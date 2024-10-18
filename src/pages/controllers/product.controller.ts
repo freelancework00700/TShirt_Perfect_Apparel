@@ -46,19 +46,33 @@ export class ProductController extends HttpStatus {
                 where[Op.and].push({ size_id: query.size_id });
             }
 
-            const products = await Product.findAll({
+            const products: any = await Product.findAll({
                 include: [
                     { model: ProductImages, required: false, where: { isDeleted: false } },
                     { model: Category },
                     { model: SubCategory },
-                    { model: Color },
-                    { model: Size }
+                    { model: Color }
                 ],
                 where
             });
 
             if (!products.length) {
                 return this.sendBadRequestResponse(res, "Products not found.", products);
+            }
+
+            for (const product of products) {
+                if (product.size_ids) {
+                    const sizes = await Size.findAll({
+                        where: {
+                            id: {
+                                [Op.in]: product.size_ids,
+                            }
+                        }
+                    });
+                    product.dataValues.Sizes = sizes;
+                } else {
+                    product.dataValues.Sizes = [];
+                }
             }
 
             return this.sendOkResponse(res, "Products get successfully.", products);

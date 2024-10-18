@@ -1,4 +1,5 @@
 import { DataTypes, Model, Sequelize } from 'sequelize';
+import Category from './category.model';
 
 class Size extends Model {
     static initModel(connection: Sequelize) {
@@ -12,6 +13,10 @@ class Size extends Model {
                 name: {
                     type: DataTypes.STRING,
                     allowNull: false,
+                },
+                category_id: {
+                    type: DataTypes.INTEGER(),
+                    allowNull: true
                 },
                 isDeleted: {
                     type: DataTypes.BOOLEAN,
@@ -29,7 +34,7 @@ class Size extends Model {
     };
 
     static initAssociations() {
-
+        Size.belongsTo(Category, { foreignKey: { name: "category_id", allowNull: false } });
     }
 }
 

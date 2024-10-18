@@ -71,8 +71,8 @@ class Product extends Model {
                     type: DataTypes.STRING,
                     allowNull: true
                 },
-                size_id: {
-                    type: DataTypes.INTEGER(),
+                size_ids: {
+                    type: DataTypes.JSON,
                     allowNull: true
                 },
                 pattern: {
@@ -119,7 +119,7 @@ class Product extends Model {
         Product.belongsTo(SubCategory, { foreignKey: 'subcategory_id', targetKey: 'id' });
         Product.belongsTo(Category, { foreignKey: 'category_id', targetKey: 'id' });
         Product.belongsTo(Color, { foreignKey: 'color_id', targetKey: 'id' });
-        Product.belongsTo(Size, { foreignKey: 'size_id', targetKey: 'id' });
+
     }
 }
 
