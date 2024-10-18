@@ -1,24 +1,35 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import Footer from "../components/Footer";
 import Header from "../components/Header";
 import heroImage1 from "../../public/Images/5_WebBanner_1920x1080_4eacfb85-fcb6-4205-9741-ed79d7545780_1400x.webp";
 import heroImage2 from "../../public/Images/3_WebBanner_1920x1080_76a24f61-cdd7-482b-ab80-52a350547e6b_1400x.webp";
 import product1 from "../../public/Images/525eebd82dd31d96fd518e97e5234fe0_78eb7754-39e4-4adc-b66c-acbaa089bfe7.webp";
-import track1 from "../../public/Images/pantTracks.png";
+// import track1 from "../../public/Images/pantTracks.png";
 import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/effect-fade";
 import "swiper/css/navigation";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { EffectFade, Navigation, Pagination } from "swiper/modules";
+import axios from "axios";
+import { IProduct } from "@/interface/types";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 type SegmentKey = "newDrops" | "mostTrending";
 
 export default function Home() {
   const [activeSegment, setActiveSegment] = useState<SegmentKey>("newDrops");
+  const [product, setProduct] = useState<IProduct[]>([]);
+  // const [category, setCategory] = useState<ICategories[]>([]);
+  // console.log('category :>> ', category);
+  const router = useRouter();
+
+  const TrackPants = product.filter(item => item.category_id === 1);
+  const Tshirt = product.filter(item => item.category_id === 2);
 
   const segments = {
     newDrops: {
@@ -28,6 +39,27 @@ export default function Home() {
       title: "Most Trending",
     },
   };
+
+  const getProduct = async () => {
+    try {
+      const response = await axios.get('/api/product')
+      const getData = response.data?.data
+      console.log('getData :>> ', getData);
+      setProduct(getData)
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
+  useEffect(() => {
+    getProduct();
+  }, [])
+
+
+  const handleShowCatagories = () => {
+    router.push(`/product`)
+  }
+
 
   return (
     <main className="max-[1024px]:mt-[77px] relative">
@@ -41,7 +73,7 @@ export default function Home() {
             pagination={true}
             effect={"fade"}
             onSlideChange={() => console.log("slide change")}
-            onSwiper={(swiper) => console.log(swiper)}
+            onSwiper={() => console.log()}
           >
             <SwiperSlide>
               <div>
@@ -61,11 +93,10 @@ export default function Home() {
               <button
                 key={key}
                 onClick={() => setActiveSegment(key as SegmentKey)}
-                className={`py-1 px-10 rounded-[20px] border border-black ${
-                  activeSegment === key
-                    ? "text-white bg-black"
-                    : " text-black bg-white"
-                }`}
+                className={`py-1 px-10 rounded-[20px] border border-black ${activeSegment === key
+                  ? "text-white bg-black"
+                  : " text-black bg-white"
+                  }`}
               >
                 {segments[key as SegmentKey].title}
               </button>
@@ -83,7 +114,7 @@ export default function Home() {
                 modules={[Navigation]}
                 navigation={true}
               >
-                <SwiperSlide>
+                {/* <SwiperSlide>
                   <div className="productImage rounded-[12px] overflow-hidden">
                     <Image src={product1} alt="product1"></Image>
                   </div>
@@ -99,75 +130,32 @@ export default function Home() {
                       Color: <span className="text-[#000]">Black</span>
                     </div>
                   </div>
-                </SwiperSlide>
-                <SwiperSlide>
-                  <div className="productImage rounded-[12px] overflow-hidden">
-                    <Image src={product1} alt="product1"></Image>
-                  </div>
-                  <div className="pt-3">
-                    <div>
-                      <div className="font-bold">Blue Oversized T-shirt</div>
-                      <div className="text-[#999] text-[14px]">
-                        Blue Oversized T-shirt
-                      </div>
-                    </div>
-                    <div className="text-[#000] text-[16px] py-2">$99.99</div>
-                    <div className="text-[#999] text-[14px]">
-                      Color: <span className="text-[#000]">Black</span>
-                    </div>
-                  </div>
-                </SwiperSlide>
-                <SwiperSlide>
-                  <div className="productImage rounded-[12px] overflow-hidden">
-                    <Image src={product1} alt="product1"></Image>
-                  </div>
-                  <div className="pt-3">
-                    <div>
-                      <div className="font-bold">Blue Oversized T-shirt</div>
-                      <div className="text-[#999] text-[14px]">
-                        Blue Oversized T-shirt
-                      </div>
-                    </div>
-                    <div className="text-[#000] text-[16px] py-2">$99.99</div>
-                    <div className="text-[#999] text-[14px]">
-                      Color: <span className="text-[#000]">Black</span>
-                    </div>
-                  </div>
-                </SwiperSlide>
-                <SwiperSlide>
-                  <div className="productImage rounded-[12px] overflow-hidden">
-                    <Image src={product1} alt="product1"></Image>
-                  </div>
-                  <div className="pt-3">
-                    <div>
-                      <div className="font-bold">Blue Oversized T-shirt</div>
-                      <div className="text-[#999] text-[14px]">
-                        Blue Oversized T-shirt
-                      </div>
-                    </div>
-                    <div className="text-[#000] text-[16px] py-2">$99.99</div>
-                    <div className="text-[#999] text-[14px]">
-                      Color: <span className="text-[#000]">Black</span>
-                    </div>
-                  </div>
-                </SwiperSlide>
-                <SwiperSlide>
-                  <div className="productImage rounded-[12px] overflow-hidden">
-                    <Image src={product1} alt="product1"></Image>
-                  </div>
-                  <div className="pt-3">
-                    <div>
-                      <div className="font-bold">Blue Oversized T-shirt</div>
-                      <div className="text-[#999] text-[14px]">
-                        Blue Oversized T-shirt
-                      </div>
-                    </div>
-                    <div className="text-[#000] text-[16px] py-2">$99.99</div>
-                    <div className="text-[#999] text-[14px]">
-                      Color: <span className="text-[#000]">Black</span>
-                    </div>
-                  </div>
-                </SwiperSlide>
+                </SwiperSlide> */}
+                {
+                  product.map((item, index) => {
+                    return (
+                      <>
+                        <SwiperSlide>
+                          <Link href={`/product/product-details?id=${item.id}`}>
+                            <div key={index} className="productImage rounded-[12px] overflow-hidden">
+                              <Image src={`/src/pages/product-image${item.ProductImages.sysFileName}`} alt="product1" width={200} height={200} />
+                            </div>
+                            <div className="pt-3">
+                              <div>
+                                <div className="font-bold">{item?.name}</div>
+                                <div className="text-[#999] text-[14px]">{item.name}</div>
+                              </div>
+                              <div className="text-[#000] text-[16px] py-2">₹{item.price}</div>
+                              <div className="text-[#999] text-[14px]">
+                                Color: <span className="text-[#000]">{item?.Color?.name}</span>
+                              </div>
+                            </div>
+                          </Link>
+                        </SwiperSlide>
+                      </>
+                    )
+                  })
+                }
               </Swiper>
             </div>
           ) : (
@@ -183,57 +171,6 @@ export default function Home() {
                   modules={[Navigation]}
                   navigation={true}
                 >
-                  <SwiperSlide>
-                    <div className="productImage rounded-[12px] overflow-hidden">
-                      <Image src={product1} alt="product1"></Image>
-                    </div>
-                    <div className="pt-3">
-                      <div>
-                        <div className="font-bold">Blue Oversized T-shirt</div>
-                        <div className="text-[#999] text-[14px]">
-                          Blue Oversized T-shirt
-                        </div>
-                      </div>
-                      <div className="text-[#000] text-[16px] py-2">$99.99</div>
-                      <div className="text-[#999] text-[14px]">
-                        Color: <span className="text-[#000]">Black</span>
-                      </div>
-                    </div>
-                  </SwiperSlide>
-                  <SwiperSlide>
-                    <div className="productImage rounded-[12px] overflow-hidden">
-                      <Image src={product1} alt="product1"></Image>
-                    </div>
-                    <div className="pt-3">
-                      <div>
-                        <div className="font-bold">Blue Oversized T-shirt</div>
-                        <div className="text-[#999] text-[14px]">
-                          Blue Oversized T-shirt
-                        </div>
-                      </div>
-                      <div className="text-[#000] text-[16px] py-2">$99.99</div>
-                      <div className="text-[#999] text-[14px]">
-                        Color: <span className="text-[#000]">Black</span>
-                      </div>
-                    </div>
-                  </SwiperSlide>
-                  <SwiperSlide>
-                    <div className="productImage rounded-[12px] overflow-hidden">
-                      <Image src={product1} alt="product1"></Image>
-                    </div>
-                    <div className="pt-3">
-                      <div>
-                        <div className="font-bold">Blue Oversized T-shirt</div>
-                        <div className="text-[#999] text-[14px]">
-                          Blue Oversized T-shirt
-                        </div>
-                      </div>
-                      <div className="text-[#000] text-[16px] py-2">$99.99</div>
-                      <div className="text-[#999] text-[14px]">
-                        Color: <span className="text-[#000]">Black</span>
-                      </div>
-                    </div>
-                  </SwiperSlide>
                   <SwiperSlide>
                     <div className="productImage rounded-[12px] overflow-hidden">
                       <Image src={product1} alt="product1"></Image>
@@ -268,7 +205,8 @@ export default function Home() {
                   T-shirts are a versatile and essential part of any wardrobe,
                   known for their comfort and adaptability.
                 </p>
-                <button className="bg-black text-white px-6 py-2 rounded-full">
+                <button className="bg-black text-white px-6 py-2 rounded-full"
+                  onClick={() => handleShowCatagories()}>
                   Show Catagories
                 </button>
               </div>
@@ -281,7 +219,8 @@ export default function Home() {
                   soft, stretchy materials like polyester, cotton blends, or
                   fleece.
                 </p>
-                <button className="bg-black text-white px-6 py-2 rounded-full">
+                <button className="bg-black text-white px-6 py-2 rounded-full"
+                  onClick={() => handleShowCatagories()}>
                   Show Catagories
                 </button>
               </div>
@@ -303,108 +242,23 @@ export default function Home() {
               modules={[Navigation]}
               navigation={true}
             >
-              <SwiperSlide>
-                <div className="productImage rounded-[12px] overflow-hidden">
-                  <Image src={product1} alt="product1"></Image>
-                </div>
-                <div className="pt-3">
-                  <div>
-                    <div className="font-bold">Blue Oversized T-shirt</div>
+              {Tshirt.map((item) => (
+                <SwiperSlide key={item.id}>
+                  <div className="productImage rounded-[12px] overflow-hidden">
+                    <Image src={`/pages/product-image/${item.ProductImages.sysFileName}`} alt={item.name} width={200} height={200} />
+                  </div>
+                  <div className="pt-3">
+                    <div>
+                      <div className="font-bold">{item.name}</div>
+                      <div className="text-[#999] text-[14px]">{item.fit}</div>
+                    </div>
+                    <div className="text-[#000] text-[16px] py-2">₹{item.price}</div>
                     <div className="text-[#999] text-[14px]">
-                      Blue Oversized T-shirt
+                      Color: <span className="text-[#000]">{item.Color?.name}</span>
                     </div>
                   </div>
-                  <div className="text-[#000] text-[16px] py-2">$99.99</div>
-                  <div className="text-[#999] text-[14px]">
-                    Color: <span className="text-[#000]">Black</span>
-                  </div>
-                </div>
-              </SwiperSlide>
-              <SwiperSlide>
-                <div className="productImage rounded-[12px] overflow-hidden">
-                  <Image src={product1} alt="product1"></Image>
-                </div>
-                <div className="pt-3">
-                  <div>
-                    <div className="font-bold">Blue Oversized T-shirt</div>
-                    <div className="text-[#999] text-[14px]">
-                      Blue Oversized T-shirt
-                    </div>
-                  </div>
-                  <div className="text-[#000] text-[16px] py-2">$99.99</div>
-                  <div className="text-[#999] text-[14px]">
-                    Color: <span className="text-[#000]">Black</span>
-                  </div>
-                </div>
-              </SwiperSlide>
-              <SwiperSlide>
-                <div className="productImage rounded-[12px] overflow-hidden">
-                  <Image src={product1} alt="product1"></Image>
-                </div>
-                <div className="pt-3">
-                  <div>
-                    <div className="font-bold">Blue Oversized T-shirt</div>
-                    <div className="text-[#999] text-[14px]">
-                      Blue Oversized T-shirt
-                    </div>
-                  </div>
-                  <div className="text-[#000] text-[16px] py-2">$99.99</div>
-                  <div className="text-[#999] text-[14px]">
-                    Color: <span className="text-[#000]">Black</span>
-                  </div>
-                </div>
-              </SwiperSlide>
-              <SwiperSlide>
-                <div className="productImage rounded-[12px] overflow-hidden">
-                  <Image src={product1} alt="product1"></Image>
-                </div>
-                <div className="pt-3">
-                  <div>
-                    <div className="font-bold">Blue Oversized T-shirt</div>
-                    <div className="text-[#999] text-[14px]">
-                      Blue Oversized T-shirt
-                    </div>
-                  </div>
-                  <div className="text-[#000] text-[16px] py-2">$99.99</div>
-                  <div className="text-[#999] text-[14px]">
-                    Color: <span className="text-[#000]">Black</span>
-                  </div>
-                </div>
-              </SwiperSlide>
-              <SwiperSlide>
-                <div className="productImage rounded-[12px] overflow-hidden">
-                  <Image src={product1} alt="product1"></Image>
-                </div>
-                <div className="pt-3">
-                  <div>
-                    <div className="font-bold">Blue Oversized T-shirt</div>
-                    <div className="text-[#999] text-[14px]">
-                      Blue Oversized T-shirt
-                    </div>
-                  </div>
-                  <div className="text-[#000] text-[16px] py-2">$99.99</div>
-                  <div className="text-[#999] text-[14px]">
-                    Color: <span className="text-[#000]">Black</span>
-                  </div>
-                </div>
-              </SwiperSlide>
-              <SwiperSlide>
-                <div className="productImage rounded-[12px] overflow-hidden">
-                  <Image src={product1} alt="product1"></Image>
-                </div>
-                <div className="pt-3">
-                  <div>
-                    <div className="font-bold">Blue Oversized T-shirt</div>
-                    <div className="text-[#999] text-[14px]">
-                      Blue Oversized T-shirt
-                    </div>
-                  </div>
-                  <div className="text-[#000] text-[16px] py-2">$99.99</div>
-                  <div className="text-[#999] text-[14px]">
-                    Color: <span className="text-[#000]">Black</span>
-                  </div>
-                </div>
-              </SwiperSlide>
+                </SwiperSlide>
+              ))}
             </Swiper>
           </div>
         </div>
@@ -423,108 +277,33 @@ export default function Home() {
               modules={[Navigation]}
               navigation={true}
             >
-              <SwiperSlide>
-                <div className="productImage rounded-[12px] overflow-hidden">
-                  <Image src={track1} alt="track1"></Image>
-                </div>
-                <div className="pt-3">
-                  <div>
-                    <div className="font-bold">Blue Oversized T-shirt</div>
-                    <div className="text-[#999] text-[14px]">
-                      Blue Oversized T-shirt
-                    </div>
-                  </div>
-                  <div className="text-[#000] text-[16px] py-2">$99.99</div>
-                  <div className="text-[#999] text-[14px]">
-                    Color: <span className="text-[#000]">Gray</span>
-                  </div>
-                </div>
-              </SwiperSlide>
-              <SwiperSlide>
-                <div className="productImage rounded-[12px] overflow-hidden">
-                  <Image src={track1} alt="track1"></Image>
-                </div>
-                <div className="pt-3">
-                  <div>
-                    <div className="font-bold">Blue Oversized T-shirt</div>
-                    <div className="text-[#999] text-[14px]">
-                      Blue Oversized T-shirt
-                    </div>
-                  </div>
-                  <div className="text-[#000] text-[16px] py-2">$99.99</div>
-                  <div className="text-[#999] text-[14px]">
-                    Color: <span className="text-[#000]">Gray</span>
-                  </div>
-                </div>
-              </SwiperSlide>
-              <SwiperSlide>
-                <div className="productImage rounded-[12px] overflow-hidden">
-                  <Image src={track1} alt="track1"></Image>
-                </div>
-                <div className="pt-3">
-                  <div>
-                    <div className="font-bold">Blue Oversized T-shirt</div>
-                    <div className="text-[#999] text-[14px]">
-                      Blue Oversized T-shirt
-                    </div>
-                  </div>
-                  <div className="text-[#000] text-[16px] py-2">$99.99</div>
-                  <div className="text-[#999] text-[14px]">
-                    Color: <span className="text-[#000]">Gray</span>
-                  </div>
-                </div>
-              </SwiperSlide>
-              <SwiperSlide>
-                <div className="productImage rounded-[12px] overflow-hidden">
-                  <Image src={track1} alt="track1"></Image>
-                </div>
-                <div className="pt-3">
-                  <div>
-                    <div className="font-bold">Blue Oversized T-shirt</div>
-                    <div className="text-[#999] text-[14px]">
-                      Blue Oversized T-shirt
-                    </div>
-                  </div>
-                  <div className="text-[#000] text-[16px] py-2">$99.99</div>
-                  <div className="text-[#999] text-[14px]">
-                    Color: <span className="text-[#000]">Gray</span>
-                  </div>
-                </div>
-              </SwiperSlide>
-              <SwiperSlide>
-                <div className="productImage rounded-[12px] overflow-hidden">
-                  <Image src={track1} alt="track1"></Image>
-                </div>
-                <div className="pt-3">
-                  <div>
-                    <div className="font-bold">Blue Oversized T-shirt</div>
-                    <div className="text-[#999] text-[14px]">
-                      Blue Oversized T-shirt
-                    </div>
-                  </div>
-                  <div className="text-[#000] text-[16px] py-2">$99.99</div>
-                  <div className="text-[#999] text-[14px]">
-                    Color: <span className="text-[#000]">Gray</span>
-                  </div>
-                </div>
-              </SwiperSlide>
-              <SwiperSlide>
-                <div className="productImage rounded-[12px] overflow-hidden">
-                  <Image src={track1} alt="track1"></Image>
-                </div>
-                <div className="pt-3">
-                  <div>
-                    <div className="font-bold">Blue Oversized T-shirt</div>
-                    <div className="text-[#999] text-[14px]">
-                      Blue Oversized T-shirt
-                    </div>
-                  </div>
-                  <div className="text-[#000] text-[16px] py-2">$99.99</div>
-                  <div className="text-[#999] text-[14px]">
-                    Color: <span className="text-[#000]">Gray</span>
-                  </div>
-                </div>
-              </SwiperSlide>
+              {
+                TrackPants.map((item, index) => {
+                  return (
+                    <>
+                      <SwiperSlide>
+                        <Link href={`/product/product-details?id=${item.id}`}>
+                          <div key={index} className="productImage rounded-[12px] overflow-hidden">
+                            <Image src={`/src/pages/product-image/${item.ProductImages.sysFileName}`} alt="track1" width={200} height={200}></Image>
+                          </div>
+                          <div className="pt-3">
+                            <div>
+                              <div className="font-bold">{item.name}</div>
+                              <div className="text-[#999] text-[14px]">
+                                {item.fit}
+                              </div>
+                            </div>
+                            <div className="text-[#000] text-[16px] py-2">₹{item.price}</div>
+                            <div className="text-[#999] text-[14px]">
+                              Color: <span className="text-[#000]">{item?.Color?.name}</span>
+                            </div>
+                          </div>
+                        </Link>
+                      </SwiperSlide>
+                    </>
+                  )
+                })
+              }
             </Swiper>
           </div>
         </div>

@@ -2,12 +2,28 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import React from "react";
+import React, { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import axios from "axios";
 
 const Footer = () => {
   const router = usePathname();
+  const [email, setEmail] = useState<string>('')
+  const [phone, setPhoneNumber] = useState<string>('')
+
+
+  const postInformation = async () => {
+    const response = await axios.post('/api/get-in-touch',
+      {
+        email, phone,
+      })
+    console.log('response :>> ', response.data);
+    setEmail("")
+    setPhoneNumber("")
+  }
+
+
   return (
     <>
       <footer className="bg-[#fff] pt-[50px]">
@@ -26,17 +42,21 @@ const Footer = () => {
                     <Input
                       type="email"
                       placeholder="Email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
                       className="w-full min-w-80 h-[52px]"
                     />
                   </div>
                   <div>
                     <Input
-                      type="number"
-                      placeholder="Phone "
+                      type="tel"
+                      placeholder="Phone"
+                      value={phone}
+                      onChange={(e) => setPhoneNumber(e.target.value)}
                       className="w-full min-w-80 h-[52px]"
                     />
                   </div>
-                  <Button className="rounded-full px-10 h-[52px]">
+                  <Button onClick={postInformation} className="rounded-full px-10 h-[52px]">
                     Submit
                   </Button>
                 </div>
@@ -54,9 +74,8 @@ const Footer = () => {
                 <li className=" py-[23px] cursor-pointer">
                   <Link
                     href="/"
-                    className={`text-sm uppercase font-medium leading-[16px]  hover:text-[#f8a25b] ${
-                      router === "/" ? "text-[#f8a25b]" : "text-[#000]"
-                    }`}
+                    className={`text-sm uppercase font-medium leading-[16px]  hover:text-[#f8a25b] ${router === "/" ? "text-[#f8a25b]" : "text-[#000]"
+                      }`}
                   >
                     Home
                   </Link>
@@ -64,9 +83,8 @@ const Footer = () => {
                 <li className=" py-[23px] cursor-pointer">
                   <Link
                     href="/product"
-                    className={`text-sm uppercase font-medium leading-[16px]  hover:text-[#f8a25b] ${
-                      router === "/product" ? "text-[#f8a25b]" : "text-[#000]"
-                    }`}
+                    className={`text-sm uppercase font-medium leading-[16px]  hover:text-[#f8a25b] ${router === "/product" ? "text-[#f8a25b]" : "text-[#000]"
+                      }`}
                   >
                     Product
                   </Link>
@@ -74,9 +92,8 @@ const Footer = () => {
                 <li className=" py-[23px] cursor-pointer">
                   <Link
                     href="/customer-service"
-                    className={`text-sm uppercase font-medium leading-[16px]  hover:text-[#f8a25b] ${
-                      router === "/service" ? "text-[#f8a25b]" : "text-[#000]"
-                    }`}
+                    className={`text-sm uppercase font-medium leading-[16px]  hover:text-[#f8a25b] ${router === "/service" ? "text-[#f8a25b]" : "text-[#000]"
+                      }`}
                   >
                     Customer Service
                   </Link>
@@ -84,11 +101,10 @@ const Footer = () => {
                 <li className=" py-[23px] cursor-pointer">
                   <Link
                     href="/privacy-policy"
-                    className={`text-sm uppercase font-medium leading-[16px]  hover:text-[#f8a25b] ${
-                      router === "/privacy-policy"
-                        ? "text-[#f8a25b]"
-                        : "text-[#000]"
-                    }`}
+                    className={`text-sm uppercase font-medium leading-[16px]  hover:text-[#f8a25b] ${router === "/privacy-policy"
+                      ? "text-[#f8a25b]"
+                      : "text-[#000]"
+                      }`}
                   >
                     Privacy Policy
                   </Link>

@@ -2,13 +2,19 @@ import { NextApiResponse } from 'next';
 import Size from '../models/size.model';
 import { HttpStatus } from '../utils/http-status';
 import { Op } from 'sequelize';
+import Category from '../models/category.model';
 
 export class SizeController extends HttpStatus {
 
     /** GET API: Get all size */
     public getAllSize = async (res: NextApiResponse) => {
         try {
-            const size = await Size.findAll({ where: { isDeleted: false } });
+            const size = await Size.findAll({
+                include: [
+                    { model: Category }
+                ],
+                where: { isDeleted: false }
+            });
 
             if (!size.length) {
                 return this.sendBadRequestResponse(res, "Size not found.", size);
@@ -25,7 +31,7 @@ export class SizeController extends HttpStatus {
     public createSize = async (res: NextApiResponse, params: any) => {
         try {
 
-            const existingSize = await Size.findOne({ where: { name: params.name } });
+            const existingSize = await Size.findOne({ where: { name: params.name, category_id: params.category_id } });
             if (existingSize) {
                 return this.sendBadRequestResponse(res, "Size already exists.", existingSize);
             }
@@ -55,6 +61,7 @@ export class SizeController extends HttpStatus {
             }
 
             size.name = params.name || size.name;
+            size.category_id = params.category_id || size.category_id;
             await size.save();
 
             return this.sendOkResponse(res, "Size update successfully.", size);
