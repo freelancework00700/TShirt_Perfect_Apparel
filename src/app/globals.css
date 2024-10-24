@@ -76,9 +76,19 @@
   opacity: 0;
 }
 .trending-swiper .swiper-button-next,.trending-swiper .swiper-button-prev{
-  background: #fff;
+  background: #ececec;
   color: #000;
   height: 40px;
   width: 40px;
   border-radius: 50%;
+}
+.table-scrollable{
+  max-width: calc(100vw - 320px);
+  overflow-x: auto;
+}
+.table-scrollable .MuiTableRow-head th:first-child,
+.table-scrollable .MuiTableRow-head th:nth-child(2),
+.table-scrollable .MuiTableRow-head th:nth-child(8),
+.table-scrollable .MuiTableRow-head th:nth-child(10){
+  min-width: 150px;
 }

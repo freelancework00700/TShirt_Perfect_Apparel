@@ -12,7 +12,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import Link from "next/link";
-import axios from 'axios';
+import axios from "axios";
 import { ICategories, IColor, IProduct, ISize } from "@/interface/types";
 
 function Product() {
@@ -20,54 +20,52 @@ function Product() {
   const [allData, setAllData] = useState<IProduct[]>([]);
   const [categories, setCategories] = useState<ICategories[]>([]);
   const [allColor, setAllColor] = useState<IColor[]>([]);
-  console.log('allColor :>> ', allColor);
+  console.log("allColor :>> ", allColor);
   const [allSize, setAllSize] = useState<ISize[]>([]);
   const [selectedCategories, setSelectedCategories] = useState<number[]>([]);
   const [selectedSizes, setSelectedSizes] = useState<number[]>([]);
   const [availableSizes, setAvailableSizes] = useState<ISize[]>([]);
-  const [availableColors, setAvailableColors] = useState<IColor[] | undefined>([]);
+  const [availableColors, setAvailableColors] = useState<IColor[] | undefined>(
+    []
+  );
   const [selectedColors, setSelectedColors] = useState<number[]>([]);
   const [filteredProducts, setFilteredProducts] = useState<IProduct[]>([]);
-  console.log('filteredProducts :>> ', filteredProducts);
-
 
   const filteredData = toggleData
-    ? allData.filter(item => item.category_id === 2)
-    : allData.filter(item => item.category_id === 1)
-  // console.log('filteredData :>> ', filteredData);
-
+    ? allData.filter((item) => item.category_id === 2)
+    : allData.filter((item) => item.category_id === 1);
 
   const getProduct = async () => {
     try {
-      const response = await axios.get('/api/product')
-      const getData = response.data?.data
-      console.log('getData :>> ', getData);
-      setAllData(getData)
+      const response = await axios.get("/api/product");
+      const getData = response.data?.data;
+      console.log("getData :>> ", getData);
+      setAllData(getData);
 
-      const categoriesResponse = await axios.get('/api/category');
-      const categoriesData = categoriesResponse.data?.data
-      setCategories(categoriesData)
+      const categoriesResponse = await axios.get("/api/category");
+      const categoriesData = categoriesResponse.data?.data;
+      setCategories(categoriesData);
 
-      const colorResponse = await axios.get('/api/color');
-      const colorData = colorResponse.data?.data
-      setAllColor(colorData)
+      const colorResponse = await axios.get("/api/color");
+      const colorData = colorResponse.data?.data;
+      setAllColor(colorData);
 
-      const sizeResponse = await axios.get('/api/size');
-      const sizeData = sizeResponse.data?.data
-      setAllSize(sizeData)
+      const sizeResponse = await axios.get("/api/size");
+      const sizeData = sizeResponse.data?.data;
+      setAllSize(sizeData);
     } catch (error) {
-      console.error(error)
+      console.error(error);
     }
-  }
+  };
 
   useEffect(() => {
     getProduct();
-  }, [])
+  }, []);
 
   const handleCheckboxChange = (id: number) => {
-    setSelectedCategories(prev => {
+    setSelectedCategories((prev) => {
       if (prev.includes(id)) {
-        return prev.filter(item => item !== id); // Deselect if already selected
+        return prev.filter((item) => item !== id); // Deselect if already selected
       } else {
         return [...prev, id]; // Select if not selected
       }
@@ -75,50 +73,14 @@ function Product() {
   };
 
   const handleSizeCheckboxChange = (id: number) => {
-    console.log('id :>> ', id);
-    setSelectedSizes(prev => {
+    setSelectedSizes((prev) => {
       if (prev.includes(id)) {
-        return prev.filter(item => item !== id);
+        return prev.filter((item) => item !== id);
       } else {
         return [...prev, id];
       }
-    })
-  }
-
-  useEffect(() => {
-    const filteredSizes = allSize.filter(size => selectedCategories.includes(size.Category.id));
-    setAvailableSizes(filteredSizes)
-  }, [selectedCategories, allSize, allData])
-
-  useEffect(() => {
-    // Filter colors based on selected sizes and categories
-    const filteredColors = allData
-      .filter((product) =>
-        selectedCategories.includes(product.category_id) &&
-        product.size_ids?.some((sizeId) => selectedSizes.includes(sizeId))
-      )
-      .map((product) => product.Color);
-
-    // Remove duplicates and set available colors
-    const displayColor: any = Array.from(new Set(filteredColors.map((color) => color.id)))
-      .map((id) => filteredColors.find((color) => color.id === id));
-    setAvailableColors(displayColor)
-    console.log(displayColor);
-  }, [selectedCategories, selectedSizes, allData]);
-
-
-  useEffect(() => {
-    // Filter products based on selected categories, sizes, and colors
-    const products = allData.filter(
-      (product) =>
-        selectedCategories.includes(product.category_id) &&
-        product.size_ids?.some((sizeId) => selectedSizes.includes(sizeId)) &&
-        selectedColors.includes(product.color_id)
-    );
-
-    setFilteredProducts(products);
-  }, [selectedCategories, selectedSizes, selectedColors, allData]);
-
+    });
+  };
 
   const handleColorCheckboxChange = (id: number) => {
     setSelectedColors((prev) => {
@@ -129,6 +91,43 @@ function Product() {
       }
     });
   };
+
+  useEffect(() => {
+    const filteredSizes = allSize.filter((size) =>
+      selectedCategories.includes(size.Category.id)
+    );
+    setAvailableSizes(filteredSizes);
+  }, [selectedCategories, allSize, allData]);
+
+  useEffect(() => {
+    // Filter colors based on selected sizes and categories
+    const filteredColors = allData
+      .filter(
+        (product) =>
+          selectedCategories.includes(product.category_id) &&
+          product.size_ids?.some((sizeId) => selectedSizes.includes(sizeId))
+      )
+      .map((product) => product.Color);
+    console.log("filteredColors: ", filteredColors);
+
+    // Remove duplicates and set available colors
+    const displayColor: any = Array.from(
+      new Set(filteredColors.map((color) => color.id))
+    ).map((id) => filteredColors.find((color) => color.id === id));
+    console.log("displayColor: ", displayColor);
+    setAvailableColors(displayColor);
+  }, [selectedCategories, selectedSizes, allData]);
+
+  useEffect(() => {
+    // Filter products based on selected categories, sizes, and colors
+    const products = allData.filter(
+      (product) =>
+        selectedCategories.includes(product.category_id) &&
+        product.size_ids?.some((sizeId) => selectedSizes.includes(sizeId)) &&
+        selectedColors.includes(product.color_id)
+    );
+    setFilteredProducts(products);
+  }, [selectedCategories, selectedSizes, selectedColors, allData]);
 
   return (
     <main className="max-[1024px]:mt-[77px] max-[767px]:mt-[50px] relative">
@@ -141,24 +140,28 @@ function Product() {
                 <AccordionTrigger>Collection</AccordionTrigger>
                 <AccordionContent>
                   <div className="flex flex-col gap-3 mt-3">
-                    {
-                      categories.map((item, index) => (
-                        <>
-                          <div key={index} className="flex items-center space-x-2">
-                            <Checkbox
-                              id={`category-${item.id}`}
-                              checked={selectedCategories.includes(item.id)}
-                              onCheckedChange={() => handleCheckboxChange(item.id)}
-                            />
-                            <label htmlFor={`category-${item.id}`}
-                              className="text-sm font-medium leading-none text-[#777]"
-                            >
-                              {item?.name}
-                            </label>
-                          </div>
-                        </>
-                      ))
-                    }
+                    {categories.map((item, index) => (
+                      <>
+                        <div
+                          key={index}
+                          className="flex items-center space-x-2"
+                        >
+                          <Checkbox
+                            id={`category-${item.id}`}
+                            checked={selectedCategories.includes(item.id)}
+                            onCheckedChange={() =>
+                              handleCheckboxChange(item.id)
+                            }
+                          />
+                          <label
+                            htmlFor={`category-${item.id}`}
+                            className="text-sm font-medium leading-none text-[#777]"
+                          >
+                            {item?.name}
+                          </label>
+                        </div>
+                      </>
+                    ))}
                   </div>
                 </AccordionContent>
               </AccordionItem>
@@ -166,42 +169,19 @@ function Product() {
                 <AccordionTrigger>Size</AccordionTrigger>
                 <AccordionContent>
                   <div className="flex flex-col gap-3 mt-3">
-                    {
-                      availableSizes.map((item, index) => {
-                        return (
-                          <>
-                            <div key={index} className="flex items-center space-x-2">
-                              <Checkbox
-                                id={`size-${item.id}`}
-                                checked={selectedSizes.includes(item.id)}
-                                onCheckedChange={() => handleSizeCheckboxChange(item.id)}
-                              />
-                              <label
-                                htmlFor="terms2"
-                                className="text-sm font-medium leading-none text-[#777]"
-                              >
-                                {item.name}
-                              </label>
-                            </div>
-                          </>
-                        )
-                      })
-                    }
-                  </div>
-                </AccordionContent>
-              </AccordionItem>
-              <AccordionItem value="item-3">
-                <AccordionTrigger>Colors</AccordionTrigger>
-                <AccordionContent>
-                  <div className="flex flex-col gap-3 mt-3">
-                    {
-                      availableColors?.map((item, index) => (
+                    {availableSizes.map((item, index) => {
+                      return (
                         <>
-                          <div key={index} className="flex items-center space-x-2">
+                          <div
+                            key={index}
+                            className="flex items-center space-x-2"
+                          >
                             <Checkbox
-                              id={`color-${item.id}`}
-                              checked={selectedColors.includes(item.id)}
-                              onCheckedChange={() => handleColorCheckboxChange(item.id)}
+                              id={`size-${item.id}`}
+                              checked={selectedSizes.includes(item.id)}
+                              onCheckedChange={() =>
+                                handleSizeCheckboxChange(item.id)
+                              }
                             />
                             <label
                               htmlFor="terms2"
@@ -211,8 +191,37 @@ function Product() {
                             </label>
                           </div>
                         </>
-                      ))
-                    }
+                      );
+                    })}
+                  </div>
+                </AccordionContent>
+              </AccordionItem>
+              <AccordionItem value="item-3">
+                <AccordionTrigger>Colors</AccordionTrigger>
+                <AccordionContent>
+                  <div className="flex flex-col gap-3 mt-3">
+                    {availableColors?.map((item, index) => (
+                      <>
+                        <div
+                          key={index}
+                          className="flex items-center space-x-2"
+                        >
+                          <Checkbox
+                            id={`color-${item.id}`}
+                            checked={selectedColors.includes(item.id)}
+                            onCheckedChange={() =>
+                              handleColorCheckboxChange(item.id)
+                            }
+                          />
+                          <label
+                            htmlFor="terms2"
+                            className="text-sm font-medium leading-none text-[#777]"
+                          >
+                            {item.name}
+                          </label>
+                        </div>
+                      </>
+                    ))}
                   </div>
                 </AccordionContent>
               </AccordionItem>
@@ -248,122 +257,94 @@ function Product() {
               </div>
             </div>
             <div className="grid grid-cols-12 gap-4 gap-y-10">
-              {/* {toggleData
-                ? filteredData.map((item, index) => (
-                  <Link
-                    key={index}
-                    className="lg:col-span-3 md:col-span-6 col-span-12"
-                    href={`/product/product-details?id=${item.id}`}
-                  >
-                    <div className="productImage rounded-[12px] overflow-hidden max-h-[400px]">
-                      <Image src={`/src/pages/product-image/${item.ProductImages?.sysFileName}`}
-                        width={200} height={200} alt="product1" />
-                    </div>
-                    <div className="pt-3">
-                      <div>
-                        <div className="font-bold">{item.name}</div>
-                        <div className="text-[#999] text-[14px]">
-                          {item.fit}
-                        </div>
-                      </div>
-                      <div className="text-[#000] text-[16px] py-2">
-                        ₹{item.price}
-                      </div>
-                      <div className="text-[#999] text-[14px]">
-                        Color:{" "}
-                        <span className="text-[#000]">{item.Color.name}</span>
-                      </div>
-                    </div>
-                  </Link>
-                ))
-                : filteredData.map((item, index) => (
-                  <Link
-                    key={index}
-                    className="col-span-3"
-                    href={`/product/product-details?id=${item.id}`}
-                  >
-                    <div className="productImage rounded-[12px] overflow-hidden">
-                      <Image src={`/src/pages/product-image/${item.ProductImages.sysFileName}`}
-                        width={200} height={200} alt="product1" />
-                    </div>
-                    <div className="pt-3">
-                      <div>
-                        <div className="font-bold">{item.name}</div>
-                        <div className="text-[#999] text-[14px]">
-                          {item.fit}
-                        </div>
-                      </div>
-                      <div className="text-[#000] text-[16px] py-2">
-                        ₹{item.price}
-                      </div>
-                      <div className="text-[#999] text-[14px]">
-                        Color:{" "}
-                        <span className="text-[#000]">{item.Color.name}</span>
-                      </div>
-                    </div>
-                  </Link>
-                )) } */}
               {filteredProducts.length > 0 ? (
                 // Display filteredProducts when data is available
                 filteredProducts.map((item, index) => (
-                  <Link
-                    key={index}
-                    className="lg:col-span-3 md:col-span-6 col-span-12"
-                    href={`/product/product-details?id=${item.id}`}
-                  >
-                    <div className="productImage rounded-[12px] overflow-hidden max-h-[400px]">
-                      <Image
-                        src={`/src/pages/product-image/${item.ProductImages?.sysFileName}`}
-                        width={200}
-                        height={200}
-                        alt={item.name}
-                      />
-                    </div>
-                    <div className="pt-3">
-                      <div>
-                        <div className="font-bold">{item.name}</div>
-                        <div className="text-[#999] text-[14px]">{item.fit}</div>
+                  <>
+                    <Link
+                      key={index}
+                      className="lg:col-span-3 md:col-span-6 col-span-12"
+                      href={`/product/product-details?id=${item.id}`}
+                    >
+                      <div className="shadow-md h-full w-full m-2 rounded-lg">
+                        <div className="productImage rounded-[12px] overflow-hidden max-h-[400px] flex justify-center">
+                          <Image
+                            src={`/product-image/${item.ProductImages[0]?.sysFileName}`}
+                            width={200}
+                            height={200}
+                            alt={item.name}
+                            className="min-h-[245px] max-h-[245px] object-cover"
+                          />
+                        </div>
+                        <div className="py-3 px-4">
+                          <div>
+                            <div className="font-bold">{item.name}</div>
+                            <div className="text-[#999] text-[14px]">
+                              {item.fit}
+                            </div>
+                          </div>
+                          <div className="text-[#000] text-[16px] py-2">
+                            ₹{item.price}
+                          </div>
+                          <div className="text-[#999] text-[14px]">
+                            Color:{" "}
+                            <span className="text-[#000]">
+                              {item.Color.name}
+                            </span>
+                          </div>
+                        </div>
                       </div>
-                      <div className="text-[#000] text-[16px] py-2">₹{item.price}</div>
-                      <div className="text-[#999] text-[14px]">
-                        Color: <span className="text-[#000]">{item.Color.name}</span>
-                      </div>
-                    </div>
-                  </Link>
+                    </Link>
+                  </>
                 ))
               ) : filteredData.length > 0 ? (
                 // If filteredProducts is not available, fallback to filteredData
                 filteredData.map((item, index) => (
-                  <Link
-                    key={index}
-                    className={toggleData ? "lg:col-span-3 md:col-span-6 col-span-12" : "col-span-3"}
-                    href={`/product/product-details?id=${item.id}`}
-                  >
-                    <div className="productImage rounded-[12px] overflow-hidden max-h-[400px]">
-                      <Image
-                        src={`/src/pages/product-image/${item.ProductImages?.sysFileName}`}
-                        width={200}
-                        height={200}
-                        alt={item.name}
-                      />
-                    </div>
-                    <div className="pt-3">
-                      <div>
-                        <div className="font-bold">{item.name}</div>
-                        <div className="text-[#999] text-[14px]">{item.fit}</div>
+                  <>
+                    <Link
+                      key={index}
+                      className={
+                        toggleData
+                          ? "lg:col-span-3 md:col-span-6 col-span-12"
+                          : "col-span-3"
+                      }
+                      href={`/product/product-details?id=${item.id}`}
+                    >
+                      <div className="shadow-md h-full w-full m-2 rounded-lg">
+                        <div className="productImage rounded-[12px] overflow-hidden max-h-[400px] flex justify-center">
+                          <Image
+                            src={`/product-image/${item.ProductImages[0]?.sysFileName}`}
+                            width={200}
+                            height={200}
+                            alt={item.name}
+                            className="min-h-[245px] max-h-[245px] object-cover"
+                          />
+                        </div>
+                        <div className="py-3 px-4">
+                          <div>
+                            <div className="font-bold">{item.name}</div>
+                            <div className="text-[#999] text-[14px]">
+                              {item.fit}
+                            </div>
+                          </div>
+                          <div className="text-[#000] text-[16px] py-2">
+                            ₹{item.price}
+                          </div>
+                          <div className="text-[#999] text-[14px]">
+                            Color:{" "}
+                            <span className="text-[#000]">
+                              {item.Color.name}
+                            </span>
+                          </div>
+                        </div>
                       </div>
-                      <div className="text-[#000] text-[16px] py-2">₹{item.price}</div>
-                      <div className="text-[#999] text-[14px]">
-                        Color: <span className="text-[#000]">{item.Color.name}</span>
-                      </div>
-                    </div>
-                  </Link>
+                    </Link>
+                  </>
                 ))
               ) : (
                 // Display a message when no products are available
-                <div>No products available for the selected filters.</div>
+                <div className="col-span-12 text-center py-20">No products available for the selected filters.</div>
               )}
-
             </div>
           </div>
         </div>

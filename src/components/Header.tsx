@@ -14,11 +14,10 @@ const Header = () => {
   return (
     <>
       <div
-        className="
-            max-[1024px]:fixed max-[1024px]:top-0 max-[1024px]:z-50 max-[1024px]:w-full overflow-hidden bg-white"
+        className="max-[1024px]:fixed max-[1024px]:top-0 max-[1024px]:z-50 max-[1024px]:w-full overflow-hidden bg-white"
       >
         <div className="container mx-auto xl:max-w-7xl">
-          <div className="flex items-center justify-between max-lg:py-1">
+          <div className="flex items-center justify-between max-lg:p-3">
             <div className="flex items-center">
               <div className="font-bold xl:me-[2rem] text-[24px]">
                 Perfect Apparels
@@ -70,7 +69,7 @@ const Header = () => {
                   href="/contactUs"
                   className="bg-[#f8a25b] hover:bg-[#000] hover:text-[#f8885b] transition ease-in-out duration-200 rounded-full text-sm flex items-center  font-bold text-[#000] py-2 px-4 max-[1023px]:hidden button button--nanuk button--border-thin button--round-s"
                 >
-                  <span>Contact Us: +91 8866993323</span>
+                  <span>Contact Us: +91 99047 97335</span>
                 </Link>
               </div>
               <div
@@ -84,7 +83,7 @@ const Header = () => {
                       alt="menu-icon"
                       width={18}
                       height={18}
-                      className="cursor-pointer invert"
+                      className="cursor-pointer"
                     />
                   </>
                 ) : (
@@ -94,7 +93,7 @@ const Header = () => {
                       alt="menu-icon-new"
                       width={18}
                       height={18}
-                      className="cursor-pointer invert"
+                      className="cursor-pointer"
                     />
                   </>
                 )}
@@ -102,14 +101,14 @@ const Header = () => {
             </div>
 
             {menuShowResponsive && (
-              <div className="fixed w-full left-0 top-[80px] lg:hidden z-20 h-[calc(100vh_-_80px)]">
-                <div className="bg-[#000] p-3 px-5 shadow-md h-full">
+              <div className="fixed w-full left-0 top-[60px] lg:hidden z-20 h-[calc(100vh_-_60px)]">
+                <div className="bg-[#fff] p-3 px-5 shadow-md h-full">
                   <nav>
-                    <ul className="flex items-center flex-col pt-4">
+                    <ul className="flex items-center flex-col">
                       <li className="py-4">
                         <Link
                           href="/"
-                          className="text-base uppercase font-medium leading-[16px] text-[#fff] hover:text-[#f8a25b] cursor-pointer "
+                          className="text-base uppercase font-medium leading-[16px] text-[#000] hover:text-[#f8a25b] cursor-pointer "
                         >
                           Home
                         </Link>

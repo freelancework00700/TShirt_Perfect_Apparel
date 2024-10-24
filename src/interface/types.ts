@@ -38,18 +38,7 @@ export interface IProduct {
         createdAt: string,
         updatedAt: string,
     },
-    ProductImages: {
-        contentType: string,
-        createdAt: string,
-        fileName: string,
-        fileSize: string,
-        fileType: string,
-        id: boolean,
-        isDeleted: boolean,
-        product_id: number,
-        sysFileName: string,
-        updatedAt: string,
-    },
+    ProductImages: ProductImages[],
     Sizes: {
         createdAt: string,
         id: number,
@@ -65,6 +54,19 @@ export interface IProduct {
         name: string,
         updatedAt: string,
     }
+}
+
+interface ProductImages {
+    contentType: string,
+    createdAt: string,
+    fileName: string,
+    fileSize: string,
+    fileType: string,
+    id: boolean,
+    isDeleted: boolean,
+    product_id: number,
+    sysFileName: string,
+    updatedAt: string,
 }
 
 export interface ICategories {

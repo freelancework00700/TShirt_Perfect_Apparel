@@ -107,7 +107,7 @@ function CustomerService() {
                 Surat, 395006
               </div>
               <div className="text-center text-[14px] mb-6">
-                Call or WhatsApp: +91 8866993323 / +91 8866993323
+                Call or WhatsApp: +91 99047 97335 / +91 99047 97335
               </div>
               <div className="text-center text-[14px] mb-6">
                 Email: hardik.disolutions@gmail.com

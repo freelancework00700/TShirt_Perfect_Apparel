@@ -6,7 +6,7 @@ import Footer from "../components/Footer";
 import Header from "../components/Header";
 import heroImage1 from "../../public/Images/5_WebBanner_1920x1080_4eacfb85-fcb6-4205-9741-ed79d7545780_1400x.webp";
 import heroImage2 from "../../public/Images/3_WebBanner_1920x1080_76a24f61-cdd7-482b-ab80-52a350547e6b_1400x.webp";
-import product1 from "../../public/Images/525eebd82dd31d96fd518e97e5234fe0_78eb7754-39e4-4adc-b66c-acbaa089bfe7.webp";
+// import product1 from "../../public/Images/525eebd82dd31d96fd518e97e5234fe0_78eb7754-39e4-4adc-b66c-acbaa089bfe7.webp";
 // import track1 from "../../public/Images/pantTracks.png";
 import "swiper/css";
 import "swiper/css/pagination";
@@ -19,11 +19,13 @@ import { IProduct } from "@/interface/types";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
+
 type SegmentKey = "newDrops" | "mostTrending";
 
 export default function Home() {
   const [activeSegment, setActiveSegment] = useState<SegmentKey>("newDrops");
   const [product, setProduct] = useState<IProduct[]>([]);
+  console.log('product: ', product.map((item) => item));
   // const [category, setCategory] = useState<ICategories[]>([]);
   // console.log('category :>> ', category);
   const router = useRouter();
@@ -42,7 +44,7 @@ export default function Home() {
 
   const getProduct = async () => {
     try {
-      const response = await axios.get('/api/product')
+      const response = await axios.get(`/api/product`)
       const getData = response.data?.data
       console.log('getData :>> ', getData);
       setProduct(getData)
@@ -64,7 +66,7 @@ export default function Home() {
   return (
     <main className="max-[1024px]:mt-[77px] relative">
       <Header />
-      <div className="container mx-auto xl:max-w-7xl">
+      <div className="container mx-auto xl:max-w-7xl max-sm:px-4">
         <div className="rounded-[20px] overflow-hidden">
           <Swiper
             slidesPerView={1}
@@ -114,48 +116,33 @@ export default function Home() {
                 modules={[Navigation]}
                 navigation={true}
               >
-                {/* <SwiperSlide>
-                  <div className="productImage rounded-[12px] overflow-hidden">
-                    <Image src={product1} alt="product1"></Image>
-                  </div>
-                  <div className="pt-3">
-                    <div>
-                      <div className="font-bold">Blue Oversized T-shirt</div>
-                      <div className="text-[#999] text-[14px]">
-                        Blue Oversized T-shirt
+                {product.filter(item => item.status === segments.newDrops.title).map(item => (
+                  <SwiperSlide key={item.id}>
+                    <div className="shadow-md h-full w-full m-2 rounded-lg">
+                    <Link href={`/product/product-details?id=${item.id}`}>
+                      <div className="productImage flex justify-center rounded-[12px] overflow-hidden">
+                        <Image
+                          src={`/product-image/${item.ProductImages[0]?.sysFileName}`}
+                          alt={item.name}
+                          width={200}
+                          height={200}
+                          className="min-h-[245px] max-h-[245px] object-cover"
+                        />
                       </div>
+                      <div className="py-3 px-4">
+                        <div>
+                          <div className="font-bold">{item.name}</div>
+                          <div className="text-[#999] text-[14px]">{item.name}</div>
+                        </div>
+                        <div className="text-[#000] text-[16px] py-2">₹{item.price}</div>
+                        {/* <div className="text-[#999] text-[14px]">
+                          Color: <span className="text-[#000]">{item.Color?.name}</span>
+                        </div> */}
+                      </div>
+                    </Link>
                     </div>
-                    <div className="text-[#000] text-[16px] py-2">$99.99</div>
-                    <div className="text-[#999] text-[14px]">
-                      Color: <span className="text-[#000]">Black</span>
-                    </div>
-                  </div>
-                </SwiperSlide> */}
-                {
-                  product.map((item, index) => {
-                    return (
-                      <>
-                        <SwiperSlide>
-                          <Link href={`/product/product-details?id=${item.id}`}>
-                            <div key={index} className="productImage rounded-[12px] overflow-hidden">
-                              <Image src={`/src/pages/product-image${item.ProductImages.sysFileName}`} alt="product1" width={200} height={200} />
-                            </div>
-                            <div className="pt-3">
-                              <div>
-                                <div className="font-bold">{item?.name}</div>
-                                <div className="text-[#999] text-[14px]">{item.name}</div>
-                              </div>
-                              <div className="text-[#000] text-[16px] py-2">₹{item.price}</div>
-                              <div className="text-[#999] text-[14px]">
-                                Color: <span className="text-[#000]">{item?.Color?.name}</span>
-                              </div>
-                            </div>
-                          </Link>
-                        </SwiperSlide>
-                      </>
-                    )
-                  })
-                }
+                  </SwiperSlide>
+                ))}
               </Swiper>
             </div>
           ) : (
@@ -171,23 +158,36 @@ export default function Home() {
                   modules={[Navigation]}
                   navigation={true}
                 >
-                  <SwiperSlide>
-                    <div className="productImage rounded-[12px] overflow-hidden">
-                      <Image src={product1} alt="product1"></Image>
-                    </div>
-                    <div className="pt-3">
-                      <div>
-                        <div className="font-bold">Blue Oversized T-shirt</div>
-                        <div className="text-[#999] text-[14px]">
-                          Blue Oversized T-shirt
-                        </div>
-                      </div>
-                      <div className="text-[#000] text-[16px] py-2">$99.99</div>
-                      <div className="text-[#999] text-[14px]">
-                        Color: <span className="text-[#000]">Black</span>
-                      </div>
-                    </div>
-                  </SwiperSlide>
+                  {
+                    product.filter((item) => item.status === segments.mostTrending.title)
+                      .map(item => (
+                        <SwiperSlide key={item.id}>
+                          <div className="shadow-md h-full w-full m-2 rounded-lg">
+                          <Link href={`/product/product-details?id=${item.id}`} >
+                            <div className="productImage flex justify-center rounded-[12px] overflow-hidden ">
+                              <Image
+                                src={`/product-image/${item.ProductImages[0]?.sysFileName}`}
+                                alt={item.name}
+                                width={200}
+                                height={200}
+                                className="min-h-[245px] max-h-[245px] object-cover"
+                              />
+                            </div>
+                            <div className="py-3 px-4">
+                              <div>
+                                <div className="font-bold">{item.name}</div>
+                                <div className="text-[#999] text-[14px]">{item.name}</div>
+                              </div>
+                              <div className="text-[#000] text-[20px] py-2">₹{item.price}</div>
+                              {/* <div className="text-[#999] text-[14px]">
+                                Color: <span className="text-[#000]">{item.Color?.name}</span>
+                              </div> */}
+                            </div>
+                          </Link>
+                          </div>
+                        </SwiperSlide>
+                      ))
+                  }
                 </Swiper>
               </div>
             </>
@@ -198,7 +198,8 @@ export default function Home() {
             Perfect Apparels Collection
           </div>
           <div className="flex justify-center flex-wrap items-center gap-5 w-full">
-            <div className="flex-1 flex justify-start items-center bg-[url('../../public/Images/how-should-a-t-shirt-fit.png')] bg-cover px-20 py-24 rounded-[16px]">
+            <div className="flex-1 flex justify-start items-center 
+            bg-[url('../../public/Images/how-should-a-t-shirt-fit.png')] bg-cover px-20 max-lg:px-5 py-24 max-lg:py-5 rounded-[16px]">
               <div>
                 <h1 className="text-3xl font-bold mb-4 text-white">T-Shirt</h1>
                 <p className="mb-6 w-72 text-white">
@@ -211,7 +212,8 @@ export default function Home() {
                 </button>
               </div>
             </div>
-            <div className="flex-1 flex justify-start items-center bg-[url('../../public/Images/track-pants.png')] bg-cover px-20 py-24 rounded-[16px]">
+            <div className="flex-1 flex justify-start items-center 
+            bg-[url('../../public/Images/track-pants.png')] bg-cover px-20 max-lg:px-5 py-24 max-lg:py-5 rounded-[16px]">
               <div>
                 <h1 className="text-3xl font-bold mb-4">Track Pants</h1>
                 <p className="mb-6 w-72">
@@ -244,18 +246,22 @@ export default function Home() {
             >
               {Tshirt.map((item) => (
                 <SwiperSlide key={item.id}>
-                  <div className="productImage rounded-[12px] overflow-hidden">
-                    <Image src={`/pages/product-image/${item.ProductImages.sysFileName}`} alt={item.name} width={200} height={200} />
-                  </div>
-                  <div className="pt-3">
-                    <div>
-                      <div className="font-bold">{item.name}</div>
-                      <div className="text-[#999] text-[14px]">{item.fit}</div>
+                  <div className="shadow-md h-full w-full m-2 rounded-lg">
+                  <Link href={`/product/product-details?id=${item.id}`}>
+                    <div className="productImage flex justify-center rounded-[12px] overflow-hidden">
+                      <Image src={`/product-image/${item.ProductImages[0]?.sysFileName}`} alt={item.name} width={200} height={200} className="min-h-[245px] max-h-[245px] object-cover"/>
                     </div>
-                    <div className="text-[#000] text-[16px] py-2">₹{item.price}</div>
-                    <div className="text-[#999] text-[14px]">
-                      Color: <span className="text-[#000]">{item.Color?.name}</span>
+                    <div className="py-3 px-4">
+                      <div>
+                        <div className="font-bold">{item.name}</div>
+                        <div className="text-[#999] text-[14px]">{item.fit}</div>
+                      </div>
+                      <div className="text-[#000] text-[20px] py-2">₹{item.price}</div>
+                      {/* <div className="text-[#999] text-[14px]">
+                        Color: <span className="text-[#000]">{item.Color?.name}</span>
+                      </div> */}
                     </div>
+                  </Link>
                   </div>
                 </SwiperSlide>
               ))}
@@ -282,23 +288,25 @@ export default function Home() {
                   return (
                     <>
                       <SwiperSlide>
+                      <div className="shadow-md h-full w-full m-2 rounded-lg">
                         <Link href={`/product/product-details?id=${item.id}`}>
-                          <div key={index} className="productImage rounded-[12px] overflow-hidden">
-                            <Image src={`/src/pages/product-image/${item.ProductImages.sysFileName}`} alt="track1" width={200} height={200}></Image>
+                          <div key={index} className="productImage flex justify-center rounded-[12px] overflow-hidden">
+                            <Image src={`/product-image/${item.ProductImages[0]?.sysFileName}`} alt="track1" width={200} height={200} className="min-h-[245px] max-h-[245px] object-cover"></Image>
                           </div>
-                          <div className="pt-3">
+                          <div className="py-3 px-4">
                             <div>
                               <div className="font-bold">{item.name}</div>
                               <div className="text-[#999] text-[14px]">
                                 {item.fit}
                               </div>
                             </div>
-                            <div className="text-[#000] text-[16px] py-2">₹{item.price}</div>
-                            <div className="text-[#999] text-[14px]">
+                            <div className="text-[#000] text-[20px] py-2">₹{item.price}</div>
+                            {/* <div className="text-[#999] text-[14px]">
                               Color: <span className="text-[#000]">{item?.Color?.name}</span>
-                            </div>
+                            </div> */}
                           </div>
                         </Link>
+                        </div>
                       </SwiperSlide>
                     </>
                   )
@@ -309,6 +317,6 @@ export default function Home() {
         </div>
       </div>
       <Footer />
-    </main>
+    </main >
   );
 }

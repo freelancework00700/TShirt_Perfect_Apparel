@@ -35,11 +35,6 @@ const ProductDetail = () => {
       const findData = productData?.find((val: { id: number }) => val.id === searchNumber)
       console.log('findData :>> ', findData);
       setProductData([findData])
-
-      // const sizeResponse = await axios.get('/api/size');
-      // const sizeData = sizeResponse.data?.data
-      // setAllSize(sizeData)
-
     } catch (error) {
       console.error(error)
     }
@@ -55,171 +50,61 @@ const ProductDetail = () => {
   return (
     <main className="max-[1024px]:mt-[77px] relative">
       <Header />
-      <div className="container mx-auto xl:max-w-7xl max-sm:px-4">
+      <div className="container mx-auto xl:max-w-7xl max-sm:px-4 py-5">
         <div className="grid grid-cols-12 gap-4">
           <div className="xl:col-span-6 lg:col-span-6 col-span-12">
-            <Swiper
-              style={{
-                "--swiper-navigation-color": "#fff",
-                "--swiper-pagination-color": "#fff",
-              }}
-              spaceBetween={10}
-              navigation={true}
-              thumbs={{ swiper: thumbsSwiper }}
-              modules={[FreeMode, Navigation, Thumbs]}
-              className="mySwiper2"
-            >
-              <SwiperSlide>
-                <Image
-                  src={product1}
-                  alt="product1"
-                  className="max-h-[65vh] object-cover"
-                />
-              </SwiperSlide>
-              <SwiperSlide>
-                <Image
-                  src={product1}
-                  alt="product1"
-                  className="max-h-[65vh] object-cover"
-                />
-              </SwiperSlide>
-              <SwiperSlide>
-                <Image
-                  src={product1}
-                  alt="product1"
-                  className="max-h-[65vh] object-cover"
-                />
-              </SwiperSlide>
-              <SwiperSlide>
-                <Image
-                  src={product1}
-                  alt="product1"
-                  className="max-h-[65vh] object-cover"
-                />
-              </SwiperSlide>
-              <SwiperSlide>
-                <Image
-                  src={product1}
-                  alt="product1"
-                  className="max-h-[65vh] object-cover"
-                />
-              </SwiperSlide>
-              <SwiperSlide>
-                <Image
-                  src={product1}
-                  alt="product1"
-                  className="max-h-[65vh] object-cover"
-                />
-              </SwiperSlide>
-              <SwiperSlide>
-                <Image
-                  src={product1}
-                  alt="product1"
-                  className="max-h-[65vh] object-cover"
-                />
-              </SwiperSlide>
-              <SwiperSlide>
-                <Image
-                  src={product1}
-                  alt="product1"
-                  className="max-h-[65vh] object-cover"
-                />
-              </SwiperSlide>
-              <SwiperSlide>
-                <Image
-                  src={product1}
-                  alt="product1"
-                  className="max-h-[65vh] object-cover"
-                />
-              </SwiperSlide>
-              <SwiperSlide>
-                <Image
-                  src={product1}
-                  alt="product1"
-                  className="max-h-[65vh] object-cover"
-                />
-              </SwiperSlide>
-            </Swiper>
-            <Swiper
-              onSwiper={setThumbsSwiper}
-              spaceBetween={10}
-              slidesPerView={4}
-              freeMode={true}
-              watchSlidesProgress={true}
-              modules={[FreeMode, Navigation, Thumbs]}
-              className="mySwiper"
-            >
-              <SwiperSlide>
-                <Image
-                  src={product1}
-                  alt="product1"
-                  className="max-h-[165px] object-cover"
-                />
-              </SwiperSlide>
-              <SwiperSlide>
-                <Image
-                  src={product1}
-                  alt="product1"
-                  className="max-h-[165px] object-cover"
-                />
-              </SwiperSlide>
-              <SwiperSlide>
-                <Image
-                  src={product1}
-                  alt="product1"
-                  className="max-h-[165px] object-cover"
-                />
-              </SwiperSlide>
-              <SwiperSlide>
-                <Image
-                  src={product1}
-                  alt="product1"
-                  className="max-h-[165px] object-cover"
-                />
-              </SwiperSlide>
-              <SwiperSlide>
-                <Image
-                  src={product1}
-                  alt="product1"
-                  className="max-h-[165px] object-cover"
-                />
-              </SwiperSlide>
-              <SwiperSlide>
-                <Image
-                  src={product1}
-                  alt="product1"
-                  className="max-h-[165px] object-cover"
-                />
-              </SwiperSlide>
-              <SwiperSlide>
-                <Image
-                  src={product1}
-                  alt="product1"
-                  className="max-h-[165px] object-cover"
-                />
-              </SwiperSlide>
-              <SwiperSlide>
-                <Image
-                  src={product1}
-                  alt="product1"
-                  className="max-h-[165px] object-cover"
-                />
-              </SwiperSlide>
-              <SwiperSlide>
-                <Image
-                  src={product1}
-                  alt="product1"
-                  className="max-h-[165px] object-cover"
-                />
-              </SwiperSlide>
-              <SwiperSlide>
-                <Image
-                  src={product1}
-                  alt="product1"
-                  className="max-h-[165px] object-cover"
-                />
-              </SwiperSlide>
-            </Swiper>
+            {
+              productData.map((item, index) => {
+                return (
+                  <Swiper key={index}
+                    style={{
+                      "--swiper-navigation-color": "#000",
+                      "--swiper-pagination-color": "#000",
+                    }}
+                    spaceBetween={10}
+                    navigation={true}
+                    thumbs={{ swiper: thumbsSwiper }}
+                    modules={[FreeMode, Navigation, Thumbs]}
+                    className="mySwiper2"
+                  >
+                    <SwiperSlide className="border rounded-xl mb-2">
+                      <Image
+                        src={`/product-image/${item.ProductImages[0]?.sysFileName}`}
+                        width={200}
+                        height={200}
+                        alt="product1"
+                        className="max-h-[65vh] h-[613px] w-full object-contain"
+                      />
+                    </SwiperSlide>
+                  </Swiper>
+                )
+              })
+            }
+
+            {productData.map((item) => (
+                <Swiper key={item.id}
+                  onSwiper={setThumbsSwiper}
+                  spaceBetween={10}
+                  slidesPerView={4}
+                  freeMode={true}
+                  watchSlidesProgress={true}
+                  modules={[FreeMode, Navigation, Thumbs]}
+                  className="mySwiper"
+                >
+                  {item.ProductImages.map((img, index) => (
+                    <SwiperSlide key={index} className="shadow-md m-1">
+                      <Image
+                        src={`/product-image/${img.sysFileName}`}
+                        width={200} height={200}
+                        alt="product1"
+                        className="max-h-[165px] h-[100px] w-full object-contain"
+                      />
+                    </SwiperSlide>
+                  ))}
+                </Swiper>
+              ))
+            }
+
           </div>
           {
             productData?.map((item, index) => {
@@ -254,12 +139,6 @@ const ProductDetail = () => {
                           </>
                         ))
                       }
-                      {/* <div className="border border-black rounded-md px-3 py-2 text-sm h-[40px] w-[36px] flex justify-center items-center">
-                        M
-                      </div>
-                      <div className="border border-black rounded-md px-3 py-2 text-sm h-[40px] w-[36px] flex justify-center items-center">
-                        L
-                      </div> */}
                     </div>
                     <div className="text-[#000] text-[18px] mt-4 pt-4 border-t border-[#ddd]">
                       Product Details

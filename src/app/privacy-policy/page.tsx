@@ -177,7 +177,12 @@ function PrivacyPolicy() {
             may be able to change this setting in your browser and you can also
             clear your cookies. If you do, you may lose some functionality of
             our site. Check your browsers help function to learn more about your
-            cookie setting options. We may use the following types of cookies:
+            cookie setting options. 
+            <br></br>
+            <br></br>
+            We may use the following types of cookies:
+            <br></br>
+            <br></br>
             Advertising and analytics: These cookies collect information about
             who is visiting our site and how users engage with our site. This
             information does not identify any individual user. It is aggregated
@@ -192,21 +197,39 @@ function PrivacyPolicy() {
             better. These include cookies that all you access to a members only
             part of the site or help the content of our site load quickly. These
             cookies are only used to provide you with these services.
-            Functionality cookies: These cookies allow the site to remember
+            <br></br>
+            <br></br>
+            Functionality cookies: 
+            <br></br>
+            <br></br>
+            These cookies allow the site to remember
             preferences you have selected such as login details or other
             selections you may have made. These are designed to make it easier
             to use our site and not have to set the same preferences every time.
-            Social Media cookies: We use social media tools on our site and
+            <br></br>
+            <br></br>
+            Social Media cookies: 
+            <br></br>
+            <br></br>
+            We use social media tools on our site and
             these cookies allow the social media network to record when you have
             liked or engaged with a social media tool on our site. In some
             situations, the social network may send us data that you have set to
             share. f you do not want the social media network to share
             information with us, please check your privacy settings with the
-            social media network. Advertising cookies: These cookies allow you
+            social media network. 
+            <br></br>
+            <br></br>
+            Advertising cookies: 
+            <br></br>
+            <br></br>
+            These cookies allow you
             to track browsing habits as you visit the site. Based on your
             browsing history and with our permission, we use third party
             advertising partners who can then display to you a relevant ad when
             you are on a third-party site such as a social media platform.
+            <br></br>
+            <br></br>
             Within these cookies, we may also know your precise location such as
             latitude, longitude, GeoIP, and other location specific information.
             Please see below for your choices on cookies in the use of
@@ -239,7 +262,13 @@ function PrivacyPolicy() {
             primarily used to enable us to provide our services to you. In
             addition, Perfect Apparels is relying on the following lawful
             grounds to collect and process any personal data you may have
-            provided: Legitimate Business Interests: To provide you with
+            provided: 
+            <br></br>
+            <br></br>
+            Legitimate Business Interests: 
+            <br></br>
+            <br></br>
+            To provide you with
             information requested from us relating to our products or services
             and to provide information on other products which we feel may be of
             interest to you if you have consented to receive such information,
@@ -248,7 +277,13 @@ function PrivacyPolicy() {
             changes, that may affect our service. If you are an existing
             customer, we may contact you with information about goods and
             services similar to those which were the subject of a previous sale
-            to you. Performance of Contract: To meet our contractual commitments
+            to you. 
+            <br></br>
+            <br></br>
+            Performance of Contract: 
+            <br></br>
+            <br></br>
+            To meet our contractual commitments
             to you and in performance of contractual obligations to you. User
             Consent: We may use your data, or permit selected third parties to
             use your data, so that you can be provided with information about
@@ -282,7 +317,10 @@ function PrivacyPolicy() {
             such as marketing, advertising, communications, infrastructure and
             IT services, to provide customer service, to collect debts, and to
             analyze and enhance data (including data about users’ interactions
-            with our service). These Service Providers may have access to your
+            with our service). 
+            <br></br>
+            <br></br>
+            These Service Providers may have access to your
             personal or other information in order to provide these functions.
             In addition, some of the information we request may be collected by
             third party providers on our behalf. We do not authorize them to use
@@ -298,19 +336,30 @@ function PrivacyPolicy() {
             installing the Google Analytics opt-out browser add-on. The add-on
             prevents the Google Analytics JavaScript (ga.js, analytics.js, and
             dc.js) from sharing information with Google Analytics about visits
-            activity. For more information on the privacy practices of Google,
+            activity.
+            <br></br>
+            <br></br>
+             For more information on the privacy practices of Google,
+             <br></br>
+            <br></br>
             please visit the Google Privacy & Terms web page:
             http://www.google.com/intl/en/policies/privacy/ Google also
             recommends installing the Google Analytics Opt-out Browser
             Add-on—https://tools.google.com/dlpage/gaoptout—for your web
-            browser. Google Analytics Opt-out Browser Add-on provides visitors
+            browser. 
+            <br></br>
+            <br></br>
+            Google Analytics Opt-out Browser Add-on provides visitors
             with the ability to prevent their data from being collected and used
             by Google Analytics. Advertising. We may use third-party Service
             Providers to show advertisements, which may include targeted
             advertisements on a third party site after you have visited our
             website. We and the third party service providers use cookies to
             inform, optimize, measure performance serve ads based on your
-            previous visits to our site. Any tracking that a third party
+            previous visits to our site. 
+            <br></br>
+            <br></br>
+            Any tracking that a third party
             performs is subject to their own privacy notice. We work with Google
             AdSense & DoubleClick Cookie Google, as a third party vendor, uses
             cookies to serve ads on our site. Googles use of the DoubleClick
@@ -318,14 +367,25 @@ function PrivacyPolicy() {
             on their visit to our Service or other websites on the Internet. You
             may opt out of the use of the DoubleClick Cookie for interest-based
             advertising by visiting the Google Ads Settings web page:
-            http://www.google.com/ads/preferences/ Google AdWords/Analytics:
+            http://www.google.com/ads/preferences/ 
+            <br></br>
+            <br></br>
+            Google AdWords/Analytics:
+            <br></br>
+            <br></br>
             Google AdWords remarketing service is provided by Google Inc. You
             can opt-out of Google Analytics for Display Advertising and
             customize the Google Display Network ads by visiting the Google Ads
-            Settings page: http://www.google.com/settings/ads For more
+            Settings page: http://www.google.com/settings/ads 
+            <br></br>
+            <br></br>
+            For more
             information on the privacy practices of Google, please visit the
             Google Privacy & Terms web page at
-            http://www.google.com/intl/en/policies/privacy/ Twitter: You can
+            http://www.google.com/intl/en/policies/privacy/ 
+            <br></br>
+            <br></br>
+            Twitter: You can
             opt-out from Twitters interest-based ads by following their
             instructions: https://support.twitter.com/articles/20170405 You can
             learn more about the privacy practices and policies of Twitter by
@@ -333,7 +393,10 @@ function PrivacyPolicy() {
             opt-out from Facebooks interest-based ads follow these instructions
             from Facebook: https://www.facebook.com/help/568137493302217 To see
             more about Facebooks participation in the Digital Advertising
-            Alliance please visit the Choices section of this notice. For more
+            Alliance please visit the Choices section of this notice. 
+            <br></br>
+            <br></br>
+            For more
             information on the privacy practices of Facebook, please visit
             Facebooks Data Policy: https://www.facebook.com/privacy/explanation
             We may participate in Facebook.coms Custom Audience or LinkedIns
@@ -352,7 +415,13 @@ function PrivacyPolicy() {
             property of the public, any person, or Perfect Apparels as required
             by law; or to detect, prevent, or otherwise address, security or
             technical issues or illegal or suspected illegal activities
-            (including fraud). Business Transfers. We may engage in a merger,
+            (including fraud). 
+            <br></br>
+            <br></br>
+            Business Transfers. 
+            <br></br>
+            <br></br>
+            We may engage in a merger,
             acquisition, bankruptcy, dissolution, reorganization, or similar
             transaction or proceeding that involves the transfer of the
             information described in this Policy. In such transitions, customer
@@ -371,12 +440,18 @@ function PrivacyPolicy() {
             transfer, processing and storage of your information in the United
             States. It is important to note that the privacy laws in the United
             States may not be as comprehensive as those in other countries such
-            as the European Union. Our service providers use appropriate
+            as the European Union.
+            <br></br>
+            <br></br>
+             Our service providers use appropriate
             safeguards to transfer your personal data to the United States. We
             may transfer data that we collect from you to locations outside of
             headquarters for processing and storing. In addition, it may be
             processed by staff operating outside the office area who work for us
-            or for one of our suppliers. For example, such staff may be engaged
+            or for one of our suppliers. 
+            <br></br>
+            <br></br>
+            For example, such staff may be engaged
             in the processing and concluding of your order, the processing of
             your payment details and the provision of support services. By
             submitting your personal data, you agree to this transfer, storing
@@ -384,7 +459,10 @@ function PrivacyPolicy() {
             your data is treated securely and in agreement with this privacy
             policy. Data that is provided to us is stored on our secure servers.
             Details relating to any transactions entered into via our site will
-            be encrypted to ensure its safety. The transmission of information
+            be encrypted to ensure its safety. 
+            <br></br>
+            <br></br>
+            The transmission of information
             via the internet is not completely secure and therefore we cannot
             guarantee the security of data sent to us electronically and the
             transmission of such data is entirely at your own risk. Where we
@@ -425,7 +503,10 @@ function PrivacyPolicy() {
             hold about you To rectify any Personal Data held about you that is
             inaccurate To request the deletion of Personal Data held about you
             You have the right to data portability for the information you have
-            provided to us. You can request to obtain a copy of this information
+            provided to us. 
+            <br></br>
+            <br></br>
+            You can request to obtain a copy of this information
             in a commonly used electronic format so that you can manage and move
             it. We will need to verify your identity before being able to
             respond to such requests. Please note that in some case, we may not
@@ -481,7 +562,7 @@ function PrivacyPolicy() {
             write to us, then our contact address is: Lambe Hanuman Road, Surat
             <br></br>
             <br></br>
-            Phone: (+91) 8866993323
+            Phone: (+91) 99047 97335
           </div>
         </section>
       </div>

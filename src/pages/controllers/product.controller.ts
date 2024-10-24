@@ -85,6 +85,7 @@ export class ProductController extends HttpStatus {
     /** POST API: Create a new Product */
     public createProduct = async (res: NextApiResponse, params: any, files: any) => {
         try {
+            params.size_ids = params.size_ids.split(',').map(Number);
             const product: any = await Product.create(params);
 
             // Handle multiple images
@@ -158,6 +159,9 @@ export class ProductController extends HttpStatus {
             }
 
             // Update product
+            if (params.size_ids != null && params.size_ids != "") {
+                params.size_ids = params.size_ids.split(',').map(Number);
+            }
             await product.update(params);
 
             return this.sendOkResponse(res, "Product update successfully.", product);
@@ -176,7 +180,7 @@ export class ProductController extends HttpStatus {
             if (productImage.length > 0) {
                 for (const image of productImage) {
                     // Delete imange in folder
-                    const oldImagePath = path.resolve(`./src/pages/product-image/${image.sysFileName}`);
+                    const oldImagePath = path.resolve(`./public/product-image/${image.sysFileName}`);
                     if (fs.existsSync(oldImagePath)) {
                         fs.unlinkSync(oldImagePath);
                     }
