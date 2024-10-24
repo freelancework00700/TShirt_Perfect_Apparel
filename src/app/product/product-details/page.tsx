@@ -67,15 +67,19 @@ const ProductDetail = () => {
                     modules={[FreeMode, Navigation, Thumbs]}
                     className="mySwiper2"
                   >
-                    <SwiperSlide className="border rounded-xl mb-2">
-                      <Image
-                        src={`/product-image/${item.ProductImages[0]?.sysFileName}`}
-                        width={200}
-                        height={200}
-                        alt="product1"
-                        className="max-h-[65vh] h-[613px] w-full object-contain"
-                      />
-                    </SwiperSlide>
+                    {
+                      item.ProductImages.map((item, index) => (
+                        <SwiperSlide key={index} className="border rounded-xl mb-2">
+                          <Image
+                            src={`/product-image/${item.sysFileName}`}
+                            width={200}
+                            height={200}
+                            alt="product1"
+                            className="max-h-[65vh] h-[613px] w-full object-contain"
+                          />
+                        </SwiperSlide>
+                      ))
+                    }
                   </Swiper>
                 )
               })

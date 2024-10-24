@@ -398,7 +398,7 @@ function Admin() {
     formik.setFieldValue("category_id", item.category_id)
     formik.setFieldValue("subcategory_id", item.subcategory_id)
     formik.setFieldValue("color_id", item.color_id)
-    formik.setFieldValue("size_ids", item.size_ids)
+    formik.setFieldValue("size_ids", item.size_ids.toString())
     formik.setFieldValue("name", item.name)
     formik.setFieldValue("price", item.price)
     formik.setFieldValue("type", item.type)
