@@ -31,8 +31,8 @@ class Product extends Model {
                     allowNull: false,
                     defaultValue: '0.00'
                 },
-                color_id: {
-                    type: DataTypes.INTEGER(),
+                color_ids: {
+                    type: DataTypes.JSON,
                     allowNull: true
                 },
                 type: {
@@ -96,7 +96,7 @@ class Product extends Model {
                     allowNull: true
                 },
                 status: {
-                    type: DataTypes.ENUM('New Drops', 'Most Trending'),
+                    type: DataTypes.ENUM('New Drops', 'Most Trending', 'Not Display'),
                     allowNull: true
                 },
                 isDeleted: {
@@ -118,7 +118,6 @@ class Product extends Model {
         Product.hasMany(ProductImages, { foreignKey: 'product_id', sourceKey: 'id', onDelete: 'CASCADE' });
         Product.belongsTo(SubCategory, { foreignKey: 'subcategory_id', targetKey: 'id' });
         Product.belongsTo(Category, { foreignKey: 'category_id', targetKey: 'id' });
-        Product.belongsTo(Color, { foreignKey: 'color_id', targetKey: 'id' });
 
     }
 }

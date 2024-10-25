@@ -3,7 +3,7 @@
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
 import React, { useEffect, useState } from "react";
-import product1 from "../../../../public/Images/525eebd82dd31d96fd518e97e5234fe0_78eb7754-39e4-4adc-b66c-acbaa089bfe7.webp";
+// import product1 from "../../../../public/Images/525eebd82dd31d96fd518e97e5234fe0_78eb7754-39e4-4adc-b66c-acbaa089bfe7.webp";
 import Image from "next/image";
 import { Swiper, SwiperSlide } from "swiper/react";
 
@@ -24,6 +24,7 @@ const ProductDetail = () => {
   const search = searchParams?.get('id')
   const searchNumber = search ? Number(search) : null;
   const [productData, setProductData] = useState<IProduct[]>([]);
+  console.log('productData: ', productData);
   // const [allSize, setAllSize] = useState<ISize[]>([]);
 
 
@@ -31,9 +32,7 @@ const ProductDetail = () => {
     try {
       const response = await axios.get(`/api/product`)
       const productData = response.data?.data
-
       const findData = productData?.find((val: { id: number }) => val.id === searchNumber)
-      console.log('findData :>> ', findData);
       setProductData([findData])
     } catch (error) {
       console.error(error)
@@ -86,27 +85,27 @@ const ProductDetail = () => {
             }
 
             {productData.map((item) => (
-                <Swiper key={item.id}
-                  onSwiper={setThumbsSwiper}
-                  spaceBetween={10}
-                  slidesPerView={4}
-                  freeMode={true}
-                  watchSlidesProgress={true}
-                  modules={[FreeMode, Navigation, Thumbs]}
-                  className="mySwiper"
-                >
-                  {item.ProductImages.map((img, index) => (
-                    <SwiperSlide key={index} className="shadow-md m-1">
-                      <Image
-                        src={`/product-image/${img.sysFileName}`}
-                        width={200} height={200}
-                        alt="product1"
-                        className="max-h-[165px] h-[100px] w-full object-contain"
-                      />
-                    </SwiperSlide>
-                  ))}
-                </Swiper>
-              ))
+              <Swiper key={item.id}
+                onSwiper={setThumbsSwiper}
+                spaceBetween={10}
+                slidesPerView={4}
+                freeMode={true}
+                watchSlidesProgress={true}
+                modules={[FreeMode, Navigation, Thumbs]}
+                className="mySwiper"
+              >
+                {item.ProductImages.map((img, index) => (
+                  <SwiperSlide key={index} className="shadow-md m-1">
+                    <Image
+                      src={`/product-image/${img.sysFileName}`}
+                      width={200} height={200}
+                      alt="product1"
+                      className="max-h-[165px] h-[100px] w-full object-contain"
+                    />
+                  </SwiperSlide>
+                ))}
+              </Swiper>
+            ))
             }
 
           </div>
@@ -128,19 +127,17 @@ const ProductDetail = () => {
                       </div>
                     </div>
                     <div className="text-[#999] text-[14px]">
-                      Color: <span className="text-[#000]">{item.Color?.name}</span>
+                      Color: <span className="text-[#000]">{item.Colors.map((item) => item.name).join(',')}</span>
                     </div>
                     <div className="text-[#999] text-[14px] mt-4 pt-4 border-t border-[#ddd]">
                       Select A Size
                     </div>
                     <div className="flex justify-start gap-2 mt-2">
                       {
-                        item.Sizes?.map((item) => (
-                          <>
-                            <div className="border border-black rounded-md px-3 py-2 text-sm h-[40px] w-[36px] flex justify-center items-center">
-                              {item.name}
-                            </div>
-                          </>
+                        item.Sizes.map((item, index) => (
+                          <div key={index} className="border border-black rounded-md px-3 py-2 text-sm h-[40px] w-[36px] flex justify-center items-center">
+                            {item.name}
+                          </div>
                         ))
                       }
                     </div>

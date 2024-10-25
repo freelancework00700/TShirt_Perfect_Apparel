@@ -25,6 +25,7 @@ type SegmentKey = "newDrops" | "mostTrending";
 export default function Home() {
   const [activeSegment, setActiveSegment] = useState<SegmentKey>("newDrops");
   const [product, setProduct] = useState<IProduct[]>([]);
+  console.log('product:::::::::::::::::: ', product);
   console.log('product: ', product.map((item) => item));
   // const [category, setCategory] = useState<ICategories[]>([]);
   // console.log('category :>> ', category);
@@ -119,27 +120,27 @@ export default function Home() {
                 {product.filter(item => item.status === segments.newDrops.title).map(item => (
                   <SwiperSlide key={item.id}>
                     <div className="shadow-md h-full w-full m-2 rounded-lg">
-                    <Link href={`/product/product-details?id=${item.id}`}>
-                      <div className="productImage flex justify-center rounded-[12px] overflow-hidden">
-                        <Image
-                          src={`/product-image/${item.ProductImages[0]?.sysFileName}`}
-                          alt={item.name}
-                          width={200}
-                          height={200}
-                          className="min-h-[245px] max-h-[245px] object-cover"
-                        />
-                      </div>
-                      <div className="py-3 px-4">
-                        <div>
-                          <div className="font-bold">{item.name}</div>
-                          <div className="text-[#999] text-[14px]">{item.name}</div>
+                      <Link href={`/product/product-details?id=${item.id}`}>
+                        <div className="productImage flex justify-center rounded-[12px] overflow-hidden">
+                          <Image
+                            src={`/product-image/${item.ProductImages[0]?.sysFileName}`}
+                            alt={item.name}
+                            width={200}
+                            height={200}
+                            className="min-h-[245px] max-h-[245px] object-cover"
+                          />
                         </div>
-                        <div className="text-[#000] text-[16px] py-2">₹{item.price}</div>
-                        {/* <div className="text-[#999] text-[14px]">
+                        <div className="py-3 px-4">
+                          <div>
+                            <div className="font-bold">{item.name}</div>
+                            <div className="text-[#999] text-[14px]">{item.name}</div>
+                          </div>
+                          <div className="text-[#000] text-[16px] py-2">₹{item.price}</div>
+                          {/* <div className="text-[#999] text-[14px]">
                           Color: <span className="text-[#000]">{item.Color?.name}</span>
                         </div> */}
-                      </div>
-                    </Link>
+                        </div>
+                      </Link>
                     </div>
                   </SwiperSlide>
                 ))}
@@ -163,27 +164,27 @@ export default function Home() {
                       .map(item => (
                         <SwiperSlide key={item.id}>
                           <div className="shadow-md h-full w-full m-2 rounded-lg">
-                          <Link href={`/product/product-details?id=${item.id}`} >
-                            <div className="productImage flex justify-center rounded-[12px] overflow-hidden ">
-                              <Image
-                                src={`/product-image/${item.ProductImages[0]?.sysFileName}`}
-                                alt={item.name}
-                                width={200}
-                                height={200}
-                                className="min-h-[245px] max-h-[245px] object-cover"
-                              />
-                            </div>
-                            <div className="py-3 px-4">
-                              <div>
-                                <div className="font-bold">{item.name}</div>
-                                <div className="text-[#999] text-[14px]">{item.name}</div>
+                            <Link href={`/product/product-details?id=${item.id}`} >
+                              <div className="productImage flex justify-center rounded-[12px] overflow-hidden ">
+                                <Image
+                                  src={`/product-image/${item.ProductImages[0]?.sysFileName}`}
+                                  alt={item.name}
+                                  width={200}
+                                  height={200}
+                                  className="min-h-[245px] max-h-[245px] object-cover"
+                                />
                               </div>
-                              <div className="text-[#000] text-[20px] py-2">₹{item.price}</div>
-                              {/* <div className="text-[#999] text-[14px]">
+                              <div className="py-3 px-4">
+                                <div>
+                                  <div className="font-bold">{item.name}</div>
+                                  <div className="text-[#999] text-[14px]">{item.name}</div>
+                                </div>
+                                <div className="text-[#000] text-[20px] py-2">₹{item.price}</div>
+                                {/* <div className="text-[#999] text-[14px]">
                                 Color: <span className="text-[#000]">{item.Color?.name}</span>
                               </div> */}
-                            </div>
-                          </Link>
+                              </div>
+                            </Link>
                           </div>
                         </SwiperSlide>
                       ))
@@ -247,21 +248,21 @@ export default function Home() {
               {Tshirt.map((item) => (
                 <SwiperSlide key={item.id}>
                   <div className="shadow-md h-full w-full m-2 rounded-lg">
-                  <Link href={`/product/product-details?id=${item.id}`}>
-                    <div className="productImage flex justify-center rounded-[12px] overflow-hidden">
-                      <Image src={`/product-image/${item.ProductImages[0]?.sysFileName}`} alt={item.name} width={200} height={200} className="min-h-[245px] max-h-[245px] object-cover"/>
-                    </div>
-                    <div className="py-3 px-4">
-                      <div>
-                        <div className="font-bold">{item.name}</div>
-                        <div className="text-[#999] text-[14px]">{item.fit}</div>
+                    <Link href={`/product/product-details?id=${item.id}`}>
+                      <div className="productImage flex justify-center rounded-[12px] overflow-hidden">
+                        <Image src={`/product-image/${item.ProductImages[0]?.sysFileName}`} alt={item.name} width={200} height={200} className="min-h-[245px] max-h-[245px] object-cover" />
                       </div>
-                      <div className="text-[#000] text-[20px] py-2">₹{item.price}</div>
-                      {/* <div className="text-[#999] text-[14px]">
+                      <div className="py-3 px-4">
+                        <div>
+                          <div className="font-bold">{item.name}</div>
+                          <div className="text-[#999] text-[14px]">{item.fit}</div>
+                        </div>
+                        <div className="text-[#000] text-[20px] py-2">₹{item.price}</div>
+                        {/* <div className="text-[#999] text-[14px]">
                         Color: <span className="text-[#000]">{item.Color?.name}</span>
                       </div> */}
-                    </div>
-                  </Link>
+                      </div>
+                    </Link>
                   </div>
                 </SwiperSlide>
               ))}
@@ -288,24 +289,24 @@ export default function Home() {
                   return (
                     <>
                       <SwiperSlide>
-                      <div className="shadow-md h-full w-full m-2 rounded-lg">
-                        <Link href={`/product/product-details?id=${item.id}`}>
-                          <div key={index} className="productImage flex justify-center rounded-[12px] overflow-hidden">
-                            <Image src={`/product-image/${item.ProductImages[0]?.sysFileName}`} alt="track1" width={200} height={200} className="min-h-[245px] max-h-[245px] object-cover"></Image>
-                          </div>
-                          <div className="py-3 px-4">
-                            <div>
-                              <div className="font-bold">{item.name}</div>
-                              <div className="text-[#999] text-[14px]">
-                                {item.fit}
-                              </div>
+                        <div className="shadow-md h-full w-full m-2 rounded-lg">
+                          <Link href={`/product/product-details?id=${item.id}`}>
+                            <div key={index} className="productImage flex justify-center rounded-[12px] overflow-hidden">
+                              <Image src={`/product-image/${item.ProductImages[0]?.sysFileName}`} alt="track1" width={200} height={200} className="min-h-[245px] max-h-[245px] object-cover"></Image>
                             </div>
-                            <div className="text-[#000] text-[20px] py-2">₹{item.price}</div>
-                            {/* <div className="text-[#999] text-[14px]">
+                            <div className="py-3 px-4">
+                              <div>
+                                <div className="font-bold">{item.name}</div>
+                                <div className="text-[#999] text-[14px]">
+                                  {item.fit}
+                                </div>
+                              </div>
+                              <div className="text-[#000] text-[20px] py-2">₹{item.price}</div>
+                              {/* <div className="text-[#999] text-[14px]">
                               Color: <span className="text-[#000]">{item?.Color?.name}</span>
                             </div> */}
-                          </div>
-                        </Link>
+                            </div>
+                          </Link>
                         </div>
                       </SwiperSlide>
                     </>

@@ -1,10 +1,19 @@
+"use client"
+
+import React from "react";
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import React from "react";
+import { useRouter } from "next/navigation";
 
 function CustomerService() {
+  const router = useRouter();
+
+  const handleRetrunBack = () => {
+    router.push('/product')
+  }
+
   return (
     <main className="max-[1024px]:mt-[77px] relative">
       <Header />
@@ -77,7 +86,7 @@ function CustomerService() {
                 purchase, we are here to help.
               </div>
               <div className="flex justify-center mt-6">
-                <Button className="px-10">Return My Product</Button>
+                <Button onClick={handleRetrunBack} className="px-10">Return My Product</Button>
               </div>
             </div>
           </div>

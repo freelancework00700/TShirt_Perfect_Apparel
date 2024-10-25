@@ -50,8 +50,7 @@ export class ProductController extends HttpStatus {
                 include: [
                     { model: ProductImages, required: false, where: { isDeleted: false } },
                     { model: Category },
-                    { model: SubCategory },
-                    { model: Color }
+                    { model: SubCategory }
                 ],
                 where
             });
@@ -61,6 +60,7 @@ export class ProductController extends HttpStatus {
             }
 
             for (const product of products) {
+                // Add size data
                 if (product.size_ids) {
                     const sizes = await Size.findAll({
                         where: {
@@ -72,6 +72,21 @@ export class ProductController extends HttpStatus {
                     product.dataValues.Sizes = sizes;
                 } else {
                     product.dataValues.Sizes = [];
+                }
+
+                // Add color data
+                if (product.color_ids) {
+                    const colors = await Color.findAll({
+                        where: {
+                            id: {
+                                [Op.in]: product.color_ids,
+                            }
+                        }
+                    });
+                    console.log('colors: ', colors);
+                    product.dataValues.Colors = colors;
+                } else {
+                    product.dataValues.Colors = [];
                 }
             }
 
@@ -85,7 +100,13 @@ export class ProductController extends HttpStatus {
     /** POST API: Create a new Product */
     public createProduct = async (res: NextApiResponse, params: any, files: any) => {
         try {
+            // Conver size id string to array
             params.size_ids = params.size_ids.split(',').map(Number);
+
+            // Conver color id string to array
+            params.color_ids = params.color_ids.split(',').map(Number);
+
+            // Create product
             const product: any = await Product.create(params);
 
             // Handle multiple images
@@ -158,10 +179,17 @@ export class ProductController extends HttpStatus {
                 await ProductImages.bulkCreate(productImages);
             }
 
-            // Update product
+            // Conver size id string to array
             if (params.size_ids != null && params.size_ids != "") {
                 params.size_ids = params.size_ids.split(',').map(Number);
             }
+
+            // Conver color id string to array
+            if (params.color_ids != null && params.color_ids != "") {
+                params.color_ids = params.color_ids.split(',').map(Number);
+            }
+
+            // Update product
             await product.update(params);
 
             return this.sendOkResponse(res, "Product update successfully.", product);

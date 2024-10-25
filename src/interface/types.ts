@@ -1,6 +1,6 @@
 export interface IProduct {
-    category_id: number
-    color_id: number
+    category_id: number,
+    color_ids: number,
     createdAt: string,
     fabric: string,
     fabric_care: string,
@@ -31,21 +31,21 @@ export interface IProduct {
         createdAt: string,
         updatedAt: string,
     }
-    Color: {
+    Colors: [{
         id: number,
         name: string,
         isDeleted: boolean,
         createdAt: string,
         updatedAt: string,
-    },
+    }],
     ProductImages: ProductImages[],
-    Sizes: {
+    Sizes: [{
         createdAt: string,
         id: number,
         isDeleted: boolean,
         name: string,
         updatedAt: string,
-    },
+    }],
     SubCategory: {
         category_id: number,
         createdAt: string,

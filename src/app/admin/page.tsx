@@ -28,6 +28,14 @@ import { ICategories, IColor, IProduct, ISize, ISubCategories } from "@/interfac
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
 import Image from "next/image";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
+import { Bounce, ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { Skeleton } from "@/components/ui/skeleton";
+import { useRouter } from "next/navigation";
+
+
+
 
 function Admin() {
 
@@ -39,7 +47,6 @@ function Admin() {
   const [password, setPassword] = useState<string>("");
   const [error, setError] = useState<string>("");
   const [allProduct, setAllProduct] = useState<IProduct[]>([]);
-  console.log('allProduct: ', allProduct);
   const [category, setCategory] = useState("")
   const [subCategory, setSubCategory] = useState("")
   const [colors, setColors] = useState("")
@@ -60,9 +67,13 @@ function Admin() {
   const [viewProductData, setViewProductData] = useState<IProduct[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const recordsPerPage = 10;
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isDeleteSizeDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [isCategoryDialogOpen, setIsCategoryDialogOpen] = useState(false);
 
 
 
+  const router = useRouter();
   const loginCredentials = [{ email: 'abc@gmail.com', password: 'Abc@123' },
   { email: 'test@gmail.com', password: 'test@123' }]
 
@@ -91,19 +102,6 @@ function Admin() {
     setEmail("");
     setPassword("");
   };
-
-  // const handleChangePage = (event: unknown, newPage: number) => {
-  //   setPage(newPage);
-  // };
-
-  // const handleChangePage = (event: unknown, newPage: number) => {
-  //   setPage(newPage);
-  // };
-
-  // const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
-  //   setRowsPerPage(+event.target.value);
-  //   setPage(0);
-  // };
 
   const getAllProduct = async () => {
     try {
@@ -167,15 +165,43 @@ function Admin() {
     // console.log('editResponse :>> ', editResponse);
   }
 
+  const openDeleteCategoryDialog = (id: number) => {
+    setSelectedCategoryId(id);
+    setIsCategoryDialogOpen(true);
+  };
+
   const handleAddCategory = async () => {
     try {
       if (selectedCategoryId) {
         const editResponse = await axios.put(`/api/category`, { id: selectedCategoryId, name: category })
         console.log('editResponse :>> ', editResponse);
         setOpenModel(false)
+        toast.success(editResponse.data.message, {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+          transition: Bounce,
+        });
+        getAllCategory();
       } else {
-        await axios.post('/api/category', { name: category })
+        const response = await axios.post('/api/category', { name: category })
         setOpenModel(false)
+        toast.success(response.data.message, {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+          transition: Bounce,
+        });
         getAllCategory();
       }
     } catch (error) {
@@ -185,7 +211,18 @@ function Admin() {
 
   const handleDeleteCategory = async (id: number) => {
     try {
-      await axios.delete(`/api/category?id=${id}`)
+      const response = await axios.delete(`/api/category?id=${id}`)
+      toast.success(response.data.message, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+        transition: Bounce,
+      });
       getAllCategory();
     } catch (error) {
       console.error(error)
@@ -202,24 +239,47 @@ function Admin() {
   }
 
   const handleEditSize = async (item: ICategories) => {
-    console.log('item :>> ', item);
     setOpenModel(true)
     setSize(item.name)
     setSelectedSizeId(item.id)
   }
 
+  const openSizeDialog = (id: number) => {
+    console.log('id: ', id);
+    setSelectedSizeId(id);
+    setIsDeleteDialogOpen(true);
+  };
+
   const handleAddSize = async () => {
-    console.log('selectedCategory :>> ', selectedCategory);
     try {
       if (selectedSizeId) {
-        console.log('selectedSizeId :>> ', selectedSizeId);
-        const editSizeResponse = await axios.put(`/api/size`, { id: selectedSizeId, name: size, category_id: selectedCategory })
+        const editSizeResponse = await axios.put(`/api/size`, { id: selectedSizeId, name: size, category_id: selectedCategory.id })
         console.log('editSizeResponse :>> ', editSizeResponse);
+        toast.success(editSizeResponse.data.message, {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+          transition: Bounce,
+        });
         getAllSize();
       } else {
-        console.log('size: ', size);
         const sizeResponse = await axios.post(`/api/size`, { name: size, category_id: selectedCategory?.id })
-        console.log('sizeResponse :>> ', sizeResponse);
+        toast.success(sizeResponse.data.message, {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+          transition: Bounce,
+        });
         getAllSize();
       }
       setOpenModel(false)
@@ -228,13 +288,25 @@ function Admin() {
     }
   }
 
-  const handleDeleteSize = async (id: number) => {
-    try {
-      await axios.delete(`/api/size?id=${id}`)
-      getAllSize();
-    } catch (error) {
-      console.error(error)
-    }
+  const handleDeleteSize = async (id: any) => {
+    console.log('iddddddd: ', id.id);
+    // try {
+    //   const response = await axios.delete(`/api/size?id=${id}`)
+    //   toast.success(response.data.message, {
+    //     position: "top-right",
+    //     autoClose: 5000,
+    //     hideProgressBar: false,
+    //     closeOnClick: true,
+    //     pauseOnHover: true,
+    //     draggable: true,
+    //     progress: undefined,
+    //     theme: "light",
+    //     transition: Bounce,
+    //   });
+    //   getAllSize();
+    // } catch (error) {
+    //   console.error(error)
+    // }
   }
 
   const handleDeleteProduct = async (id: number) => {
@@ -249,9 +321,13 @@ function Admin() {
   const handleEditColor = async (item: IColor) => {
     setOpenModel(true)
     setColors(item.name)
-    console.log('item :>> ', item);
     setSelectedColorId(item.id)
   }
+
+  const openDeleteDialog = (id: number) => {
+    setSelectedColorId(id);
+    setIsDialogOpen(true);
+  };
 
   const handleAddColor = async () => {
     try {
@@ -259,11 +335,33 @@ function Admin() {
         const editResponse = await axios.put(`/api/color`, { id: selectedColorId, name: colors })
         console.log('editResponse :>> ', editResponse);
         setOpenModel(false)
+        toast.success(editResponse.data.message, {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+          transition: Bounce,
+        });
         getAllColor();
       } else {
         const colorResponse = await axios.post(`/api/color`, { name: colors })
         console.log('colorResponse :>> ', colorResponse);
         setOpenModel(false)
+        toast.success(colorResponse.data.message, {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+          transition: Bounce,
+        });
         getAllColor();
       }
     } catch (error) {
@@ -272,16 +370,32 @@ function Admin() {
   }
 
   const handleDeleteColor = async (id: number) => {
-    try {
-      await axios.delete(`/api/color?id=${id}`)
-      getAllColor();
-    } catch (error) {
-      console.error(error)
+    if (selectedColorId !== null) {
+      try {
+        const response = await axios.delete(`/api/color?id=${id}`)
+        console.log('response.data.message :>> ', response.data.message);
+        toast.success(response.data.message, {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+          transition: Bounce,
+        });
+        getAllColor();
+      } catch (error) {
+        console.error(error)
+      } finally {
+        setIsDialogOpen(false);
+        setSelectedColorId(null);
+      }
     }
   }
 
   const handleViewProduct = async (item: IProduct) => {
-    console.log('item', item);
     setViewProductData([item]);
     setViewProduct(true)
   }
@@ -290,7 +404,7 @@ function Admin() {
     initialValues: {
       category_id: "",
       subcategory_id: "",
-      color_id: "",
+      color_ids: "",
       size_ids: "",
       name: "",
       price: "",
@@ -314,7 +428,7 @@ function Admin() {
     validationSchema: yup.object({
       category_id: yup.string().required("Select a category"),
       subcategory_id: yup.string().required("Select a sub category"),
-      color_id: yup.string().required("Select a color"),
+      color_ids: yup.string().required("Select a color"),
       size_ids: yup.string().required("Select a size"),
       name: yup.string().min(1).max(100).required("Enter product name"),
       price: yup.string().min(1).max(30).required("Enter price"),
@@ -336,11 +450,10 @@ function Admin() {
       images: yup.array().min(1, "At least one file is required").required("Required"),
     }),
     onSubmit: async (values) => {
-      console.log('FINALVALUES........>>>>>>>>>>>>>>', values);
       const formData = new FormData();
       formData.append("category_id", values.category_id)
       formData.append("subcategory_id", values.subcategory_id)
-      formData.append("color_id", values.color_id)
+      formData.append("color_ids", values.color_ids)
       formData.append("size_ids", values.size_ids)
       console.log('values.size_ids: ', values.size_ids);
       formData.append("name", values.name)
@@ -389,7 +502,7 @@ function Admin() {
     },
   });
 
-  console.log('formik.values :>> ', formik.values);
+  // console.log('formik.values :>> ', formik.values);
 
   const handleEditProduct = async (item: IProduct) => {
     console.log('DATA>>>>>>>>>>>>>>>>> ', item);
@@ -397,7 +510,7 @@ function Admin() {
     setId(item.id.toString())
     formik.setFieldValue("category_id", item.category_id)
     formik.setFieldValue("subcategory_id", item.subcategory_id)
-    formik.setFieldValue("color_id", item.color_id)
+    formik.setFieldValue("color_ids", item.color_ids?.toString())
     formik.setFieldValue("size_ids", item.size_ids.toString())
     formik.setFieldValue("name", item.name)
     formik.setFieldValue("price", item.price)
@@ -417,7 +530,6 @@ function Admin() {
     formik.setFieldValue("status", item.status)
     formik.setFieldValue("sales_package", item.sales_package)
     const imageFilenames: any = item.ProductImages.map((image) => image.fileName);
-    console.log('imageFilenames: ', imageFilenames);
     formik.setFieldValue("images", imageFilenames);
     setSelectedImages(imageFilenames)
   }
@@ -458,7 +570,6 @@ function Admin() {
   const removeImage = (item: number) => {
     console.log('item :>> ', item);
     const updatedImages = selectedImages.filter((_, i) => i !== item);
-    console.log('updatedImages: ', updatedImages);
     setSelectedImages(updatedImages);
     formik.setFieldValue("images", updatedImages);
   }
@@ -469,7 +580,7 @@ function Admin() {
     formData.append("id", item.id.toString());
     formData.append("category_id", item.category_id.toString());
     formData.append("subcategory_id", item.subcategory_id.toString());
-    formData.append("color_id", item.color_id.toString());
+    formData.append("color_ids", item.color_ids.toString());
     formData.append("size_ids", item.size_ids.toString());
     formData.append("name", item.name);
     formData.append("price", item.price);
@@ -502,6 +613,41 @@ function Admin() {
       console.error(error)
     }
   }
+  // const [sizeIds, setSizeIds] = useState<string>('');
+
+  const handleCheckboxChange = async (id: string) => {
+    console.log(id, "iddddd")
+    const selectedIds = new Set(formik.values.size_ids.split(',').filter(Boolean)); // Use a Set to handle uniqueness
+    console.log('selectedIds: ', selectedIds);
+    if (selectedIds.has(id)) {
+      selectedIds.delete(id);
+    } else {
+      selectedIds.add(id);
+    }
+    formik.setFieldValue('size_ids', Array.from(selectedIds).join(',')); // Convert back to string
+
+    // formik.setFieldValue("size_ids", id)
+    // formik.setFieldValue('size_ids', (prev: string) => {
+    //   const selectedIds = prev.split(',').filter(Boolean); // Split and filter empty strings
+    //   if (selectedIds.includes(id)) {
+    //     return selectedIds.filter((sizeId) => sizeId !== id).join(','); // Remove ID and join
+    //   } else {
+    //     return [...selectedIds, id].join(','); // Add ID and join
+    //   }
+    // });
+  }
+
+  const handleColorCheckBoxChange = async (id: string) => {
+    console.log('iddddd :>> ', id);
+    const selectedIds = new Set(formik.values.color_ids?.split(',').filter(Boolean)); // Use a Set to handle uniqueness
+    console.log('selectedIds: ', selectedIds);
+    if (selectedIds.has(id)) {
+      selectedIds.delete(id);
+    } else {
+      selectedIds.add(id);
+    }
+    formik.setFieldValue('color_ids', Array.from(selectedIds).join(','));
+  }
 
   const totalPages = Math.ceil(allProduct.length / recordsPerPage);
   const currentProducts = allProduct.slice(
@@ -533,8 +679,10 @@ function Admin() {
   };
 
 
+
   return (
     <>
+      <ToastContainer />
       <main className="relative max-h-[100vh]">
         {!adminShow ? (
           <div className="bg-gray-100 h-[100vh]">
@@ -582,10 +730,8 @@ function Admin() {
         ) : (
           <>
             <div className="relative flex w-full" style={{ flex: "1 1 auto" }}>
-              <div
-                className="h-[100vh] w-[300px] min-w-[280px] max-w-[280px] bg-black text-white sticky flex flex-col top-0 min-h-[100vh] max-h-[100vh] z-[200]"
-                style={{ flex: "1 0 auto" }}
-              >
+              <div className="h-[100vh] w-[300px] min-w-[280px] max-w-[280px] bg-black text-white sticky flex flex-col top-0 min-h-[100vh] max-h-[100vh] z-[200]"
+                style={{ flex: "1 0 auto" }}>
                 <div className="font-bold text-[24px] p-[10px]">
                   Perfect Apparels
                 </div>
@@ -605,76 +751,87 @@ function Admin() {
                   <div onClick={() => setPage(5)} className={`${page === 5 && "bg-[#222]"} hover:bg-[#141414] p-2 px-5 rounded-md cursor-pointer`}>
                     Color
                   </div>
+                  <div className="mt-48">
+                    <div onClick={() => router.push('/')}
+                      className="p-2 px-5 mt-80 rounded-md cursor-pointer text-lg font-semibold">
+                      Back To Website
+                    </div>
+                  </div>
                 </div>
               </div>
               {viewProduct && (
-                  <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-10">
-                    <div className="w-[700px] p-7 max-h-[600px] mt-20 bg-white rounded-lg shadow-lg relative overflow-y-auto">
-                      <h2 className="text-2xl font-semibold mb-4">Product Details</h2>
-                      {
-                        viewProductData?.map((item) => (
-                          <>
-                            <div key={item.id} className="mb-2">
-                              <span className="font-bold">Category:</span> {item.Category?.name}
-                            </div>
-                            <div className="mb-2">
-                              <span className="font-bold">Name:</span>{item.name}
-                            </div>
-                            <div className="mb-2">
-                              <span className="font-bold">Price:</span>{item.price}
-                            </div>
-                            <div className="mb-2">
-                              <span className="font-bold">Type:</span>{item.sleeve}
-                            </div>
-                            <div className="mb-2">
-                              <span className="font-bold">Fabric:</span>{item.sleeve}
-                            </div>
-                            <div className="mb-2">
-                              <span className="font-bold">Sales Package:</span>{item.sales_package}
-                            </div>
-                            <div className="mb-2">
-                              <span className="font-bold">Style Code:</span>{item.style_code}
-                            </div>
-                            <div className="mb-2">
-                              <span className="font-bold">Neck Type:</span>{item.neck_type}
-                            </div>
-                            <div className="mb-2">
-                              <span className="font-bold">Pattern:</span>{item.pattern}
-                            </div>
-                            <div className="mb-2">
-                              <span className="font-bold">Fabric Care:</span>{item.fabric_care}
-                            </div>
-                            <div className="mb-2">
-                              <span className="font-bold">Net Quantity:</span>{item.net_quantity}
-                            </div>
-                            <div className="mb-2">
-                              <span className="font-bold">Status:</span>{item.status}
-                            </div>
-                            <div className="mb-2">
-                              <span className="font-bold">Images:</span>
-                              {
-                                item.ProductImages.map((image, index) => (
-                                  <div key={index}>
-                                    <Image src={`/product-image/${image.sysFileName}`}
-                                      width={200} height={200} alt="Product image"
-                                    />
-                                  </div>
-                                ))
-                              }
-                            </div>
-                          </>
-                        ))
-                      }
-                      <button onClick={() => setViewProduct(false)}
-                        className="absolute top-2 right-2 text-gray-500 hover:text-gray-700"
-                      >
-                        ✖️
-                      </button>
-                    </div>
+                <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-10">
+                  <div className="w-[700px] p-7 max-h-[600px] mt-20 bg-white rounded-lg shadow-lg relative overflow-y-auto">
+                    <h2 className="text-2xl font-semibold mb-4">Product Details</h2>
+                    {
+                      viewProductData?.map((item) => (
+                        <>
+                          <div key={item.id} className="mb-2">
+                            <span className="font-bold">Category:</span> {item.Category?.name}
+                          </div>
+                          <div className="mb-2">
+                            <span className="font-bold">Name:</span>{item.name}
+                          </div>
+                          <div className="mb-2">
+                            <span className="font-bold">Price:</span>{item.price}
+                          </div>
+                          <div className="mb-2">
+                            <span className="font-bold">Colors:</span>{item.Colors.map(color => color.name).join(',')}
+                          </div>
+                          <div className="mb-2">
+                            <span className="font-bold">Type:</span>{item.sleeve}
+                          </div>
+                          <div className="mb-2">
+                            <span className="font-bold">Fabric:</span>{item.sleeve}
+                          </div>
+                          <div className="mb-2">
+                            <span className="font-bold">Sales Package:</span>{item.sales_package}
+                          </div>
+                          <div className="mb-2">
+                            <span className="font-bold">Style Code:</span>{item.style_code}
+                          </div>
+                          <div className="mb-2">
+                            <span className="font-bold">Neck Type:</span>{item.neck_type}
+                          </div>
+                          <div className="mb-2">
+                            <span className="font-bold">Pattern:</span>{item.pattern}
+                          </div>
+                          <div className="mb-2">
+                            <span className="font-bold">Fabric Care:</span>{item.fabric_care}
+                          </div>
+                          <div className="mb-2">
+                            <span className="font-bold">Net Quantity:</span>{item.net_quantity}
+                          </div>
+                          <div className="mb-2">
+                            <span className="font-bold">Status:</span>{item.status}
+                          </div>
+                          <div className="mb-2">
+                            <span className="font-bold">Images:</span>
+                            {
+                              item.ProductImages.map((image, index) => (
+                                <div key={index}>
+                                  <Image src={`/product-image/${image.sysFileName}`}
+                                    width={200} height={200} alt="Product image"
+                                  />
+                                </div>
+                              ))
+                            }
+                          </div>
+                        </>
+                      ))
+                    }
+                    <button onClick={() => setViewProduct(false)}
+                      className="absolute top-2 right-2 text-gray-500 hover:text-gray-700"
+                    >
+                      ✖️
+                    </button>
                   </div>
-                )
+                </div>
+              )
               }
+
               <div className="w-full p-5 max-h-[100vh] bg-[#eee]">
+
                 {
                   page === 1 &&
                   <>
@@ -755,9 +912,9 @@ function Admin() {
                               </div>
 
                               <div className="col-span-4">
-                                <Label>Color</Label>
-                                <Select value={formik.values.color_id.toString()}
-                                  onValueChange={(value) => formik.setFieldValue('color_id', value)}>
+                                {/* <Label>Color</Label>
+                                <Select value={formik.values.color_ids?.toString()}
+                                  onValueChange={(value) => formik.setFieldValue('color_ids', value)}>
                                   <SelectTrigger className="w-[180px]">
                                     <SelectValue placeholder="Select a color" />
                                   </SelectTrigger>
@@ -769,11 +926,31 @@ function Admin() {
                                       ))}
                                     </SelectGroup>
                                   </SelectContent>
-                                </Select>
+                                </Select> */}
                               </div>
 
                               <div className="col-span-4">
-                                <Label>Size</Label>
+                                <Label>Color</Label>
+                                <div className="w-[180px]">
+                                  <div className="border rounded p-2">
+                                    {allColors.map((item) => (
+                                      <label key={item.id} className="flex items-center">
+                                        <input
+                                          type="checkbox"
+                                          value={item.id.toString()}
+                                          checked={formik.values.color_ids?.split(',').includes(item.id.toString())}
+                                          onChange={() => handleColorCheckBoxChange(item.id.toString())}
+                                          className="mr-2"
+                                        />
+                                        {item.name}
+                                      </label>
+                                    ))}
+                                  </div>
+                                </div>
+                              </div>
+
+                              <div className="col-span-4">
+                                {/* <Label>Size</Label>
                                 <Select value={formik.values.size_ids?.toString()}
                                   onValueChange={(value) => {
                                     formik.setFieldValue('size_ids', value.toString());
@@ -792,7 +969,27 @@ function Admin() {
                                       ))}
                                     </SelectGroup>
                                   </SelectContent>
-                                </Select>
+                                </Select> */}
+                              </div>
+
+                              <div className="col-span-4">
+                                <Label>Size</Label>
+                                <div className="w-[180px]">
+                                  <div className="border rounded p-2">
+                                    {filteredSize.map((item) => (
+                                      <label key={item.id} className="flex items-center">
+                                        <input
+                                          type="checkbox"
+                                          value={item.id.toString()}
+                                          checked={formik.values.size_ids.split(',').includes(item.id.toString())}
+                                          onChange={() => handleCheckboxChange(item.id.toString())}
+                                          className="mr-2"
+                                        />
+                                        {item.name}
+                                      </label>
+                                    ))}
+                                  </div>
+                                </div>
                               </div>
 
                               <div className="col-span-4">
@@ -1023,7 +1220,7 @@ function Admin() {
                                       <ul>
                                         {selectedImages.map((file, index) => (
                                           <>
-                                            <li key={index} className="flex items-center justify-between">{file.name}</li>
+                                            <li key={index} className="flex items-center justify-between">{file.name || file}</li>
                                             <button type="button"
                                               onClick={() => removeImage(index)}
                                               className="text-red-500 ml-4"
@@ -1081,14 +1278,14 @@ function Admin() {
                                       onValueChange={(value) => handleUpdateStatus(item, value)}
                                     >
                                       <div className="flex gap-1 items-center whitespace-nowrap">
-                                       <RadioGroupItem value="New Drops" />New Drops
-                                       </div>
-                                       <div className="flex gap-1 items-center whitespace-nowrap">
-                                       <RadioGroupItem value="Most Trending" />Most Trending
-                                       </div>
-                                       <div className="flex gap-1 items-center whitespace-nowrap">
-                                       <RadioGroupItem value="Not Display" />Not Display
-                                       </div>
+                                        <RadioGroupItem value="New Drops" />New Drops
+                                      </div>
+                                      <div className="flex gap-1 items-center whitespace-nowrap">
+                                        <RadioGroupItem value="Most Trending" />Most Trending
+                                      </div>
+                                      <div className="flex gap-1 items-center whitespace-nowrap">
+                                        <RadioGroupItem value="Not Display" />Not Display
+                                      </div>
                                     </RadioGroup>
                                   </TableCell>
                                   <TableCell>{item.style_code}</TableCell>
@@ -1098,8 +1295,8 @@ function Admin() {
                                   <TableCell>{item.net_quantity}</TableCell>
                                   <TableCell>
                                     <div className="flex items-center gap-1">
-                                      <svg onClick={() => handleViewProduct(item)} 
-                                      className="cursor-pointer w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                      <svg onClick={() => handleViewProduct(item)}
+                                        className="cursor-pointer w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
                                         <path stroke="currentColor" stroke-width="2" d="M21 12c0 1.2-4.03 6-9 6s-9-4.8-9-6c0-1.2 4.03-6 9-6s9 4.8 9 6Z" />
                                         <path stroke="currentColor" stroke-width="2" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
                                       </svg>
@@ -1108,8 +1305,8 @@ function Admin() {
                                           <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m14.304 4.844 2.852 2.852M7 7H4a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1v-4.5m2.409-9.91a2.017 2.017 0 0 1 0 2.853l-6.844 6.844L8 14l.713-3.565 6.844-6.844a2.015 2.015 0 0 1 2.852 0Z" />
                                         </svg>
                                       </div>
-                                      <svg onClick={() => handleDeleteProduct(item.id)} 
-                                      className="cursor-pointer w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                      <svg onClick={() => handleDeleteProduct(item.id)}
+                                        className="cursor-pointer w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
                                         <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 7h14m-9 3v8m4-8v8M10 3h4a1 1 0 0 1 1 1v3H9V4a1 1 0 0 1 1-1ZM6 7h12v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7Z" />
                                       </svg>
                                     </div>
@@ -1215,37 +1412,56 @@ function Admin() {
                       </Dialog>
                     </div>
                     <Paper sx={{ width: '100%', overflow: 'hidden', borderRadius: '12px' }}>
-                        <TableContainer className="table-scrollable h-[calc(100vh_-_100px)] overflow-auto">
-                            <Table>
-                              <TableHead>
-                                <TableRow>
-                                  <TableCell>Category ID</TableCell>
-                                  <TableCell>Name</TableCell>
-                                  <TableCell>Action</TableCell>
-                                </TableRow>
-                              </TableHead>
-                              <TableBody>
-                                {
-                                  allCategory.map((item, index) => (
-                                    <TableRow key={index}>
-                                      <TableCell>{item.id}</TableCell>
-                                      <TableCell>{item.name}</TableCell>
-                                      <TableCell>
-                                        <div className="flex items-center gap-1">
-                                          <svg onClick={() => handleEditCategory(item)} className="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m14.304 4.844 2.852 2.852M7 7H4a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1v-4.5m2.409-9.91a2.017 2.017 0 0 1 0 2.853l-6.844 6.844L8 14l.713-3.565 6.844-6.844a2.015 2.015 0 0 1 2.852 0Z" />
-                                          </svg>
-                                          <svg onClick={() => handleDeleteCategory(item.id)} className="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                      <TableContainer className="table-scrollable h-[calc(100vh_-_100px)] overflow-auto">
+                        <Table>
+                          <TableHead>
+                            <TableRow>
+                              <TableCell>Category ID</TableCell>
+                              <TableCell>Name</TableCell>
+                              <TableCell>Action</TableCell>
+                            </TableRow>
+                          </TableHead>
+                          <TableBody>
+                            {
+                              allCategory.map((item, index) => (
+                                <TableRow key={index}>
+                                  <TableCell>{item.id}</TableCell>
+                                  <TableCell>{item.name}</TableCell>
+                                  <TableCell>
+                                    <div className="flex items-center gap-1">
+                                      <svg onClick={() => handleEditCategory(item)} className="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m14.304 4.844 2.852 2.852M7 7H4a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1v-4.5m2.409-9.91a2.017 2.017 0 0 1 0 2.853l-6.844 6.844L8 14l.713-3.565 6.844-6.844a2.015 2.015 0 0 1 2.852 0Z" />
+                                      </svg>
+                                      <AlertDialog open={isCategoryDialogOpen} onOpenChange={setIsCategoryDialogOpen}>
+                                        <AlertDialogTrigger>
+                                          <svg onClick={() => openDeleteCategoryDialog(item.id)} className="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
                                             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 7h14m-9 3v8m4-8v8M10 3h4a1 1 0 0 1 1 1v3H9V4a1 1 0 0 1 1-1ZM6 7h12v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7Z" />
                                           </svg>
-                                        </div>
-                                      </TableCell>
-                                    </TableRow>
-                                  ))
-                                }
-                              </TableBody>
-                            </Table>
-                          </TableContainer>
+                                        </AlertDialogTrigger>
+                                        <AlertDialogContent>
+                                          <AlertDialogHeader>
+                                            <AlertDialogTitle>
+                                              Are you sure you want to delete this category
+                                            </AlertDialogTitle>
+                                            <AlertDialogDescription>
+                                              Are you sure you want to delete this category
+                                              <span className="font-extrabold">{item.name}</span>? This action cannot be undone.
+                                            </AlertDialogDescription>
+                                          </AlertDialogHeader>
+                                          <AlertDialogFooter>
+                                            <AlertDialogCancel onClick={() => setIsCategoryDialogOpen(false)}>Cancel</AlertDialogCancel>
+                                            <AlertDialogAction onClick={() => handleDeleteCategory(item.id)}>Continue</AlertDialogAction>
+                                          </AlertDialogFooter>
+                                        </AlertDialogContent>
+                                      </AlertDialog>
+                                    </div>
+                                  </TableCell>
+                                </TableRow>
+                              ))
+                            }
+                          </TableBody>
+                        </Table>
+                      </TableContainer>
                     </Paper>
                   </>
                 }
@@ -1321,20 +1537,20 @@ function Admin() {
                           </form>
                         </DialogContent>
                       </Dialog>
-                    </div>                    
-                      <Paper sx={{ width: '100%', overflow: 'hidden', borderRadius: '12px' }}>
-                        <TableContainer className="table-scrollable h-[calc(100vh_-_100px)] overflow-auto">
-                            <Table>
-                              <TableHead>
-                                <TableRow>
-                                  <TableCell>Category ID</TableCell>
-                                  <TableCell>Sub Category ID</TableCell>
-                                  <TableCell>Name</TableCell>
-                                  <TableCell>Action</TableCell>
-                                </TableRow>
-                              </TableHead>
-                              <TableBody>
-                                {/* {allSubCategory.map((item, index) => (
+                    </div>
+                    <Paper sx={{ width: '100%', overflow: 'hidden', borderRadius: '12px' }}>
+                      <TableContainer className="table-scrollable h-[calc(100vh_-_100px)] overflow-auto">
+                        <Table>
+                          <TableHead>
+                            <TableRow>
+                              <TableCell>Category ID</TableCell>
+                              <TableCell>Sub Category ID</TableCell>
+                              <TableCell>Name</TableCell>
+                              <TableCell>Action</TableCell>
+                            </TableRow>
+                          </TableHead>
+                          <TableBody>
+                            {/* {allSubCategory.map((item, index) => (
                                   <TableRow key={index}>
                                     <TableCell>{item.category_id}</TableCell>
                                     <TableCell>{item.id}</TableCell>
@@ -1342,11 +1558,11 @@ function Admin() {
                                     <TableCell></TableCell>
                                   </TableRow>
                                 ))} */}
-                              </TableBody>
-                            </Table>
-                          </TableContainer>
-                        </Paper>
-                      
+                          </TableBody>
+                        </Table>
+                      </TableContainer>
+                    </Paper>
+
                   </>
                 }
 
@@ -1426,81 +1642,99 @@ function Admin() {
                       </Dialog>
                     </div>
                     <Paper sx={{ width: '100%', overflow: 'hidden', borderRadius: '12px' }}>
-                        <TableContainer className="table-scrollable h-[calc(100vh_-_180px)] overflow-auto">
-                            <Table>
-                              <TableHead>
-                                <TableRow>
-                                  <TableCell>Size ID</TableCell>
-                                  <TableCell>Category ID</TableCell>
-                                  <TableCell>Category Name</TableCell>
-                                  <TableCell>Size Name</TableCell>
-                                  <TableCell>Action</TableCell>
-                                </TableRow>
-                              </TableHead>
-                              <TableBody>
-                                {
-                                  currentSize.map((item, index) => (
-                                    <>
-                                      <TableRow key={index}>
-                                        <TableCell>{item.id}</TableCell>
-                                        <TableCell>{item.Category?.id}</TableCell>
-                                        <TableCell>{item.Category?.name}</TableCell>
-                                        <TableCell>{item.name}</TableCell>
-                                        <TableCell>
-                                          <div className="flex items-center gap-1">
-                                            <svg onClick={() => handleEditSize(item)} className="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                                              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m14.304 4.844 2.852 2.852M7 7H4a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1v-4.5m2.409-9.91a2.017 2.017 0 0 1 0 2.853l-6.844 6.844L8 14l.713-3.565 6.844-6.844a2.015 2.015 0 0 1 2.852 0Z" />
-                                            </svg>
-                                            <svg onClick={() => handleDeleteSize(item.id)} className="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                      <TableContainer className="table-scrollable h-[calc(100vh_-_180px)] overflow-auto">
+                        <Table>
+                          <TableHead>
+                            <TableRow>
+                              <TableCell>Size ID</TableCell>
+                              <TableCell>Category ID</TableCell>
+                              <TableCell>Category Name</TableCell>
+                              <TableCell>Size Name</TableCell>
+                              <TableCell>Action</TableCell>
+                            </TableRow>
+                          </TableHead>
+                          <TableBody>
+                            {
+                              currentSize.map((item, index) => (
+                                <>
+                                  <TableRow key={index}>
+                                    <TableCell>{item.id}</TableCell>
+                                    <TableCell>{item.Category?.id}</TableCell>
+                                    <TableCell>{item.Category?.name}</TableCell>
+                                    <TableCell>{item.name}</TableCell>
+                                    <TableCell>
+                                      <div className="flex items-center gap-1">
+                                        <svg onClick={() => handleEditSize(item)} className="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                          <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m14.304 4.844 2.852 2.852M7 7H4a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1v-4.5m2.409-9.91a2.017 2.017 0 0 1 0 2.853l-6.844 6.844L8 14l.713-3.565 6.844-6.844a2.015 2.015 0 0 1 2.852 0Z" />
+                                        </svg>
+                                        <AlertDialog open={isDeleteSizeDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
+                                          <AlertDialogTrigger>
+                                            <svg onClick={() => openSizeDialog(item.id)} className="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
                                               <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 7h14m-9 3v8m4-8v8M10 3h4a1 1 0 0 1 1 1v3H9V4a1 1 0 0 1 1-1ZM6 7h12v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7Z" />
                                             </svg>
-                                          </div>
-                                        </TableCell>
-                                      </TableRow>
-                                    </>
-                                  ))
-                                }
-                              </TableBody>
-                            </Table>
-                          </TableContainer>
-                          <div className="flex justify-center my-4 space-x-2">
-                            <button
-                              onClick={prevPage}
-                              disabled={currentPage === 1}
-                              className={`px-4 py-2 text-sm font-medium border rounded-md ${currentPage === 1
-                                ? 'cursor-not-allowed opacity-50'
-                                : 'hover:bg-gray-200'
-                                }`}
-                            >
-                              Previous
-                            </button>
-                            {/* Render page numbers */}
-                            {Array.from({ length: totalPages }, (_, index) => (
-                              <button
-                                key={index}
-                                onClick={() => goToPage(index + 1)}
-                                className={`px-4 py-2 text-sm font-medium border rounded-md ${currentPage === index + 1
-                                  ? 'font-bold bg-gray-300'
-                                  : 'hover:bg-gray-200'
-                                  }`}
-                              >
-                                {index + 1}
-                              </button>
-                            ))}
-                            <button
-                              onClick={nextPage}
-                              disabled={currentPage === totalPages}
-                              className={`px-4 py-2 text-sm font-medium border rounded-md ${currentPage === totalPages
-                                ? 'cursor-not-allowed opacity-50'
-                                : 'hover:bg-gray-200'
-                                }`}
-                            >
-                              Next
-                            </button>
-                          </div>
+                                          </AlertDialogTrigger>
+                                          <AlertDialogContent>
+                                            <AlertDialogHeader>
+                                              <AlertDialogTitle>Are you sure you want to delete this size
+                                              </AlertDialogTitle>
+                                              <AlertDialogDescription>
+                                                Are you sure you want to delete this size? This action cannot be undone.
+                                              </AlertDialogDescription>
+                                            </AlertDialogHeader>
+                                            <AlertDialogFooter>
+                                              <AlertDialogCancel onClick={() => setIsDeleteDialogOpen(false)}>Cancel</AlertDialogCancel>
+                                              <AlertDialogAction onClick={() => handleDeleteSize(item)}>Continue</AlertDialogAction>
+                                            </AlertDialogFooter>
+                                          </AlertDialogContent>
+                                        </AlertDialog>
+                                      </div>
+                                    </TableCell>
+                                  </TableRow>
+                                </>
+                              ))
+                            }
+                          </TableBody>
+                        </Table>
+                      </TableContainer>
+                      <div className="flex justify-center my-4 space-x-2">
+                        <button
+                          onClick={prevPage}
+                          disabled={currentPage === 1}
+                          className={`px-4 py-2 text-sm font-medium border rounded-md ${currentPage === 1
+                            ? 'cursor-not-allowed opacity-50'
+                            : 'hover:bg-gray-200'
+                            }`}
+                        >
+                          Previous
+                        </button>
+                        {/* Render page numbers */}
+                        {Array.from({ length: totalPages }, (_, index) => (
+                          <button
+                            key={index}
+                            onClick={() => goToPage(index + 1)}
+                            className={`px-4 py-2 text-sm font-medium border rounded-md ${currentPage === index + 1
+                              ? 'font-bold bg-gray-300'
+                              : 'hover:bg-gray-200'
+                              }`}
+                          >
+                            {index + 1}
+                          </button>
+                        ))}
+                        <button
+                          onClick={nextPage}
+                          disabled={currentPage === totalPages}
+                          className={`px-4 py-2 text-sm font-medium border rounded-md ${currentPage === totalPages
+                            ? 'cursor-not-allowed opacity-50'
+                            : 'hover:bg-gray-200'
+                            }`}
+                        >
+                          Next
+                        </button>
+                      </div>
                     </Paper>
                   </>
                 }
+
                 {
                   page === 5 &&
                   <>
@@ -1553,49 +1787,67 @@ function Admin() {
                       </Dialog>
                     </div>
                     <Paper sx={{ width: '100%', overflow: 'hidden', borderRadius: '12px' }}>
-                        <TableContainer className="table-scrollable h-[calc(100vh_-_100px)] overflow-auto">
-                            <Table>
-                              <TableHead>
-                                <TableRow>
-                                  <TableCell>Color ID</TableCell>
-                                  <TableCell>Name</TableCell>
-                                  <TableCell>Action</TableCell>
-                                </TableRow>
-                              </TableHead>
-                              <TableBody>
-                                {
-                                  allColors.map((item, index) => {
-                                    return (
-                                      <TableRow key={index}>
-                                        <TableCell>{item.id}</TableCell>
-                                        <TableCell>{item.name}</TableCell>
-                                        <TableCell>
-                                          <div className="flex items-center gap-1">
-                                            <svg onClick={() => handleEditColor(item)} className="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true"
-                                              xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                              fill="none" viewBox="0 0 24 24">
-                                              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                                                stroke-width="2" d="m14.304 4.844 2.852 2.852M7 7H4a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1v-4.5m2.409-9.91a2.017 2.017 0 0 1 0 2.853l-6.844 6.844L8 14l.713-3.565 6.844-6.844a2.015 2.015 0 0 1 2.852 0Z" />
-                                            </svg>
-                                            <svg onClick={() => handleDeleteColor(item.id)} className="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true"
+                      <TableContainer className="table-scrollable h-[calc(100vh_-_100px)] overflow-auto">
+                        <Table>
+                          <TableHead>
+                            <TableRow>
+                              <TableCell>Color ID</TableCell>
+                              <TableCell>Name</TableCell>
+                              <TableCell>Action</TableCell>
+                            </TableRow>
+                          </TableHead>
+                          <TableBody>
+                            {
+                              allColors.map((item, index) => {
+                                return (
+                                  <TableRow key={index}>
+                                    <TableCell>{item.id}</TableCell>
+                                    <TableCell>{item.name}</TableCell>
+                                    <TableCell>
+                                      <div className="flex items-center gap-1">
+                                        <svg onClick={() => handleEditColor(item)} className="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true"
+                                          xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                          fill="none" viewBox="0 0 24 24">
+                                          <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                            stroke-width="2" d="m14.304 4.844 2.852 2.852M7 7H4a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1v-4.5m2.409-9.91a2.017 2.017 0 0 1 0 2.853l-6.844 6.844L8 14l.713-3.565 6.844-6.844a2.015 2.015 0 0 1 2.852 0Z" />
+                                        </svg>
+                                        <AlertDialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+                                          <AlertDialogTrigger>
+                                            <svg onClick={() => openDeleteDialog(item.id)} className="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true"
                                               xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                               fill="none" viewBox="0 0 24 24">
                                               <path stroke="currentColor" stroke-linecap="round"
                                                 stroke-linejoin="round" stroke-width="2"
                                                 d="M5 7h14m-9 3v8m4-8v8M10 3h4a1 1 0 0 1 1 1v3H9V4a1 1 0 0 1 1-1ZM6 7h12v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7Z" />
                                             </svg>
-                                          </div>
-                                        </TableCell>
-                                      </TableRow>
-                                    )
-                                  })
-                                }
-                              </TableBody>
-                            </Table>
-                          </TableContainer>
+                                          </AlertDialogTrigger>
+                                          <AlertDialogContent>
+                                            <AlertDialogHeader>
+                                              <AlertDialogTitle>Are you sure you want to delete this color?</AlertDialogTitle>
+                                              <AlertDialogDescription>
+                                                Are you sure you want to delete the color <span className="font-extrabold">{item.name}</span>? This action cannot be undone.
+                                              </AlertDialogDescription>
+                                            </AlertDialogHeader>
+                                            <AlertDialogFooter>
+                                              <AlertDialogCancel onClick={() => setIsDialogOpen(false)}>Cancel</AlertDialogCancel>
+                                              <AlertDialogAction onClick={() => handleDeleteColor(item.id)}>Continue</AlertDialogAction>
+                                            </AlertDialogFooter>
+                                          </AlertDialogContent>
+                                        </AlertDialog>
+
+                                      </div>
+                                    </TableCell>
+                                  </TableRow>
+                                )
+                              })
+                            }
+                          </TableBody>
+                        </Table>
+                      </TableContainer>
                     </Paper>
                   </>
                 }
+
               </div>
             </div>
           </>
