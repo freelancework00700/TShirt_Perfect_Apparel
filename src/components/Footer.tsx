@@ -9,7 +9,7 @@ import axios from "axios";
 import { useFormik } from "formik";
 import * as yup from "yup";
 import { Bounce, toast, ToastContainer } from "react-toastify";
-import 'react-toastify/dist/ReactToastify.css';
+import "react-toastify/dist/ReactToastify.css";
 import { Skeleton } from "./ui/skeleton";
 
 const Footer = () => {
@@ -23,16 +23,30 @@ const Footer = () => {
       message: "",
     },
     validationSchema: yup.object({
-      email: yup.string().min(5).max(30).required('Enter the email'),
-      phone: yup.number().typeError("Only digits are allowed!").required("Phone number required!").test(
-        "isTenDigits", "Mobile number must be exactly 10 digits",
-        (value: any) => { return value && /^\d{10}$/.test(value.toString()); }),
+      email: yup
+        .string()
+        .matches(
+          /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+          "Invalid email"
+        )
+        .required("Email required!"),
+      phone: yup
+        .number()
+        .typeError("Only digits are allowed!")
+        .required("Phone number required!")
+        .test(
+          "isTenDigits",
+          "Mobile number must be exactly 10 digits",
+          (value: any) => {
+            return value && /^\d{10}$/.test(value.toString());
+          }
+        ),
       message: yup.string().min(10).max(100).required("Enter the message"),
     }),
     onSubmit: async (values, { resetForm }) => {
       setLoading(true);
       try {
-        const response = await axios.post('/api/get-in-touch', values)
+        const response = await axios.post("/api/get-in-touch", values);
         toast.success(response.data.message, {
           position: "top-right",
           autoClose: 5000,
@@ -46,22 +60,21 @@ const Footer = () => {
         });
         resetForm();
       } catch (error) {
-        console.error(error)
+        console.error(error);
       } finally {
-        setLoading(false)
+        setLoading(false);
       }
     },
-  })
-
+  });
 
   return (
     <>
       <ToastContainer />
-      <footer className="bg-[#fff] pt-[50px]">
+      <footer className="bg-[#fff]">
         <div className="w-full bg-gray-100 py-10 max-md:py-5">
           <div className="container mx-auto xl:max-w-7xl max-sm:px-4">
             <div className="grid grid-cols-12">
-              <div className="col-span-12 text-[30px] font-medium text-center mb-4">
+              <div className="col-span-12 text-[30px] font-medium text-center mb-4 ">
                 Get In Touch
               </div>
               <div className="col-span-12">
@@ -113,10 +126,15 @@ const Footer = () => {
                           className="w-full min-w-80 h-[52px]"
                         />
                         {formik.errors.message && formik.touched.message && (
-                          <p className="text-red-500">{formik.errors.message}</p>
+                          <p className="text-red-500">
+                            {formik.errors.message}
+                          </p>
                         )}
                       </div>
-                      <Button type="submit" className="rounded-full px-10 h-[52px]">
+                      <Button
+                        type="submit"
+                        className="rounded-full px-10 h-[52px] "
+                      >
                         Submit
                       </Button>
                     </div>
@@ -128,38 +146,48 @@ const Footer = () => {
         </div>
         <div className="container mx-auto xl:max-w-7xl max-sm:px-4">
           <div className="flex justify-between items-center flex-wrap max-md:justify-center">
-            <div className="font-bold xl:me-[2rem] text-[24px]">Perfect Apparels</div>
+            <div className="font-bold xl:me-[2rem] text-[24px] ">
+              Perfect Apparels
+            </div>
             <ul className="flex items-center flex-wrap xl:gap-10 md:gap-5 gap-3 xl:ml-5">
               <li className=" py-[23px] cursor-pointer">
-                <Link href="/"
-                  className={`text-sm uppercase font-medium leading-[16px]  hover:text-[#f8a25b] ${router === "/" ? "text-[#f8a25b]" : "text-[#000]"
-                    }`}
+                <Link
+                  href="/"
+                  className={`text-sm uppercase font-medium leading-[16px]  hover:text-[#f8a25b] ${
+                    router === "/" ? "text-[#f8a25b]" : "text-[#000]"
+                  }`}
                 >
                   Home
                 </Link>
               </li>
               <li className=" py-[23px] cursor-pointer">
-                <Link href="/product"
-                  className={`text-sm uppercase font-medium leading-[16px]  hover:text-[#f8a25b] ${router === "/product" ? "text-[#f8a25b]" : "text-[#000]"
-                    }`}
+                <Link
+                  href="/product"
+                  className={`text-sm uppercase font-medium leading-[16px]  hover:text-[#f8a25b] ${
+                    router === "/product" ? "text-[#f8a25b]" : "text-[#000]"
+                  }`}
                 >
                   Product
                 </Link>
               </li>
               <li className=" py-[23px] cursor-pointer">
-                <Link href="/customer-service"
-                  className={`text-sm uppercase font-medium leading-[16px]  hover:text-[#f8a25b] ${router === "/service" ? "text-[#f8a25b]" : "text-[#000]"
-                    }`}
+                <Link
+                  href="/customer-service"
+                  className={`text-sm uppercase font-medium leading-[16px]  hover:text-[#f8a25b] ${
+                    router === "/service" ? "text-[#f8a25b]" : "text-[#000]"
+                  }`}
                 >
                   Customer Service
                 </Link>
               </li>
               <li className=" py-[23px] cursor-pointer">
-                <Link href="/privacy-policy"
-                  className={`text-sm uppercase font-medium leading-[16px]  hover:text-[#f8a25b] ${router === "/privacy-policy"
-                    ? "text-[#f8a25b]"
-                    : "text-[#000]"
-                    }`}
+                <Link
+                  href="/privacy-policy"
+                  className={`text-sm uppercase font-medium leading-[16px]  hover:text-[#f8a25b] ${
+                    router === "/privacy-policy"
+                      ? "text-[#f8a25b]"
+                      : "text-[#000]"
+                  }`}
                 >
                   Privacy Policy
                 </Link>

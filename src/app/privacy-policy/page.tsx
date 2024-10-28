@@ -562,7 +562,7 @@ function PrivacyPolicy() {
             write to us, then our contact address is: Lambe Hanuman Road, Surat
             <br></br>
             <br></br>
-            Phone: (+91) 99047 97335
+            Phone: (+91) 94268 66467
           </div>
         </section>
       </div>

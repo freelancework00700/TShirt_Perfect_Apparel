@@ -57,96 +57,53 @@ export default function Home() {
     getProduct();
   }, [])
 
-
   const handleShowCatagories = () => {
     router.push(`/product`)
   }
 
-
   return (
     <main className="max-[1024px]:mt-[77px] relative">
       <Header />
-      <div className="container mx-auto xl:max-w-7xl max-sm:px-4">
-        <div className="rounded-[20px] overflow-hidden">
-          <Swiper
-            slidesPerView={1}
-            spaceBetween={0}
-            modules={[Pagination, EffectFade]}
-            pagination={true}
-            effect={"fade"}
-            onSlideChange={() => console.log("slide change")}
-            onSwiper={() => console.log()}
-          >
-            <SwiperSlide>
-              <div>
-                <Image src={heroImage1} alt="heroImage1"></Image>
-              </div>
-            </SwiperSlide>
-            <SwiperSlide>
-              <div>
-                <Image src={heroImage2} alt="heroImage2"></Image>
-              </div>
-            </SwiperSlide>
-          </Swiper>
+      <div className="min-h-[calc(100vh_-_385px)]">
+        <div className="overflow-hidden">
+            <Swiper
+              slidesPerView={1}
+              spaceBetween={0}
+              modules={[Pagination, EffectFade]}
+              pagination={true}
+              effect={"fade"}
+              onSlideChange={() => console.log("slide change")}
+              onSwiper={() => console.log()}
+            >
+              <SwiperSlide>
+                <div>
+                  <Image src={heroImage1} alt="heroImage1" className="w-full h-[calc(100vh_-_70px)] object-cover"></Image>
+                </div>
+              </SwiperSlide>
+              <SwiperSlide>
+                <div>
+                  <Image src={heroImage2} alt="heroImage2" className="w-full h-[calc(100vh_-_70px)] object-cover"></Image>
+                </div>
+              </SwiperSlide>
+            </Swiper>
         </div>
-        <div className="py-10">
-          <div className="flex justify-center items-center gap-2 py-7">
-            {Object.keys(segments).map((key: string) => (
-              <button
-                key={key}
-                onClick={() => setActiveSegment(key as SegmentKey)}
-                className={`py-1 px-10 rounded-[20px] border border-black ${activeSegment === key
-                  ? "text-white bg-black"
-                  : " text-black bg-white"
-                  }`}
-              >
-                {segments[key as SegmentKey].title}
-              </button>
-            ))}
-          </div>
-          {activeSegment === "newDrops" ? (
-            <div className="trending-swiper">
-              <Swiper
-                breakpoints={{
-                  320: { slidesPerView: 1, spaceBetween: 5 },
-                  480: { slidesPerView: 1, spaceBetween: 5 },
-                  768: { slidesPerView: 2.3, spaceBetween: 10 },
-                  1024: { slidesPerView: 4.3, spaceBetween: 12 },
-                }}
-                modules={[Navigation]}
-                navigation={true}
-              >
-                {product.filter(item => item.status === segments.newDrops.title).map(item => (
-                  <SwiperSlide key={item.id}>
-                    <div className="shadow-md h-full w-full m-2 rounded-lg">
-                      <Link href={`/product/product-details?id=${item.id}`}>
-                        <div className="productImage flex justify-center rounded-[12px] overflow-hidden">
-                          <Image
-                            src={`/product-image/${item.ProductImages[0]?.sysFileName}`}
-                            alt={item.name}
-                            width={200}
-                            height={200}
-                            className="min-h-[245px] max-h-[245px] object-cover"
-                          />
-                        </div>
-                        <div className="py-3 px-4">
-                          <div>
-                            <div className="font-bold">{item.name}</div>
-                            <div className="text-[#999] text-[14px]">{item.name}</div>
-                          </div>
-                          <div className="text-[#000] text-[16px] py-2">₹{item.price}</div>
-                          {/* <div className="text-[#999] text-[14px]">
-                          Color: <span className="text-[#000]">{item.Color?.name}</span>
-                        </div> */}
-                        </div>
-                      </Link>
-                    </div>
-                  </SwiperSlide>
-                ))}
-              </Swiper>
+        <div className="container mx-auto xl:max-w-7xl max-sm:px-4">        
+          <div className="py-10">
+            <div className="flex justify-center items-center gap-2 py-7">
+              {Object.keys(segments).map((key: string) => (
+                <button
+                  key={key}
+                  onClick={() => setActiveSegment(key as SegmentKey)}
+                  className={`py-1 px-10 rounded-[20px] border border-black text-lg ${activeSegment === key
+                    ? "text-white bg-black"
+                    : " text-black bg-white"
+                    }`}
+                >
+                  {segments[key as SegmentKey].title}
+                </button>
+              ))}
             </div>
-          ) : (
-            <>
+            {activeSegment === "newDrops" ? (
               <div className="trending-swiper">
                 <Swiper
                   breakpoints={{
@@ -158,161 +115,204 @@ export default function Home() {
                   modules={[Navigation]}
                   navigation={true}
                 >
-                  {
-                    product.filter((item) => item.status === segments.mostTrending.title)
-                      .map(item => (
-                        <SwiperSlide key={item.id}>
+                  {product.filter(item => item.status === segments.newDrops.title).map(item => (
+                    <SwiperSlide key={item.id}>
+                      <div className="shadow-md h-full w-full m-2 rounded-lg">
+                        <Link href={`/product/product-details?id=${item.id}`}>
+                          <div className="productImage flex justify-center rounded-[12px] overflow-hidden">
+                            <Image
+                              src={`/product-image/${item.ProductImages[0]?.sysFileName}`}
+                              alt={item.name}
+                              width={200}
+                              height={200}
+                              className="min-h-[245px] max-h-[245px] object-cover"
+                            />
+                          </div>
+                          <div className="py-3 px-4">
+                            <div>
+                              <div className="font-bold">{item.name}</div>
+                              <div className="text-[#999] text-[14px]">{item.name}</div>
+                            </div>
+                            <div className="text-[#000] text-[16px] py-2">₹{item.price}</div>
+                            {/* <div className="text-[#999] text-[14px]">
+                            Color: <span className="text-[#000]">{item.Color?.name}</span>
+                          </div> */}
+                          </div>
+                        </Link>
+                      </div>
+                    </SwiperSlide>
+                  ))}
+                </Swiper>
+              </div>
+            ) : (
+              <>
+                <div className="trending-swiper">
+                  <Swiper
+                    breakpoints={{
+                      320: { slidesPerView: 1, spaceBetween: 5 },
+                      480: { slidesPerView: 1, spaceBetween: 5 },
+                      768: { slidesPerView: 2.3, spaceBetween: 10 },
+                      1024: { slidesPerView: 4.3, spaceBetween: 12 },
+                    }}
+                    modules={[Navigation]}
+                    navigation={true}
+                  >
+                    {
+                      product.filter((item) => item.status === segments.mostTrending.title)
+                        .map(item => (
+                          <SwiperSlide key={item.id}>
+                            <div className="shadow-md h-full w-full m-2 rounded-lg">
+                              <Link href={`/product/product-details?id=${item.id}`} >
+                                <div className="productImage flex justify-center rounded-[12px] overflow-hidden ">
+                                  <Image
+                                    src={`/product-image/${item.ProductImages[0]?.sysFileName}`}
+                                    alt={item.name}
+                                    width={200}
+                                    height={200}
+                                    className="min-h-[245px] max-h-[245px] object-cover"
+                                  />
+                                </div>
+                                <div className="py-3 px-4">
+                                  <div>
+                                    <div className="font-bold">{item.name}</div>
+                                    <div className="text-[#999] text-[14px]">{item.name}</div>
+                                  </div>
+                                  <div className="text-[#000] text-[20px] py-2">₹{item.price}</div>
+                                  {/* <div className="text-[#999] text-[14px]">
+                                  Color: <span className="text-[#000]">{item.Color?.name}</span>
+                                </div> */}
+                                </div>
+                              </Link>
+                            </div>
+                          </SwiperSlide>
+                        ))
+                    }
+                  </Swiper>
+                </div>
+              </>
+            )}
+          </div>
+          <div className="py-10">
+            <div className="mb-8 text-[30px] font-medium text-center">
+              Perfect Apparels Collection
+            </div>
+            <div className="flex justify-center flex-wrap items-center gap-5 w-full">
+              <div className="flex-1 flex justify-start items-center 
+              bg-[url('../../public/Images/how-should-a-t-shirt-fit.png')] bg-cover px-20 max-lg:px-5 py-24 max-lg:py-5 rounded-[16px]">
+                <div>
+                  <h1 className="text-3xl font-bold mb-4 text-white">T-Shirt</h1>
+                  <p className="mb-6 w-72 text-white">
+                    T-shirts are a versatile and essential part of any wardrobe,
+                    known for their comfort and adaptability.
+                  </p>
+                  <button className="bg-black text-white px-6 py-2 rounded-full"
+                    onClick={() => handleShowCatagories()}>
+                    Show Catagories
+                  </button>
+                </div>
+              </div>
+              <div className="flex-1 flex justify-start items-center 
+              bg-[url('../../public/Images/track-pants.png')] bg-cover px-20 max-lg:px-5 py-24 max-lg:py-5 rounded-[16px]">
+                <div>
+                  <h1 className="text-3xl font-bold mb-4">Track Pants</h1>
+                  <p className="mb-6 w-72">
+                    Track pants are a popular type of athletic wear, often made of
+                    soft, stretchy materials like polyester, cotton blends, or
+                    fleece.
+                  </p>
+                  <button className="bg-black text-white px-6 py-2 rounded-full"
+                    onClick={() => handleShowCatagories()}>
+                    Show Catagories
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="py-10">
+            <div className="mb-8 text-[30px] font-medium text-center">
+              Trending T-Shirt Collection
+            </div>
+            <div className="trending-swiper">
+              <Swiper
+                breakpoints={{
+                  320: { slidesPerView: 1, spaceBetween: 5 },
+                  480: { slidesPerView: 1, spaceBetween: 5 },
+                  768: { slidesPerView: 2.3, spaceBetween: 10 },
+                  1024: { slidesPerView: 4.3, spaceBetween: 12 },
+                }}
+                modules={[Navigation]}
+                navigation={true}
+              >
+                {Tshirt.map((item) => (
+                  <SwiperSlide key={item.id}>
+                    <div className="shadow-md h-full w-full m-2 rounded-lg">
+                      <Link href={`/product/product-details?id=${item.id}`}>
+                        <div className="productImage flex justify-center rounded-[12px] overflow-hidden">
+                          <Image src={`/product-image/${item.ProductImages[0]?.sysFileName}`} alt={item.name} width={200} height={200} className="min-h-[245px] max-h-[245px] object-cover" />
+                        </div>
+                        <div className="py-3 px-4">
+                          <div>
+                            <div className="font-bold">{item.name}</div>
+                            <div className="text-[#999] text-[14px]">{item.fit}</div>
+                          </div>
+                          <div className="text-[#000] text-[20px] py-2">₹{item.price}</div>
+                          {/* <div className="text-[#999] text-[14px]">
+                          Color: <span className="text-[#000]">{item.Color?.name}</span>
+                        </div> */}
+                        </div>
+                      </Link>
+                    </div>
+                  </SwiperSlide>
+                ))}
+              </Swiper>
+            </div>
+          </div>
+          <div className="py-10">
+            <div className="mb-8 text-[30px] font-medium text-center">
+              Trending Track Pants Collection
+            </div>
+            <div className="trending-swiper">
+              <Swiper
+                breakpoints={{
+                  320: { slidesPerView: 1, spaceBetween: 5 },
+                  480: { slidesPerView: 1, spaceBetween: 5 },
+                  768: { slidesPerView: 2.3, spaceBetween: 10 },
+                  1024: { slidesPerView: 4.3, spaceBetween: 12 },
+                }}
+                modules={[Navigation]}
+                navigation={true}
+              >
+                {
+                  TrackPants.map((item, index) => {
+                    return (
+                      <>
+                        <SwiperSlide>
                           <div className="shadow-md h-full w-full m-2 rounded-lg">
-                            <Link href={`/product/product-details?id=${item.id}`} >
-                              <div className="productImage flex justify-center rounded-[12px] overflow-hidden ">
-                                <Image
-                                  src={`/product-image/${item.ProductImages[0]?.sysFileName}`}
-                                  alt={item.name}
-                                  width={200}
-                                  height={200}
-                                  className="min-h-[245px] max-h-[245px] object-cover"
-                                />
+                            <Link href={`/product/product-details?id=${item.id}`}>
+                              <div key={index} className="productImage flex justify-center rounded-[12px] overflow-hidden">
+                                <Image src={`/product-image/${item.ProductImages[0]?.sysFileName}`} alt="track1" width={200} height={200} className="min-h-[245px] max-h-[245px] object-cover"></Image>
                               </div>
                               <div className="py-3 px-4">
                                 <div>
                                   <div className="font-bold">{item.name}</div>
-                                  <div className="text-[#999] text-[14px]">{item.name}</div>
+                                  <div className="text-[#999] text-[14px]">
+                                    {item.fit}
+                                  </div>
                                 </div>
                                 <div className="text-[#000] text-[20px] py-2">₹{item.price}</div>
                                 {/* <div className="text-[#999] text-[14px]">
-                                Color: <span className="text-[#000]">{item.Color?.name}</span>
+                                Color: <span className="text-[#000]">{item?.Color?.name}</span>
                               </div> */}
                               </div>
                             </Link>
                           </div>
                         </SwiperSlide>
-                      ))
-                  }
-                </Swiper>
-              </div>
-            </>
-          )}
-        </div>
-        <div className="py-10">
-          <div className="mb-8 text-[30px] font-medium text-center">
-            Perfect Apparels Collection
-          </div>
-          <div className="flex justify-center flex-wrap items-center gap-5 w-full">
-            <div className="flex-1 flex justify-start items-center 
-            bg-[url('../../public/Images/how-should-a-t-shirt-fit.png')] bg-cover px-20 max-lg:px-5 py-24 max-lg:py-5 rounded-[16px]">
-              <div>
-                <h1 className="text-3xl font-bold mb-4 text-white">T-Shirt</h1>
-                <p className="mb-6 w-72 text-white">
-                  T-shirts are a versatile and essential part of any wardrobe,
-                  known for their comfort and adaptability.
-                </p>
-                <button className="bg-black text-white px-6 py-2 rounded-full"
-                  onClick={() => handleShowCatagories()}>
-                  Show Catagories
-                </button>
-              </div>
+                      </>
+                    )
+                  })
+                }
+              </Swiper>
             </div>
-            <div className="flex-1 flex justify-start items-center 
-            bg-[url('../../public/Images/track-pants.png')] bg-cover px-20 max-lg:px-5 py-24 max-lg:py-5 rounded-[16px]">
-              <div>
-                <h1 className="text-3xl font-bold mb-4">Track Pants</h1>
-                <p className="mb-6 w-72">
-                  Track pants are a popular type of athletic wear, often made of
-                  soft, stretchy materials like polyester, cotton blends, or
-                  fleece.
-                </p>
-                <button className="bg-black text-white px-6 py-2 rounded-full"
-                  onClick={() => handleShowCatagories()}>
-                  Show Catagories
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div className="py-10">
-          <div className="mb-8 text-[30px] font-medium text-center">
-            Trending T-Shirt Collection
-          </div>
-          <div className="trending-swiper">
-            <Swiper
-              breakpoints={{
-                320: { slidesPerView: 1, spaceBetween: 5 },
-                480: { slidesPerView: 1, spaceBetween: 5 },
-                768: { slidesPerView: 2.3, spaceBetween: 10 },
-                1024: { slidesPerView: 4.3, spaceBetween: 12 },
-              }}
-              modules={[Navigation]}
-              navigation={true}
-            >
-              {Tshirt.map((item) => (
-                <SwiperSlide key={item.id}>
-                  <div className="shadow-md h-full w-full m-2 rounded-lg">
-                    <Link href={`/product/product-details?id=${item.id}`}>
-                      <div className="productImage flex justify-center rounded-[12px] overflow-hidden">
-                        <Image src={`/product-image/${item.ProductImages[0]?.sysFileName}`} alt={item.name} width={200} height={200} className="min-h-[245px] max-h-[245px] object-cover" />
-                      </div>
-                      <div className="py-3 px-4">
-                        <div>
-                          <div className="font-bold">{item.name}</div>
-                          <div className="text-[#999] text-[14px]">{item.fit}</div>
-                        </div>
-                        <div className="text-[#000] text-[20px] py-2">₹{item.price}</div>
-                        {/* <div className="text-[#999] text-[14px]">
-                        Color: <span className="text-[#000]">{item.Color?.name}</span>
-                      </div> */}
-                      </div>
-                    </Link>
-                  </div>
-                </SwiperSlide>
-              ))}
-            </Swiper>
-          </div>
-        </div>
-        <div className="py-10">
-          <div className="mb-8 text-[30px] font-medium text-center">
-            Trending Track Pants Collection
-          </div>
-          <div className="trending-swiper">
-            <Swiper
-              breakpoints={{
-                320: { slidesPerView: 1, spaceBetween: 5 },
-                480: { slidesPerView: 1, spaceBetween: 5 },
-                768: { slidesPerView: 2.3, spaceBetween: 10 },
-                1024: { slidesPerView: 4.3, spaceBetween: 12 },
-              }}
-              modules={[Navigation]}
-              navigation={true}
-            >
-              {
-                TrackPants.map((item, index) => {
-                  return (
-                    <>
-                      <SwiperSlide>
-                        <div className="shadow-md h-full w-full m-2 rounded-lg">
-                          <Link href={`/product/product-details?id=${item.id}`}>
-                            <div key={index} className="productImage flex justify-center rounded-[12px] overflow-hidden">
-                              <Image src={`/product-image/${item.ProductImages[0]?.sysFileName}`} alt="track1" width={200} height={200} className="min-h-[245px] max-h-[245px] object-cover"></Image>
-                            </div>
-                            <div className="py-3 px-4">
-                              <div>
-                                <div className="font-bold">{item.name}</div>
-                                <div className="text-[#999] text-[14px]">
-                                  {item.fit}
-                                </div>
-                              </div>
-                              <div className="text-[#000] text-[20px] py-2">₹{item.price}</div>
-                              {/* <div className="text-[#999] text-[14px]">
-                              Color: <span className="text-[#000]">{item?.Color?.name}</span>
-                            </div> */}
-                            </div>
-                          </Link>
-                        </div>
-                      </SwiperSlide>
-                    </>
-                  )
-                })
-              }
-            </Swiper>
           </div>
         </div>
       </div>

@@ -167,12 +167,21 @@ function Admin() {
   }
 
   useEffect(() => {
-    getAllProduct();
-    getAllCategory();
-    getAllSize();
-    getAllColor();
-    getAllInquiry();
-  }, [])
+    if (page === 1) {
+      getAllProduct();
+    } else if (page === 2) {
+      getAllCategory();
+    } else if (page === 3) {
+      // getAllSubCategory();
+    } else if (page === 4) {
+      getAllSize();
+      getAllCategory();
+    } else if (page === 5) {
+      getAllColor();
+    } else {
+      getAllInquiry();
+    }
+  }, [page])
 
   const handleEditCategory = async (item: ICategories) => {
     console.log('item :>> ', item);

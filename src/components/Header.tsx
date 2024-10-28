@@ -28,7 +28,7 @@ const Header = () => {
                     <li className=" py-[23px] cursor-pointer">
                       <Link
                         href="/"
-                        className={`text-sm uppercase font-medium leading-[16px]  hover:text-[#f8a25b] ${
+                        className={`text-base uppercase font-bold leading-[16px]  hover:text-[#f8a25b] ${
                           router === "/" ? "text-[#f8a25b]" : "text-[#000]"
                         }`}
                       >
@@ -38,7 +38,7 @@ const Header = () => {
                     <li className=" py-[23px] cursor-pointer">
                       <Link
                         href="/product"
-                        className={`text-sm uppercase font-medium leading-[16px]  hover:text-[#f8a25b] ${
+                        className={`text-base uppercase font-bold leading-[16px]  hover:text-[#f8a25b] ${
                           router === "/product"
                             ? "text-[#f8a25b]"
                             : "text-[#000]"
@@ -50,7 +50,7 @@ const Header = () => {
                     <li className=" py-[23px] cursor-pointer">
                       <Link
                         href="/customer-service"
-                        className={`text-sm uppercase font-medium leading-[16px]  hover:text-[#f8a25b] ${
+                        className={`text-base uppercase font-bold leading-[16px]  hover:text-[#f8a25b] ${
                           router === "/service"
                             ? "text-[#f8a25b]"
                             : "text-[#000]"
@@ -67,9 +67,9 @@ const Header = () => {
               <div className="ps-4 pe-8 lg:pe-0 max-lg:hidden">
                 <Link
                   href="/contactUs"
-                  className="bg-[#f8a25b] hover:bg-[#000] hover:text-[#f8885b] transition ease-in-out duration-200 rounded-full text-sm flex items-center  font-bold text-[#000] py-2 px-4 max-[1023px]:hidden button button--nanuk button--border-thin button--round-s"
+                  className="bg-[#f8a25b] hover:bg-[#000] hover:text-[#f8885b] transition ease-in-out duration-200 rounded-full text-base flex items-center  font-bold text-[#000] py-2 px-4 max-[1023px]:hidden button button--nanuk button--border-thin button--round-s"
                 >
-                  <span>Contact Us: +91 99047 97335</span>
+                  <span>Contact Us: +91 94268 66467</span>
                 </Link>
               </div>
               <div

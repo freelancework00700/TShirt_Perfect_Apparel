@@ -66,6 +66,18 @@
     }
 }
 
+/* styles/fonts.css */
+@font-face {
+  font-family: 'CustomFont';
+  src: url('../../public/fonts/TwentiethCentury.woff2') format('woff2'),
+  url('../../public/fonts/TwentiethCentury.woff') format('woff');
+  font-weight: bold;
+  font-style: normal;
+}
+body {
+  font-family: 'CustomFont', sans-serif !important;
+}
+
 .max-w-7xl {
   max-width: 1400px;
 }
