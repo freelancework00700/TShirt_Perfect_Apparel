@@ -25,8 +25,7 @@ type SegmentKey = "newDrops" | "mostTrending";
 export default function Home() {
   const [activeSegment, setActiveSegment] = useState<SegmentKey>("newDrops");
   const [product, setProduct] = useState<IProduct[]>([]);
-  console.log('product:::::::::::::::::: ', product);
-  console.log('product: ', product.map((item) => item));
+  // console.log('product:::::::::::::::::: ', product);
   // const [category, setCategory] = useState<ICategories[]>([]);
   // console.log('category :>> ', category);
   const router = useRouter();
@@ -47,7 +46,7 @@ export default function Home() {
     try {
       const response = await axios.get(`/api/product`)
       const getData = response.data?.data
-      console.log('getData :>> ', getData);
+      // console.log('getData :>> ', getData);
       setProduct(getData)
     } catch (error) {
       console.error(error)

@@ -108,3 +108,12 @@ export interface ISize {
         updatedAt: string;
     }
 }
+
+export interface Inquiry {
+    id: number,
+    email: string,
+    phone: string,
+    message: string,
+    createdAt: string,
+    updatedAt: string,
+}

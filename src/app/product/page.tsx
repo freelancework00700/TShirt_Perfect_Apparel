@@ -18,7 +18,7 @@ import { ICategories, IColor, IProduct, ISize } from "@/interface/types";
 function Product() {
   const [toggleData, setToggleData] = useState(true);
   const [allData, setAllData] = useState<IProduct[]>([]);
-  console.log('allData: ', allData);
+  // console.log('allData: ', allData);
   const [categories, setCategories] = useState<ICategories[]>([]);
   const [allColor, setAllColor] = useState<IColor[]>([]);
   console.log('allColor: ', allColor);
@@ -27,12 +27,12 @@ function Product() {
   const [selectedCategories, setSelectedCategories] = useState<number[]>([]);
   const [selectedSizes, setSelectedSizes] = useState<number[]>([]);
   const [availableSizes, setAvailableSizes] = useState<ISize[]>([]);
-  console.log('availableSizes: ', availableSizes);
+  // console.log('availableSizes: ', availableSizes);
   const [availableColors, setAvailableColors] = useState<IColor[] | undefined>([]);
-  console.log('availableColors: ', availableColors);
+  // console.log('availableColors: ', availableColors);
   const [selectedColors, setSelectedColors] = useState<number[]>([]);
   const [filteredProducts, setFilteredProducts] = useState<IProduct[]>([]);
-  console.log('filteredProducts: ', filteredProducts);
+  // console.log('filteredProducts: ', filteredProducts);
 
   const filteredData = toggleData
     ? allData.filter((item) => item.category_id === 2)
@@ -43,7 +43,7 @@ function Product() {
     try {
       const response = await axios.get("/api/product");
       const getData = response.data?.data;
-      console.log("getData :>> ", getData);
+      // console.log("getData :>> ", getData);
       setAllData(getData);
 
       const categoriesResponse = await axios.get("/api/category");

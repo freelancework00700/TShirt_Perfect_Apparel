@@ -24,15 +24,15 @@ import TableRow from '@mui/material/TableRow';
 import { useFormik } from "formik";
 import * as yup from 'yup';
 import axios from "axios";
-import { ICategories, IColor, IProduct, ISize, ISubCategories } from "@/interface/types";
+import { ICategories, IColor, Inquiry, IProduct, ISize, ISubCategories } from "@/interface/types";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
 import Image from "next/image";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { Bounce, ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { Skeleton } from "@/components/ui/skeleton";
 import { useRouter } from "next/navigation";
+import { Skeleton } from "@/components/ui/skeleton";
 
 
 
@@ -55,10 +55,11 @@ function Admin() {
   const [allSubCategory, setAllSubCategory] = useState<ISubCategories[]>([]);
   const [openModel, setOpenModel] = useState(false);
   const [size, setSize] = useState('')
+  const [selectedProductId, setSelectedProductId] = useState<number | null>(null);
   const [selectedCategoryId, setSelectedCategoryId] = useState<any>(null);
   const [selectedCategory, setSelectedCategory] = useState<any>(null);
-  const [selectedSizeId, setSelectedSizeId] = useState<any>(null);
-  const [selectedColorId, setSelectedColorId] = useState<any>(null);
+  const [selectedSizeId, setSelectedSizeId] = useState<number | string | null>(null);
+  const [selectedColorId, setSelectedColorId] = useState<number | string | null>(null);
   const [allSize, setAllSize] = useState<ISize[]>([])
   const [filteredSize, setFilteredSize] = useState<ISize[]>([])
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -66,10 +67,15 @@ function Admin() {
   const [selectedImages, setSelectedImages] = useState<File[]>([]);
   const [viewProductData, setViewProductData] = useState<IProduct[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
+  const [currentPageOfInquiry, setCurrentPageOfInquiry] = useState(1);
+  const [currentPageOfSize, setCurrentPageOfSize] = useState(1);
   const recordsPerPage = 10;
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isDeleteSizeDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [isCategoryDialogOpen, setIsCategoryDialogOpen] = useState(false);
+  const [isProductDialogOpen, setIsProductDialogOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [allInquiry, setAllInquiry] = useState<Inquiry[]>([]);
 
 
 
@@ -78,7 +84,6 @@ function Admin() {
   { email: 'test@gmail.com', password: 'test@123' }]
 
   useEffect(() => {
-    // Check if there's login data in localStorage when the component mounts
     const storedData = localStorage.getItem("loginCredentials");
     if (storedData) {
       setAdminShow(true); // User is logged in
@@ -104,11 +109,14 @@ function Admin() {
   };
 
   const getAllProduct = async () => {
+    setLoading(true);
     try {
       const response = await axios.get('/api/product')
       setAllProduct(response.data.data)
     } catch (error) {
       console.log('error :>> ', error);
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -149,11 +157,21 @@ function Admin() {
     }
   }
 
+  const getAllInquiry = async () => {
+    try {
+      const response = await axios.get('/api/get-in-touch')
+      setAllInquiry(response.data.data)
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
   useEffect(() => {
     getAllProduct();
     getAllCategory();
     getAllSize();
-    getAllColor()
+    getAllColor();
+    getAllInquiry();
   }, [])
 
   const handleEditCategory = async (item: ICategories) => {
@@ -245,7 +263,6 @@ function Admin() {
   }
 
   const openSizeDialog = (id: number) => {
-    console.log('id: ', id);
     setSelectedSizeId(id);
     setIsDeleteDialogOpen(true);
   };
@@ -254,7 +271,6 @@ function Admin() {
     try {
       if (selectedSizeId) {
         const editSizeResponse = await axios.put(`/api/size`, { id: selectedSizeId, name: size, category_id: selectedCategory.id })
-        console.log('editSizeResponse :>> ', editSizeResponse);
         toast.success(editSizeResponse.data.message, {
           position: "top-right",
           autoClose: 5000,
@@ -288,30 +304,46 @@ function Admin() {
     }
   }
 
-  const handleDeleteSize = async (id: any) => {
-    console.log('iddddddd: ', id.id);
-    // try {
-    //   const response = await axios.delete(`/api/size?id=${id}`)
-    //   toast.success(response.data.message, {
-    //     position: "top-right",
-    //     autoClose: 5000,
-    //     hideProgressBar: false,
-    //     closeOnClick: true,
-    //     pauseOnHover: true,
-    //     draggable: true,
-    //     progress: undefined,
-    //     theme: "light",
-    //     transition: Bounce,
-    //   });
-    //   getAllSize();
-    // } catch (error) {
-    //   console.error(error)
-    // }
+  const handleDeleteSize = async () => {
+    console.log('selectedSizeId', selectedSizeId);
+    try {
+      const response = await axios.delete(`/api/size?id=${selectedSizeId}`)
+      toast.success(response.data.message, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+        transition: Bounce,
+      });
+      getAllSize();
+    } catch (error) {
+      console.error(error)
+    }
   }
 
-  const handleDeleteProduct = async (id: number) => {
+  const openDeleteProductDialog = (id: number) => {
+    setSelectedProductId(id)
+    setIsProductDialogOpen(true);
+  }
+
+  const handleDeleteProduct = async () => {
     try {
-      await axios.delete(`/api/product?id=${id}`)
+      const response = await axios.delete(`/api/product?id=${selectedProductId}`)
+      toast.success(response.data.message, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+        transition: Bounce,
+      });
       getAllProduct();
     } catch (error) {
       console.error(error)
@@ -366,6 +398,17 @@ function Admin() {
       }
     } catch (error) {
       console.error(error)
+      // toast.success(error, {
+      //   position: "top-right",
+      //   autoClose: 5000,
+      //   hideProgressBar: false,
+      //   closeOnClick: true,
+      //   pauseOnHover: true,
+      //   draggable: true,
+      //   progress: undefined,
+      //   theme: "light",
+      //   transition: Bounce,
+      // });  
     }
   }
 
@@ -455,7 +498,6 @@ function Admin() {
       formData.append("subcategory_id", values.subcategory_id)
       formData.append("color_ids", values.color_ids)
       formData.append("size_ids", values.size_ids)
-      console.log('values.size_ids: ', values.size_ids);
       formData.append("name", values.name)
       formData.append("price", values.price)
       formData.append("type", values.type)
@@ -480,9 +522,20 @@ function Admin() {
       if (id) {
         formData.append("id", id.toString())
         try {
-          await axios.put(`/api/product?id=${id}`, formData, {
+          const response = await axios.put(`/api/product?id=${id}`, formData, {
             headers: { 'content-type': 'multipart/form-data' }
           })
+          toast.success(response.data.message, {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+            transition: Bounce,
+          });
           getAllProduct();
         } catch (error) {
           console.error(error)
@@ -492,7 +545,17 @@ function Admin() {
           const productResponse = await axios.post(`/api/product/`, formData, {
             headers: { 'content-type': 'multipart/form-data' }
           })
-          console.log('productResponse :>> ', productResponse);
+          toast.success(productResponse.data.message, {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+            transition: Bounce,
+          });
           getAllProduct();
         } catch (error) {
           console.error(error)
@@ -502,10 +565,8 @@ function Admin() {
     },
   });
 
-  // console.log('formik.values :>> ', formik.values);
 
   const handleEditProduct = async (item: IProduct) => {
-    console.log('DATA>>>>>>>>>>>>>>>>> ', item);
     setOpenModel(true)
     setId(item.id.toString())
     formik.setFieldValue("category_id", item.category_id)
@@ -613,12 +674,11 @@ function Admin() {
       console.error(error)
     }
   }
-  // const [sizeIds, setSizeIds] = useState<string>('');
 
   const handleCheckboxChange = async (id: string) => {
-    console.log(id, "iddddd")
+    // console.log(id, "iddddd")
     const selectedIds = new Set(formik.values.size_ids.split(',').filter(Boolean)); // Use a Set to handle uniqueness
-    console.log('selectedIds: ', selectedIds);
+    // console.log('selectedIds: ', selectedIds);
     if (selectedIds.has(id)) {
       selectedIds.delete(id);
     } else {
@@ -638,9 +698,9 @@ function Admin() {
   }
 
   const handleColorCheckBoxChange = async (id: string) => {
-    console.log('iddddd :>> ', id);
+    // console.log('iddddd :>> ', id);
     const selectedIds = new Set(formik.values.color_ids?.split(',').filter(Boolean)); // Use a Set to handle uniqueness
-    console.log('selectedIds: ', selectedIds);
+    // console.log('selectedIds: ', selectedIds);
     if (selectedIds.has(id)) {
       selectedIds.delete(id);
     } else {
@@ -654,10 +714,6 @@ function Admin() {
     (currentPage - 1) * recordsPerPage,
     currentPage * recordsPerPage
   );
-
-  const currentSize = allSize.slice(
-    (currentPage - 1) * recordsPerPage,
-    currentPage * recordsPerPage)
 
   // Handler to go to the next page
   const nextPage = () => {
@@ -674,9 +730,56 @@ function Admin() {
   };
 
   // Handler to go to a specific page
-  const goToPage = (page) => {
+  const goToPage = (page: number) => {
     setCurrentPage(page);
   };
+
+  // size pagination
+  const totalPagesOfSize = Math.ceil(allSize.length / recordsPerPage)
+  const currentSize = allSize.slice(
+    (currentPageOfSize - 1) * recordsPerPage,
+    currentPageOfSize * recordsPerPage)
+
+  const nextPageofSize = () => {
+    if (currentPageOfSize < totalPagesOfSize) {
+      setCurrentPageOfSize(currentPageOfSize + 1)
+    }
+  }
+
+  const previousPageOfSize = () => {
+    if (totalPagesOfSize > 1) {
+      setCurrentPageOfSize(currentPageOfSize - 1);
+    }
+  }
+
+  const gotoPageOfSize = (page: number) => {
+    setCurrentPageOfSize(page);
+  }
+
+
+  //inquiry pagination 
+  const totalPagesOfInquiry = Math.ceil(allInquiry.length / recordsPerPage)
+  const currentInquiry = allInquiry.slice(
+    (currentPageOfInquiry - 1) * recordsPerPage,
+    currentPageOfInquiry * recordsPerPage
+  );
+
+  const nextPageOfInquiry = () => {
+    if (currentPageOfInquiry < totalPagesOfInquiry) {
+      setCurrentPageOfInquiry(currentPageOfInquiry + 1)
+    }
+  }
+
+  const previousPageOfInquiry = () => {
+    if (currentPageOfInquiry > 1) {
+      setCurrentPageOfInquiry(currentPageOfInquiry - 1);
+    }
+  }
+
+  const gotoPageOfInquiry = (page: number) => {
+    console.log('page :>> ', page);
+    setCurrentPageOfInquiry(page)
+  }
 
 
 
@@ -751,9 +854,12 @@ function Admin() {
                   <div onClick={() => setPage(5)} className={`${page === 5 && "bg-[#222]"} hover:bg-[#141414] p-2 px-5 rounded-md cursor-pointer`}>
                     Color
                   </div>
-                  <div className="mt-48">
+                  <div onClick={() => setPage(6)} className={`${page === 6 && "bg-[#222]"} hover:bg-[#141414] p-2 px-5 rounded-md cursor-pointer`}>
+                    Inquiry
+                  </div>
+                  <div className="">
                     <div onClick={() => router.push('/')}
-                      className="p-2 px-5 mt-80 rounded-md cursor-pointer text-lg font-semibold">
+                      className="p-2 px-5 mt-64 rounded-md cursor-pointer text-lg font-semibold">
                       Back To Website
                     </div>
                   </div>
@@ -777,6 +883,9 @@ function Admin() {
                           </div>
                           <div className="mb-2">
                             <span className="font-bold">Colors:</span>{item.Colors.map(color => color.name).join(',')}
+                          </div>
+                          <div className="mb-2">
+                            <span className="font-bold">Size:</span>{item.Sizes.map(size => size.name).join(',')}
                           </div>
                           <div className="mb-2">
                             <span className="font-bold">Type:</span>{item.sleeve}
@@ -827,8 +936,7 @@ function Admin() {
                     </button>
                   </div>
                 </div>
-              )
-              }
+              )}
 
               <div className="w-full p-5 max-h-[100vh] bg-[#eee]">
 
@@ -887,6 +995,8 @@ function Admin() {
                                     </SelectGroup>
                                   </SelectContent>
                                 </Select>
+                                {formik.errors.category_id && formik.touched.category_id && (
+                                  <p className="text-red-500">{formik.errors.category_id}</p>)}
                               </div>
 
                               <div className="col-span-4">
@@ -909,24 +1019,8 @@ function Admin() {
                                     </SelectGroup>
                                   </SelectContent>
                                 </Select>
-                              </div>
-
-                              <div className="col-span-4">
-                                {/* <Label>Color</Label>
-                                <Select value={formik.values.color_ids?.toString()}
-                                  onValueChange={(value) => formik.setFieldValue('color_ids', value)}>
-                                  <SelectTrigger className="w-[180px]">
-                                    <SelectValue placeholder="Select a color" />
-                                  </SelectTrigger>
-                                  <SelectContent>
-                                    <SelectGroup>
-                                      <SelectLabel>Color</SelectLabel>
-                                      {allColors.map((item, index) => (
-                                        <SelectItem key={index} value={item.id.toString()}>{item.name}</SelectItem>
-                                      ))}
-                                    </SelectGroup>
-                                  </SelectContent>
-                                </Select> */}
+                                {formik.errors.subcategory_id && formik.touched.subcategory_id &&
+                                  (<p className="text-red-500">{formik.errors.subcategory_id}</p>)}
                               </div>
 
                               <div className="col-span-4">
@@ -947,29 +1041,8 @@ function Admin() {
                                     ))}
                                   </div>
                                 </div>
-                              </div>
-
-                              <div className="col-span-4">
-                                {/* <Label>Size</Label>
-                                <Select value={formik.values.size_ids?.toString()}
-                                  onValueChange={(value) => {
-                                    formik.setFieldValue('size_ids', value.toString());
-                                  }}
-                                >
-                                  <SelectTrigger className="w-[180px]">
-                                    <SelectValue placeholder="Select a size" />
-                                  </SelectTrigger>
-                                  <SelectContent>
-                                    <SelectGroup>
-                                      <SelectLabel>Size</SelectLabel>
-                                      {filteredSize.map((item, index) => (
-                                        <SelectItem key={index} value={item.id.toString()}>
-                                          {item.name}
-                                        </SelectItem>
-                                      ))}
-                                    </SelectGroup>
-                                  </SelectContent>
-                                </Select> */}
+                                {formik.errors.color_ids && formik.touched.color_ids &&
+                                  (<p className="text-red-500">{formik.errors.color_ids}</p>)}
                               </div>
 
                               <div className="col-span-4">
@@ -990,6 +1063,8 @@ function Admin() {
                                     ))}
                                   </div>
                                 </div>
+                                {formik.errors.size_ids && formik.touched.size_ids &&
+                                  (<p className="text-red-500">{formik.errors.size_ids}</p>)}
                               </div>
 
                               <div className="col-span-4">
@@ -1215,12 +1290,18 @@ function Admin() {
                                   multiple
                                 />
                                 {
+                                  formik.errors.images && formik.touched.images &&
+                                  (<p className="text-red-500">{formik.errors.images}</p>)
+                                }
+                                {
                                   selectedImages.length > 0 && (
                                     <div className="mt-2">
                                       <ul>
                                         {selectedImages.map((file, index) => (
                                           <>
-                                            <li key={index} className="flex items-center justify-between">{file.name || file}</li>
+                                            <li key={index} className="flex items-center justify-between">
+                                              {typeof file === 'string' ? file : file.name}
+                                            </li>
                                             <button type="button"
                                               onClick={() => removeImage(index)}
                                               className="text-red-500 ml-4"
@@ -1243,118 +1324,138 @@ function Admin() {
                         </DialogContent>
                       </Dialog>
                     </div>
-                    <Paper sx={{ width: '100%', overflow: 'hidden', borderRadius: '12px' }}>
-                      <TableContainer className="table-scrollable h-[calc(100vh_-_180px)] overflow-auto">
-                        <Table stickyHeader aria-label="sticky table">
-                          <TableHead>
-                            <TableRow>
-                              <TableCell>Category</TableCell>
-                              <TableCell className="text-center">Name</TableCell>
-                              <TableCell>Price</TableCell>
-                              <TableCell>Type</TableCell>
-                              <TableCell>Fabric</TableCell>
-                              <TableCell>Sales Package</TableCell>
-                              <TableCell>Status</TableCell>
-                              <TableCell>Style Code</TableCell>
-                              <TableCell>Neck Type</TableCell>
-                              <TableCell>Pattern</TableCell>
-                              <TableCell>Fabric Care</TableCell>
-                              <TableCell>Net Quantity</TableCell>
-                              <TableCell>Action</TableCell>
-                            </TableRow>
-                          </TableHead>
-                          <TableBody>
-                            {
-                              currentProducts.map((item, index) => (
-                                <TableRow key={index}>
-                                  <TableCell>{item.Category?.name}</TableCell>
-                                  <TableCell>{item.name}</TableCell>
-                                  <TableCell>{item.price}</TableCell>
-                                  <TableCell>{item.type}</TableCell>
-                                  <TableCell>{item.fabric}</TableCell>
-                                  <TableCell>{item.sales_package}</TableCell>
-                                  <TableCell>
-                                    <RadioGroup value={item.status}
-                                      onValueChange={(value) => handleUpdateStatus(item, value)}
-                                    >
-                                      <div className="flex gap-1 items-center whitespace-nowrap">
-                                        <RadioGroupItem value="New Drops" />New Drops
-                                      </div>
-                                      <div className="flex gap-1 items-center whitespace-nowrap">
-                                        <RadioGroupItem value="Most Trending" />Most Trending
-                                      </div>
-                                      <div className="flex gap-1 items-center whitespace-nowrap">
-                                        <RadioGroupItem value="Not Display" />Not Display
-                                      </div>
-                                    </RadioGroup>
-                                  </TableCell>
-                                  <TableCell>{item.style_code}</TableCell>
-                                  <TableCell>{item.neck_type}</TableCell>
-                                  <TableCell>{item.pattern}</TableCell>
-                                  <TableCell>{item.fabric_care}</TableCell>
-                                  <TableCell>{item.net_quantity}</TableCell>
-                                  <TableCell>
-                                    <div className="flex items-center gap-1">
-                                      <svg onClick={() => handleViewProduct(item)}
-                                        className="cursor-pointer w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                                        <path stroke="currentColor" stroke-width="2" d="M21 12c0 1.2-4.03 6-9 6s-9-4.8-9-6c0-1.2 4.03-6 9-6s9 4.8 9 6Z" />
-                                        <path stroke="currentColor" stroke-width="2" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
-                                      </svg>
-                                      <div onClick={() => handleEditProduct(item)}>
-                                        <svg className="cursor-pointer w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                                          <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m14.304 4.844 2.852 2.852M7 7H4a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1v-4.5m2.409-9.91a2.017 2.017 0 0 1 0 2.853l-6.844 6.844L8 14l.713-3.565 6.844-6.844a2.015 2.015 0 0 1 2.852 0Z" />
-                                        </svg>
-                                      </div>
-                                      <svg onClick={() => handleDeleteProduct(item.id)}
-                                        className="cursor-pointer w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                                        <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 7h14m-9 3v8m4-8v8M10 3h4a1 1 0 0 1 1 1v3H9V4a1 1 0 0 1 1-1ZM6 7h12v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7Z" />
-                                      </svg>
-                                    </div>
-                                  </TableCell>
+                    {
+                      loading ? (
+                        <div className="flex  items-center space-x-4">
+                          <Skeleton className="h-12 w-12 rounded-md" />
+                        </div>
+                      ) : (
+                        <Paper sx={{ width: '100%', overflow: 'hidden', borderRadius: '12px' }}>
+                          <TableContainer className="table-scrollable h-[calc(100vh_-_180px)] overflow-auto">
+                            <Table stickyHeader aria-label="sticky table">
+                              <TableHead>
+                                <TableRow>
+                                  <TableCell>Category</TableCell>
+                                  <TableCell className="text-center">Name</TableCell>
+                                  <TableCell>Price</TableCell>
+                                  <TableCell>Fabric</TableCell>
+                                  <TableCell>Color</TableCell>
+                                  <TableCell>Size</TableCell>
+                                  <TableCell>Status</TableCell>
+                                  <TableCell>Style Code</TableCell>
+                                  <TableCell>Pattern</TableCell>
+                                  <TableCell>Action</TableCell>
                                 </TableRow>
-                              ))
-                            }
-                          </TableBody>
-                        </Table>
-                      </TableContainer>
-                      <div className="flex justify-center my-4 space-x-2">
-                        <button
-                          onClick={prevPage}
-                          disabled={currentPage === 1}
-                          className={`px-4 py-2 text-sm font-medium border rounded-md ${currentPage === 1
-                            ? 'cursor-not-allowed opacity-50'
-                            : 'hover:bg-gray-200'
-                            }`}
-                        >
-                          Previous
-                        </button>
+                              </TableHead>
+                              <TableBody>
+                                {
+                                  currentProducts.map((item, index) => (
+                                    <TableRow key={index}>
+                                      <TableCell>{item.Category?.name}</TableCell>
+                                      <TableCell>{item.name}</TableCell>
+                                      <TableCell>{item.price}</TableCell>
+                                      <TableCell>{item.fabric}</TableCell>
+                                      <TableCell>{item.Colors.map(color => color.name).join(',')}</TableCell>
+                                      <TableCell>{item.Sizes.map(size => size.name).join(',')}</TableCell>
+                                      <TableCell>
+                                        <RadioGroup value={item.status}
+                                          onValueChange={(value) => handleUpdateStatus(item, value)}
+                                        >
+                                          <div className="flex gap-1 items-center whitespace-nowrap">
+                                            <RadioGroupItem value="New Drops" />New Drops
+                                          </div>
+                                          <div className="flex gap-1 items-center whitespace-nowrap">
+                                            <RadioGroupItem value="Most Trending" />Most Trending
+                                          </div>
+                                          <div className="flex gap-1 items-center whitespace-nowrap">
+                                            <RadioGroupItem value="Not Display" />Not Display
+                                          </div>
+                                        </RadioGroup>
+                                      </TableCell>
+                                      <TableCell>{item.style_code}</TableCell>
+                                      <TableCell>{item.pattern}</TableCell>
+                                      <TableCell>
+                                        <div className="flex items-center gap-1">
+                                          <svg onClick={() => handleViewProduct(item)}
+                                            className="cursor-pointer w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                            <path stroke="currentColor" stroke-width="2" d="M21 12c0 1.2-4.03 6-9 6s-9-4.8-9-6c0-1.2 4.03-6 9-6s9 4.8 9 6Z" />
+                                            <path stroke="currentColor" stroke-width="2" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+                                          </svg>
+                                          <div onClick={() => handleEditProduct(item)}>
+                                            <svg className="cursor-pointer w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                              <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m14.304 4.844 2.852 2.852M7 7H4a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1v-4.5m2.409-9.91a2.017 2.017 0 0 1 0 2.853l-6.844 6.844L8 14l.713-3.565 6.844-6.844a2.015 2.015 0 0 1 2.852 0Z" />
+                                            </svg>
+                                          </div>
+                                          <AlertDialog open={isProductDialogOpen} onOpenChange={setIsProductDialogOpen}>
+                                            <AlertDialogTrigger>
+                                              <svg onClick={() => openDeleteProductDialog(item.id)}
+                                                className="cursor-pointer w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                                <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 7h14m-9 3v8m4-8v8M10 3h4a1 1 0 0 1 1 1v3H9V4a1 1 0 0 1 1-1ZM6 7h12v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7Z" />
+                                              </svg>
+                                            </AlertDialogTrigger>
+                                            <AlertDialogContent>
+                                              <AlertDialogHeader>
+                                                <AlertDialogTitle>Are you sure you want to delete this product</AlertDialogTitle>
+                                                <AlertDialogDescription>
+                                                  Are you sure you want to delete this product? This action cannot be undone.
+                                                </AlertDialogDescription>
+                                              </AlertDialogHeader>
+                                              <AlertDialogFooter>
+                                                <AlertDialogFooter>
+                                                  <AlertDialogCancel onClick={() => setIsProductDialogOpen(false)}>Cancel</AlertDialogCancel>
+                                                  <AlertDialogAction onClick={handleDeleteProduct}>Confirm</AlertDialogAction>
+                                                </AlertDialogFooter>
+                                              </AlertDialogFooter>
+                                            </AlertDialogContent>
+                                          </AlertDialog>
+                                        </div>
+                                      </TableCell>
+                                    </TableRow>
+                                  ))
+                                }
+                              </TableBody>
+                            </Table>
+                          </TableContainer>
+                          <div className="flex justify-center my-4 space-x-2">
+                            <button
+                              onClick={prevPage}
+                              disabled={currentPage === 1}
+                              className={`px-4 py-2 text-sm font-medium border rounded-md ${currentPage === 1
+                                ? 'cursor-not-allowed opacity-50'
+                                : 'hover:bg-gray-200'
+                                }`}
+                            >
+                              Previous
+                            </button>
 
-                        {/* Render page numbers */}
-                        {Array.from({ length: totalPages }, (_, index) => (
-                          <button
-                            key={index}
-                            onClick={() => goToPage(index + 1)}
-                            className={`px-4 py-2 text-sm font-medium border rounded-md ${currentPage === index + 1
-                              ? 'font-bold bg-gray-300'
-                              : 'hover:bg-gray-200'
-                              }`}
-                          >
-                            {index + 1}
-                          </button>
-                        ))}
+                            {/* Render page numbers */}
+                            {Array.from({ length: totalPages }, (_, index) => (
+                              <button
+                                key={index}
+                                onClick={() => goToPage(index + 1)}
+                                className={`px-4 py-2 text-sm font-medium border rounded-md ${currentPage === index + 1
+                                  ? 'font-bold bg-gray-300'
+                                  : 'hover:bg-gray-200'
+                                  }`}
+                              >
+                                {index + 1}
+                              </button>
+                            ))}
 
-                        <button
-                          onClick={nextPage}
-                          disabled={currentPage === totalPages}
-                          className={`px-4 py-2 text-sm font-medium border rounded-md ${currentPage === totalPages
-                            ? 'cursor-not-allowed opacity-50'
-                            : 'hover:bg-gray-200'
-                            }`}
-                        >
-                          Next
-                        </button>
-                      </div>
-                    </Paper>
+                            <button
+                              onClick={nextPage}
+                              disabled={currentPage === totalPages}
+                              className={`px-4 py-2 text-sm font-medium border rounded-md ${currentPage === totalPages
+                                ? 'cursor-not-allowed opacity-50'
+                                : 'hover:bg-gray-200'
+                                }`}
+                            >
+                              Next
+                            </button>
+                          </div>
+                        </Paper>
+                      )
+                    }
                   </>
                 }
 
@@ -1594,7 +1695,7 @@ function Admin() {
                         </DialogTrigger>
                         <DialogContent className="sm:max-w-[425px] p-5">
                           <DialogHeader>
-                            <DialogTitle className="px-5 pt-5">New Product</DialogTitle>
+                            <DialogTitle className="px-5 pt-5">New Size</DialogTitle>
                             <DialogDescription className="px-5 pt-1">
                               Upload your New Size Here
                             </DialogDescription>
@@ -1675,15 +1776,15 @@ function Admin() {
                                           </AlertDialogTrigger>
                                           <AlertDialogContent>
                                             <AlertDialogHeader>
-                                              <AlertDialogTitle>Are you sure you want to delete this size
+                                              <AlertDialogTitle>Are you sure you want to delete this size?
                                               </AlertDialogTitle>
                                               <AlertDialogDescription>
-                                                Are you sure you want to delete this size? This action cannot be undone.
+                                                Are you sure you want to delete this size{item.name}? This action cannot be undone.
                                               </AlertDialogDescription>
                                             </AlertDialogHeader>
                                             <AlertDialogFooter>
                                               <AlertDialogCancel onClick={() => setIsDeleteDialogOpen(false)}>Cancel</AlertDialogCancel>
-                                              <AlertDialogAction onClick={() => handleDeleteSize(item)}>Continue</AlertDialogAction>
+                                              <AlertDialogAction onClick={handleDeleteSize}>Continue</AlertDialogAction>
                                             </AlertDialogFooter>
                                           </AlertDialogContent>
                                         </AlertDialog>
@@ -1698,9 +1799,9 @@ function Admin() {
                       </TableContainer>
                       <div className="flex justify-center my-4 space-x-2">
                         <button
-                          onClick={prevPage}
-                          disabled={currentPage === 1}
-                          className={`px-4 py-2 text-sm font-medium border rounded-md ${currentPage === 1
+                          onClick={previousPageOfSize}
+                          disabled={currentPageOfSize === 1}
+                          className={`px-4 py-2 text-sm font-medium border rounded-md ${currentPageOfSize === 1
                             ? 'cursor-not-allowed opacity-50'
                             : 'hover:bg-gray-200'
                             }`}
@@ -1708,11 +1809,11 @@ function Admin() {
                           Previous
                         </button>
                         {/* Render page numbers */}
-                        {Array.from({ length: totalPages }, (_, index) => (
+                        {Array.from({ length: totalPagesOfSize }, (_, index) => (
                           <button
                             key={index}
-                            onClick={() => goToPage(index + 1)}
-                            className={`px-4 py-2 text-sm font-medium border rounded-md ${currentPage === index + 1
+                            onClick={() => gotoPageOfSize(index + 1)}
+                            className={`px-4 py-2 text-sm font-medium border rounded-md ${currentPageOfSize === index + 1
                               ? 'font-bold bg-gray-300'
                               : 'hover:bg-gray-200'
                               }`}
@@ -1721,9 +1822,9 @@ function Admin() {
                           </button>
                         ))}
                         <button
-                          onClick={nextPage}
-                          disabled={currentPage === totalPages}
-                          className={`px-4 py-2 text-sm font-medium border rounded-md ${currentPage === totalPages
+                          onClick={nextPageofSize}
+                          disabled={currentPageOfSize === totalPagesOfSize}
+                          className={`px-4 py-2 text-sm font-medium border rounded-md ${currentPageOfSize === totalPagesOfSize
                             ? 'cursor-not-allowed opacity-50'
                             : 'hover:bg-gray-200'
                             }`}
@@ -1844,6 +1945,79 @@ function Admin() {
                           </TableBody>
                         </Table>
                       </TableContainer>
+                    </Paper>
+                  </>
+                }
+
+                {
+                  page === 6 &&
+                  <>
+                    <div className="flex justify-between items-center pb-5">
+                      <div className="text-2xl font-bold">Inquiry</div>
+                    </div>
+
+                    <Paper sx={{ width: '100%', overflow: 'hidden', borderRadius: '12px' }}>
+                      <TableContainer className="table-scrollable h-[calc(100vh_-_100px)] overflow-auto">
+                        <Table>
+                          <TableHead>
+                            <TableRow>
+                              <TableCell>ID</TableCell>
+                              <TableCell>Email</TableCell>
+                              <TableCell>Mobile Number</TableCell>
+                              <TableCell>Message</TableCell>
+                            </TableRow>
+                          </TableHead>
+                          <TableBody>
+                            {
+                              currentInquiry.map((item, index) => (
+                                <TableRow key={index}>
+                                  <TableCell>{item.id}</TableCell>
+                                  <TableCell>{item.email}</TableCell>
+                                  <TableCell>{item.phone}</TableCell>
+                                  <TableCell>{item.message}</TableCell>
+                                </TableRow>
+                              ))
+                            }
+                          </TableBody>
+                        </Table>
+                      </TableContainer>
+                      <div className="flex justify-center my-4 space-x-2">
+                        <button
+                          onClick={previousPageOfInquiry}
+                          disabled={currentPageOfInquiry === 1}
+                          className={`px-4 py-2 text-sm font-medium border rounded-md ${currentPageOfInquiry === 1
+                            ? 'cursor-not-allowed opacity-50'
+                            : 'hover:bg-gray-200'
+                            }`}
+                        >
+                          Previous
+                        </button>
+
+                        {/* Render page numbers */}
+                        {Array.from({ length: totalPagesOfInquiry }, (_, index) => (
+                          <button
+                            key={index}
+                            onClick={() => gotoPageOfInquiry(index + 1)}
+                            className={`px-4 py-2 text-sm font-medium border rounded-md ${currentPageOfInquiry === index + 1
+                              ? 'font-bold bg-gray-300'
+                              : 'hover:bg-gray-200'
+                              }`}
+                          >
+                            {index + 1}
+                          </button>
+                        ))}
+
+                        <button
+                          onClick={nextPageOfInquiry}
+                          disabled={currentPageOfInquiry === totalPagesOfInquiry}
+                          className={`px-4 py-2 text-sm font-medium border rounded-md ${currentPageOfInquiry === totalPagesOfInquiry
+                            ? 'cursor-not-allowed opacity-50'
+                            : 'hover:bg-gray-200'
+                            }`}
+                        >
+                          Next
+                        </button>
+                      </div>
                     </Paper>
                   </>
                 }
