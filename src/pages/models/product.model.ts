@@ -99,6 +99,14 @@ class Product extends Model {
                     type: DataTypes.ENUM('New Drops', 'Most Trending', 'Not Display'),
                     allowNull: true
                 },
+                description: {
+                    type: DataTypes.TEXT,
+                    allowNull: true
+                },
+                discount_price: {
+                    type: DataTypes.INTEGER,
+                    allowNull: true
+                },
                 isDeleted: {
                     type: DataTypes.BOOLEAN,
                     allowNull: false,

@@ -24,7 +24,7 @@ import TableRow from '@mui/material/TableRow';
 import { useFormik } from "formik";
 import * as yup from 'yup';
 import axios from "axios";
-import { ICategories, IColor, Inquiry, IProduct, ISize, ISubCategories } from "@/interface/types";
+import { ICategories, IColor, Inquiry, IProduct, ISize, ISubCategories, ProductInquiry } from "@/interface/types";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
 import Image from "next/image";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
@@ -33,6 +33,7 @@ import { Bounce, ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useRouter } from "next/navigation";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Textarea } from "@/components/ui/textarea";
 
 
 
@@ -76,10 +77,11 @@ function Admin() {
   const [isProductDialogOpen, setIsProductDialogOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [allInquiry, setAllInquiry] = useState<Inquiry[]>([]);
-
-
-
+  const [productInquiry, setProductInquiry] = useState<ProductInquiry[]>([])
   const router = useRouter();
+
+
+
   const loginCredentials = [{ email: 'abc@gmail.com', password: 'Abc@123' },
   { email: 'test@gmail.com', password: 'test@123' }]
 
@@ -97,7 +99,8 @@ function Admin() {
       return;
     }
 
-    const findData = loginCredentials.find((value) => value.email === email && value.password === password)
+    const findData = loginCredentials.find((value) => value.email === email &&
+      value.password === password)
 
     if (findData) {
       localStorage.setItem("loginCredentials", JSON.stringify(findData));
@@ -107,6 +110,11 @@ function Admin() {
     setEmail("");
     setPassword("");
   };
+
+  const handleLogout = () => {
+    localStorage.removeItem('loginCredentials')
+    setAdminShow(false)
+  }
 
   const getAllProduct = async () => {
     setLoading(true);
@@ -121,11 +129,14 @@ function Admin() {
   }
 
   const getAllCategory = async () => {
+    setLoading(true);
     try {
       const response = await axios.get(`/api/category`)
       setAllCategory(response.data.data)
     } catch (error) {
       console.error(error)
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -140,20 +151,26 @@ function Admin() {
   // }
 
   const getAllSize = async () => {
+    setLoading(true)
     try {
       const response = await axios.get(`/api/size`)
       setAllSize(response.data.data)
     } catch (error) {
       console.error(error)
+    } finally {
+      setLoading(false)
     }
   }
 
   const getAllColor = async () => {
+    setLoading(true)
     try {
       const colorResponse = await axios.get(`/api/color`)
       setAllColors(colorResponse.data.data)
     } catch (error) {
       console.error(error)
+    } finally {
+      setLoading(false)
     }
   }
 
@@ -161,6 +178,27 @@ function Admin() {
     try {
       const response = await axios.get('/api/get-in-touch')
       setAllInquiry(response.data.data)
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
+  const getProductInquiry = async () => {
+    setLoading(true);
+    try {
+      const response = await axios.get('/api/product-inquiry')
+      setProductInquiry(response.data.data)
+    } catch (error) {
+      console.error(error)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const getApiPage = async () => {
+    try {
+      await getAllSize();
+      await getAllCategory();
     } catch (error) {
       console.error(error)
     }
@@ -174,10 +212,11 @@ function Admin() {
     } else if (page === 3) {
       // getAllSubCategory();
     } else if (page === 4) {
-      getAllSize();
-      getAllCategory();
+      getApiPage();
     } else if (page === 5) {
       getAllColor();
+    } else if (page === 6) {
+      getProductInquiry();
     } else {
       getAllInquiry();
     }
@@ -476,6 +515,7 @@ function Admin() {
       status: "",
       sales_package: "",
       images: [] as File[],
+      description: "",
     },
     validationSchema: yup.object({
       category_id: yup.string().required("Select a category"),
@@ -500,6 +540,7 @@ function Admin() {
       status: yup.string().min(1).max(30).required("Enter status"),
       sales_package: yup.string().min(1).max(30).required("Enter status"),
       images: yup.array().min(1, "At least one file is required").required("Required"),
+      description: yup.string().min(10).max(500).required("Enter the description"),
     }),
     onSubmit: async (values) => {
       const formData = new FormData();
@@ -527,6 +568,8 @@ function Admin() {
       values.images.forEach((images) => {
         formData.append("images", images)
       })
+      formData.append("description", values.description)
+
 
       if (id) {
         formData.append("id", id.toString())
@@ -576,6 +619,9 @@ function Admin() {
 
 
   const handleEditProduct = async (item: IProduct) => {
+    getAllCategory();
+    getAllSize();
+    getAllColor();
     setOpenModel(true)
     setId(item.id.toString())
     formik.setFieldValue("category_id", item.category_id)
@@ -602,6 +648,7 @@ function Admin() {
     const imageFilenames: any = item.ProductImages.map((image) => image.fileName);
     formik.setFieldValue("images", imageFilenames);
     setSelectedImages(imageFilenames)
+    formik.setFieldValue("description", item.description)
   }
 
   useEffect(() => {
@@ -669,11 +716,10 @@ function Admin() {
     formData.append("net_quantity", item.net_quantity);
     formData.append("status", value);
     formData.append("sales_package", item.sales_package);
-
-    // Append images (if needed)
     item.ProductImages.forEach((image) => {
       formData.append("images", image.fileSize);
     });
+    formData.append("description", item.description);
 
     try {
       const response = await axios.put(`/api/product?id=${item.id}`, formData)
@@ -864,11 +910,17 @@ function Admin() {
                     Color
                   </div>
                   <div onClick={() => setPage(6)} className={`${page === 6 && "bg-[#222]"} hover:bg-[#141414] p-2 px-5 rounded-md cursor-pointer`}>
-                    Inquiry
+                    Product Inquiry
                   </div>
-                  <div className="">
+                  <div onClick={() => setPage(7)} className={`${page === 7 && "bg-[#222]"} hover:bg-[#141414] p-2 px-5 rounded-md cursor-pointer`}>
+                    Get in Touch
+                  </div>
+                  <div className="mt-60">
+                    <div onClick={handleLogout} className="p-2 px-5 rounded-md cursor-pointer text-lg font-semibold">
+                      Logout
+                    </div>
                     <div onClick={() => router.push('/')}
-                      className="p-2 px-5 mt-64 rounded-md cursor-pointer text-lg font-semibold">
+                      className="p-2 px-5 rounded-md cursor-pointer text-lg font-semibold">
                       Back To Website
                     </div>
                   </div>
@@ -924,6 +976,9 @@ function Admin() {
                             <span className="font-bold">Status:</span>{item.status}
                           </div>
                           <div className="mb-2">
+                            <span className="font-bold">Description:</span>{item.description}
+                          </div>
+                          <div className="mb-2">
                             <span className="font-bold">Images:</span>
                             {
                               item.ProductImages.map((image, index) => (
@@ -956,10 +1011,13 @@ function Admin() {
                       <div className="text-2xl font-bold">Product</div>
                       <Dialog open={openModel} onOpenChange={(state) => setOpenModel(state)}>
                         <DialogTrigger asChild>
-                          <Button className="rounded-full pr-5" onClick={() => {
+                          <Button className="rounded-full pr-5" onClick={async () => {
                             setId(null)
                             setSelectedImages([])
                             formik.resetForm()
+                            await getAllCategory();
+                            await getAllSize();
+                            await getAllColor();
                           }}>
                             <svg
                               className="w-6 h-6 text-gray-800 dark:text-white mr-2"
@@ -1314,13 +1372,25 @@ function Admin() {
                                             <button type="button"
                                               onClick={() => removeImage(index)}
                                               className="text-red-500 ml-4"
-                                            >Cancel</button>
+                                            >✖️</button>
                                           </>
                                         ))}
                                       </ul>
                                     </div>
                                   )
                                 }
+                              </div>
+
+                              <div className="col-span-4">
+                                <Label>Product Description</Label>
+                                <Textarea
+                                  placeholder="type your message here."
+                                  name="description"
+                                  value={formik.values.description}
+                                  onChange={formik.handleChange}
+                                />
+                                {formik.errors.description && formik.touched.description &&
+                                  (<p className="text-red-500">{formik.errors.description}</p>)}
                               </div>
 
                             </div>
@@ -1335,8 +1405,16 @@ function Admin() {
                     </div>
                     {
                       loading ? (
-                        <div className="flex  items-center space-x-4">
-                          <Skeleton className="h-12 w-12 rounded-md" />
+                        <div className="flex items-center justify-center w-full">
+                          <TableRow className="flex items-center justify-center w-full">
+                            <TableCell className="flex justify-center">
+                              <Skeleton className="h-12 w-12 rounded-full" />
+                            </TableCell>
+                            <TableCell className="space-y-2 flex flex-col items-center">
+                              <Skeleton className="h-4 w-[250px]" />
+                              <Skeleton className="h-4 w-[200px]" />
+                            </TableCell>
+                          </TableRow>
                         </div>
                       ) : (
                         <Paper sx={{ width: '100%', overflow: 'hidden', borderRadius: '12px' }}>
@@ -1532,7 +1610,21 @@ function Admin() {
                             </TableRow>
                           </TableHead>
                           <TableBody>
-                            {
+                            {loading ? (
+                              Array.from({ length: 5 }).map((_, index) => (
+                                <TableRow key={index}>
+                                  <TableCell>
+                                    <Skeleton className="h-4 w-[100px]" />
+                                  </TableCell>
+                                  <TableCell>
+                                    <Skeleton className="h-4 w-[250px]" />
+                                  </TableCell>
+                                  <TableCell>
+                                    <Skeleton className="h-4 w-[100px]" />
+                                  </TableCell>
+                                </TableRow>
+                              ))
+                            ) : (
                               allCategory.map((item, index) => (
                                 <TableRow key={index}>
                                   <TableCell>{item.id}</TableCell>
@@ -1568,7 +1660,9 @@ function Admin() {
                                   </TableCell>
                                 </TableRow>
                               ))
-                            }
+                            )}
+
+
                           </TableBody>
                         </Table>
                       </TableContainer>
@@ -1764,7 +1858,27 @@ function Admin() {
                             </TableRow>
                           </TableHead>
                           <TableBody>
-                            {
+                            {loading ? (
+                              Array.from({ length: 5 }).map((_, index) => (
+                                <TableRow key={index}>
+                                  <TableCell>
+                                    <Skeleton className="h-4 w-[100px]" />
+                                  </TableCell>
+                                  <TableCell>
+                                    <Skeleton className="h-4 w-[250px]" />
+                                  </TableCell>
+                                  <TableCell>
+                                    <Skeleton className="h-4 w-[100px]" />
+                                  </TableCell>
+                                  <TableCell>
+                                    <Skeleton className="h-4 w-[100px]" />
+                                  </TableCell>
+                                  <TableCell>
+                                    <Skeleton className="h-4 w-[100px]" />
+                                  </TableCell>
+                                </TableRow>
+                              ))
+                            ) : (
                               currentSize.map((item, index) => (
                                 <>
                                   <TableRow key={index}>
@@ -1802,7 +1916,8 @@ function Admin() {
                                   </TableRow>
                                 </>
                               ))
-                            }
+                            )}
+
                           </TableBody>
                         </Table>
                       </TableContainer>
@@ -1907,7 +2022,21 @@ function Admin() {
                             </TableRow>
                           </TableHead>
                           <TableBody>
-                            {
+                            {loading ? (
+                              Array.from({ length: 5 }).map((_, index) => (
+                                <TableRow key={index}>
+                                  <TableCell>
+                                    <Skeleton className="h-4 w-[100px]" />
+                                  </TableCell>
+                                  <TableCell>
+                                    <Skeleton className="h-4 w-[250px]" />
+                                  </TableCell>
+                                  <TableCell>
+                                    <Skeleton className="h-4 w-[100px]" />
+                                  </TableCell>
+                                </TableRow>
+                              ))
+                            ) : (
                               allColors.map((item, index) => {
                                 return (
                                   <TableRow key={index}>
@@ -1950,7 +2079,7 @@ function Admin() {
                                   </TableRow>
                                 )
                               })
-                            }
+                            )}
                           </TableBody>
                         </Table>
                       </TableContainer>
@@ -1960,6 +2089,78 @@ function Admin() {
 
                 {
                   page === 6 &&
+                  <>
+                    <div className="flex justify-between items-center pb-5">
+                      <div className="text-2xl font-bold">Product Inquiry</div>
+                    </div>
+                    <Paper sx={{ width: '100%', overflow: 'hidden', borderRadius: '12px' }}>
+                      <TableContainer className="table-scrollable h-[calc(100vh_-_100px)] overflow-auto">
+                        <Table>
+                          <TableHead>
+                            <TableRow>
+                              <TableCell>ID</TableCell>
+                              <TableCell>Name</TableCell>
+                              <TableCell>Email</TableCell>
+                              <TableCell>Mobile Number</TableCell>
+                              <TableCell>Message</TableCell>
+                              <TableCell>Product Name</TableCell>
+                              <TableCell>Quntity</TableCell>
+                              <TableCell>Price</TableCell>
+                              <TableCell>Color</TableCell>
+                              <TableCell>Size</TableCell>
+                            </TableRow>
+                          </TableHead>
+                          <TableBody>
+                            {loading ? (
+                              Array.from(new Array(5)).map((_, index) => (
+                                <TableRow key={index}>
+                                  <TableCell>
+                                    <Skeleton className="h-4 w-[250px]" />
+                                  </TableCell>
+                                  <TableCell>
+                                    <Skeleton className="h-4 w-[250px]" />
+                                  </TableCell>
+                                  <TableCell>
+                                    <Skeleton className="h-4 w-[250px]" />
+                                  </TableCell>
+                                  <TableCell>
+                                    <Skeleton className="h-4 w-[250px]" />
+                                  </TableCell>
+                                  <TableCell>
+                                    <Skeleton className="h-4 w-[250px]" />
+                                  </TableCell>
+                                </TableRow>
+                              ))
+                            ) : (
+                              productInquiry.map((item, index) => {
+                                console.log('item :>> ', item);
+                                const filteredData = item.Sizes.filter((val) => item.size_ids.includes(val.id))
+                                const filteredColorData = item.Colors.filter(val => item.color_ids.includes(val.id))
+                                return (
+                                  <TableRow key={index}>
+                                    <TableCell>{item.id}</TableCell>
+                                    <TableCell>{item.name}</TableCell>
+                                    <TableCell>{item.email}</TableCell>
+                                    <TableCell>{item.mobile_no}</TableCell>
+                                    <TableCell>{item.inquiry_message}</TableCell>
+                                    <TableCell>{item.Product.name}</TableCell>
+                                    <TableCell>{item.quantity}</TableCell>
+                                    <TableCell>Price</TableCell>
+                                    <TableCell>{filteredColorData.map((item) => item.name).join(',')}</TableCell>
+                                    <TableCell>{filteredData.map((item) => item.name).join(',')}</TableCell>
+                                  </TableRow>
+                                )
+                              })
+                            )}
+                          </TableBody>
+                        </Table>
+                      </TableContainer>
+                    </Paper>
+                  </>
+                }
+
+                {
+                  page === 7 &&
                   <>
                     <div className="flex justify-between items-center pb-5">
                       <div className="text-2xl font-bold">Inquiry</div>
@@ -1977,7 +2178,21 @@ function Admin() {
                             </TableRow>
                           </TableHead>
                           <TableBody>
-                            {
+                            {loading ? (
+                              Array.from({ length: 5 }).map((_, index) => (
+                                <TableRow key={index}>
+                                  <TableCell>
+                                    <Skeleton className="h-4 w-[100px]" />
+                                  </TableCell>
+                                  <TableCell>
+                                    <Skeleton className="h-4 w-[250px]" />
+                                  </TableCell>
+                                  <TableCell>
+                                    <Skeleton className="h-4 w-[100px]" />
+                                  </TableCell>
+                                </TableRow>
+                              ))
+                            ) : (
                               currentInquiry.map((item, index) => (
                                 <TableRow key={index}>
                                   <TableCell>{item.id}</TableCell>
@@ -1986,7 +2201,7 @@ function Admin() {
                                   <TableCell>{item.message}</TableCell>
                                 </TableRow>
                               ))
-                            }
+                            )}
                           </TableBody>
                         </Table>
                       </TableContainer>
@@ -2035,7 +2250,7 @@ function Admin() {
             </div>
           </>
         )}
-      </main >
+      </main>
     </>
   );
 }

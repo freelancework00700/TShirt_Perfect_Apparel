@@ -14,15 +14,15 @@ import {
 import Link from "next/link";
 import axios from "axios";
 import { ICategories, IColor, IProduct, ISize } from "@/interface/types";
+import { Slider } from "@/components/ui/slider";
 
 function Product() {
   const [toggleData, setToggleData] = useState(true);
   const [allData, setAllData] = useState<IProduct[]>([]);
+  // console.log('allData: ', allData);
   const [categories, setCategories] = useState<ICategories[]>([]);
   const [allColor, setAllColor] = useState<IColor[]>([]);
-  console.log("allColor: ", allColor);
   const [allSize, setAllSize] = useState<ISize[]>([]);
-  console.log("allSize: ", allSize);
   const [selectedCategories, setSelectedCategories] = useState<number[]>([]);
   const [selectedSizes, setSelectedSizes] = useState<number[]>([]);
   const [availableSizes, setAvailableSizes] = useState<ISize[]>([]);
@@ -61,6 +61,16 @@ function Product() {
   useEffect(() => {
     getProduct();
   }, []);
+
+  useEffect(() => {
+    const filteredData = allData.filter((val) => selectedCategories.includes(val.category_id));
+
+    const sizeFilter = filteredData.filter((val) =>
+      val.size_ids.some((size) => selectedSizes.includes(size))
+    );
+    console.log('sizeFilter:::::', sizeFilter);
+
+  }, [allData, selectedCategories, allSize, selectedSizes])
 
   const handleCheckboxChange = (id: number) => {
     setSelectedCategories((prev) => {
@@ -121,9 +131,7 @@ function Product() {
       (product) =>
         selectedCategories.includes(product.category_id) &&
         product.size_ids?.some((sizeId) => selectedSizes.includes(sizeId)) &&
-        product.color_ids?.some((colorId: any) =>
-          selectedColors.includes(colorId)
-        )
+        product.color_ids?.some((colorId: any) => selectedColors.includes(colorId))
     );
     setFilteredProducts(products);
   }, [selectedCategories, selectedSizes, selectedColors, allData]);
@@ -170,13 +178,10 @@ function Product() {
                   <AccordionTrigger>Size</AccordionTrigger>
                   <AccordionContent>
                     <div className="flex flex-col gap-3 mt-3">
-                      {availableSizes.map((item, index) => {
+                      {/* {availableSizes.map((item, index) => {
                         return (
                           <>
-                            <div
-                              key={index}
-                              className="flex items-center space-x-2"
-                            >
+                            <div key={index} className="flex items-center space-x-2">
                               <Checkbox
                                 id={`size-${item.id}`}
                                 checked={selectedSizes.includes(item.id)}
@@ -184,8 +189,27 @@ function Product() {
                                   handleSizeCheckboxChange(item.id)
                                 }
                               />
-                              <label
-                                htmlFor="terms2"
+                              <label htmlFor="terms2"
+                                className="text-sm font-medium leading-none text-[#777]"
+                              >
+                                {item.name}
+                              </label>
+                            </div>
+                          </>
+                        );
+                      })} */}
+                      {allSize.map((item, index) => {
+                        return (
+                          <>
+                            <div key={index} className="flex items-center space-x-2">
+                              <Checkbox
+                                id={`size-${item.id}`}
+                                checked={selectedSizes.includes(item.id)}
+                                onCheckedChange={() =>
+                                  handleSizeCheckboxChange(item.id)
+                                }
+                              />
+                              <label htmlFor="terms2"
                                 className="text-base font-medium leading-none text-[#777]"
                               >
                                 {item.name}
@@ -201,14 +225,11 @@ function Product() {
                   <AccordionTrigger>Colors</AccordionTrigger>
                   <AccordionContent>
                     <div className="flex flex-col gap-3 mt-3">
-                      {availableColors?.map((item, index) => {
+                      {allColor?.map((item, index) => {
                         // console.log('availableColors: ', availableColors?.map((item) => item));
                         return (
                           <>
-                            <div
-                              key={index}
-                              className="flex items-center space-x-2"
-                            >
+                            <div key={index} className="flex items-center space-x-2">
                               <Checkbox
                                 id={`color-${item.id}`}
                                 checked={selectedColors.includes(item.id)}
@@ -266,12 +287,6 @@ function Product() {
                 {filteredProducts.length > 0 ? (
                   // Display filteredProducts when data is available
                   filteredProducts.map((item, index) => {
-                    console.log(
-                      "filteredProducts:::::::::::::::: ",
-                      filteredProducts.map((item) =>
-                        item.Colors.map((itemColor) => itemColor.name)
-                      )
-                    );
                     return (
                       <>
                         <Link
