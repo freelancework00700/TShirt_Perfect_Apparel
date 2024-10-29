@@ -135,7 +135,7 @@ const GetInTouch = () => {
                 <div className="mb-3 pt-3">
                   <button
                     type="submit"
-                    className="bg-[#f8a25b] rounded-md uppercase text-sm flex w-full justify-center items-center font-semibold text-[#1d1c20] py-3 px-4"
+                    className="bg-[#f8a25b] rounded-md uppercase text-base flex w-full justify-center items-center font-semibold text-[#1d1c20] py-3 px-4"
                   >
                     Submit
                   </button>

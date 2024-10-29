@@ -19,36 +19,36 @@ const Sitemap = () => {
         </h3>
         <ul className='pl-[30px] list-disc'>
           <li className="py-2">
-            <Link href="/" className="text-sm font-medium leading-[16px] text-[#000] hover:text-[#f8a25b] cursor-pointer ">
+            <Link href="/" className="text-base font-medium leading-[16px] text-[#000] hover:text-[#f8a25b] cursor-pointer ">
               Home
             </Link>
           </li>
           <li className="py-2">
-            <Link href="http://visionblinds.in/about" className="text-sm font-medium leading-[16px] text-[#000] hover:text-[#f8a25b] cursor-pointer ">
+            <Link href="http://visionblinds.in/about" className="text-base font-medium leading-[16px] text-[#000] hover:text-[#f8a25b] cursor-pointer ">
               About
             </Link>
           </li>
           <li className="py-2">
-            <Link href="http://visionblinds.in/services" className="text-sm font-medium leading-[16px] text-[#000] cursor-pointer ">
+            <Link href="http://visionblinds.in/services" className="text-base font-medium leading-[16px] text-[#000] cursor-pointer ">
               Services
               <ul className='ml-10 mt-3 list-square'>
                 <li className="py-2">
-                  <Link href="http://visionblinds.in/services" className="text-sm font-medium leading-[16px] text-[#000] hover:text-[#f8a25b] cursor-pointer ">
+                  <Link href="http://visionblinds.in/services" className="text-base font-medium leading-[16px] text-[#000] hover:text-[#f8a25b] cursor-pointer ">
                     Web Development
                   </Link>
                 </li>
                 <li className="py-2">
-                  <Link href="http://visionblinds.in/services" className="text-sm font-medium leading-[16px] text-[#000] hover:text-[#f8a25b] cursor-pointer ">
+                  <Link href="http://visionblinds.in/services" className="text-base font-medium leading-[16px] text-[#000] hover:text-[#f8a25b] cursor-pointer ">
                   Mobile App Development
                   </Link>
                 </li>
                 <li className="py-2">
-                  <Link href="http://visionblinds.in/services" className="text-sm font-medium leading-[16px] text-[#000] hover:text-[#f8a25b] cursor-pointer ">
+                  <Link href="http://visionblinds.in/services" className="text-base font-medium leading-[16px] text-[#000] hover:text-[#f8a25b] cursor-pointer ">
                   Cloud Service
                   </Link>
                 </li>
                 <li className="py-2">
-                  <Link href="http://visionblinds.in/services" className="text-sm font-medium leading-[16px] text-[#000] hover:text-[#f8a25b] cursor-pointer ">
+                  <Link href="http://visionblinds.in/services" className="text-base font-medium leading-[16px] text-[#000] hover:text-[#f8a25b] cursor-pointer ">
                   IT Consulting
                   </Link>
                 </li>
@@ -56,7 +56,7 @@ const Sitemap = () => {
             </Link>
           </li>
           <li className="py-2">
-            <Link href="/contactUs" className="text-sm font-medium leading-[16px] text-[#000] hover:text-[#f8a25b] cursor-pointer ">
+            <Link href="/contactUs" className="text-base font-medium leading-[16px] text-[#000] hover:text-[#f8a25b] cursor-pointer ">
               Contact Us
             </Link>
           </li>

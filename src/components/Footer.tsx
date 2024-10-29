@@ -72,7 +72,7 @@ const Footer = () => {
       <ToastContainer />
       <footer className="bg-[#fff]">
         <div className="w-full bg-gray-100 py-10 max-md:py-5">
-          <div className="container mx-auto xl:max-w-7xl max-sm:px-4">
+          <div className="container mx-auto xl:max-w-8xl max-sm:px-4">
             <div className="grid grid-cols-12">
               <div className="col-span-12 text-[30px] font-medium text-center mb-4 ">
                 Get In Touch
@@ -144,7 +144,7 @@ const Footer = () => {
             </div>
           </div>
         </div>
-        <div className="container mx-auto xl:max-w-7xl max-sm:px-4">
+        <div className="container mx-auto xl:max-w-8xl max-sm:px-4">
           <div className="flex justify-between items-center flex-wrap max-md:justify-center">
             <div className="font-bold xl:me-[2rem] text-[24px] ">
               Perfect Apparels
@@ -153,7 +153,7 @@ const Footer = () => {
               <li className=" py-[23px] cursor-pointer">
                 <Link
                   href="/"
-                  className={`text-sm uppercase font-medium leading-[16px]  hover:text-[#f8a25b] ${
+                  className={`text-base uppercase font-medium leading-[16px]  hover:text-[#f8a25b] ${
                     router === "/" ? "text-[#f8a25b]" : "text-[#000]"
                   }`}
                 >
@@ -163,7 +163,7 @@ const Footer = () => {
               <li className=" py-[23px] cursor-pointer">
                 <Link
                   href="/product"
-                  className={`text-sm uppercase font-medium leading-[16px]  hover:text-[#f8a25b] ${
+                  className={`text-base uppercase font-medium leading-[16px]  hover:text-[#f8a25b] ${
                     router === "/product" ? "text-[#f8a25b]" : "text-[#000]"
                   }`}
                 >
@@ -173,7 +173,7 @@ const Footer = () => {
               <li className=" py-[23px] cursor-pointer">
                 <Link
                   href="/customer-service"
-                  className={`text-sm uppercase font-medium leading-[16px]  hover:text-[#f8a25b] ${
+                  className={`text-base uppercase font-medium leading-[16px]  hover:text-[#f8a25b] ${
                     router === "/service" ? "text-[#f8a25b]" : "text-[#000]"
                   }`}
                 >
@@ -183,7 +183,7 @@ const Footer = () => {
               <li className=" py-[23px] cursor-pointer">
                 <Link
                   href="/privacy-policy"
-                  className={`text-sm uppercase font-medium leading-[16px]  hover:text-[#f8a25b] ${
+                  className={`text-base uppercase font-medium leading-[16px]  hover:text-[#f8a25b] ${
                     router === "/privacy-policy"
                       ? "text-[#f8a25b]"
                       : "text-[#000]"
@@ -196,8 +196,8 @@ const Footer = () => {
           </div>
         </div>
         <div className="w-full bg-gray-100">
-          <div className="container mx-auto xl:max-w-7xl max-sm:px-4">
-            <div className="text-sm text-center py-4">
+          <div className="container mx-auto xl:max-w-8xl max-sm:px-4">
+            <div className="text-base text-center py-4">
               © 2025 Perfect Apparels. All rights reserved
             </div>
           </div>

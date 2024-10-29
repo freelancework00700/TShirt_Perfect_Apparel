@@ -6,7 +6,7 @@ function PrivacyPolicy() {
   return (
     <main className="max-[1024px]:mt-[77px] relative">
       <Header />
-      <div className="container mx-auto xl:max-w-7xl">
+      <div className="container mx-auto xl:max-w-8xl">
         <section>
           <h2 className="my-8 text-[30px] font-medium">PRIVACY POLICY</h2>
         </section>

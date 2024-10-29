@@ -798,7 +798,7 @@ function Admin() {
       <main className="relative max-h-[100vh]">
         {!adminShow ? (
           <div className="bg-gray-100 h-[100vh]">
-            <div className="container mx-auto xl:max-w-7xl">
+            <div className="container mx-auto xl:max-w-8xl">
               <div
                 className="login-form max-w-[600px] w-[450px] mx-auto absolute top-[50%] left-[50%]"
                 style={{ transform: "translate(-50%, -50%)" }}
@@ -808,7 +808,7 @@ function Admin() {
                 </div>
                 <form className="m-2 p-10 rounded-md shadow-lg bg-white">
                   <div>
-                    <label className="text-sm">Email</label>
+                    <label className="text-base">Email</label>
                     <Input
                       type="email"
                       placeholder="Email"
@@ -817,7 +817,7 @@ function Admin() {
                     />
                   </div>
                   <div className="mt-3">
-                    <label className="text-sm">Password</label>
+                    <label className="text-base">Password</label>
                     <Input
                       type="password"
                       placeholder="password"
@@ -1429,7 +1429,7 @@ function Admin() {
                             <button
                               onClick={prevPage}
                               disabled={currentPage === 1}
-                              className={`px-4 py-2 text-sm font-medium border rounded-md ${currentPage === 1
+                              className={`px-4 py-2 text-base font-medium border rounded-md ${currentPage === 1
                                 ? 'cursor-not-allowed opacity-50'
                                 : 'hover:bg-gray-200'
                                 }`}
@@ -1442,7 +1442,7 @@ function Admin() {
                               <button
                                 key={index}
                                 onClick={() => goToPage(index + 1)}
-                                className={`px-4 py-2 text-sm font-medium border rounded-md ${currentPage === index + 1
+                                className={`px-4 py-2 text-base font-medium border rounded-md ${currentPage === index + 1
                                   ? 'font-bold bg-gray-300'
                                   : 'hover:bg-gray-200'
                                   }`}
@@ -1454,7 +1454,7 @@ function Admin() {
                             <button
                               onClick={nextPage}
                               disabled={currentPage === totalPages}
-                              className={`px-4 py-2 text-sm font-medium border rounded-md ${currentPage === totalPages
+                              className={`px-4 py-2 text-base font-medium border rounded-md ${currentPage === totalPages
                                 ? 'cursor-not-allowed opacity-50'
                                 : 'hover:bg-gray-200'
                                 }`}
@@ -1810,7 +1810,7 @@ function Admin() {
                         <button
                           onClick={previousPageOfSize}
                           disabled={currentPageOfSize === 1}
-                          className={`px-4 py-2 text-sm font-medium border rounded-md ${currentPageOfSize === 1
+                          className={`px-4 py-2 text-base font-medium border rounded-md ${currentPageOfSize === 1
                             ? 'cursor-not-allowed opacity-50'
                             : 'hover:bg-gray-200'
                             }`}
@@ -1822,7 +1822,7 @@ function Admin() {
                           <button
                             key={index}
                             onClick={() => gotoPageOfSize(index + 1)}
-                            className={`px-4 py-2 text-sm font-medium border rounded-md ${currentPageOfSize === index + 1
+                            className={`px-4 py-2 text-base font-medium border rounded-md ${currentPageOfSize === index + 1
                               ? 'font-bold bg-gray-300'
                               : 'hover:bg-gray-200'
                               }`}
@@ -1833,7 +1833,7 @@ function Admin() {
                         <button
                           onClick={nextPageofSize}
                           disabled={currentPageOfSize === totalPagesOfSize}
-                          className={`px-4 py-2 text-sm font-medium border rounded-md ${currentPageOfSize === totalPagesOfSize
+                          className={`px-4 py-2 text-base font-medium border rounded-md ${currentPageOfSize === totalPagesOfSize
                             ? 'cursor-not-allowed opacity-50'
                             : 'hover:bg-gray-200'
                             }`}
@@ -1994,7 +1994,7 @@ function Admin() {
                         <button
                           onClick={previousPageOfInquiry}
                           disabled={currentPageOfInquiry === 1}
-                          className={`px-4 py-2 text-sm font-medium border rounded-md ${currentPageOfInquiry === 1
+                          className={`px-4 py-2 text-base font-medium border rounded-md ${currentPageOfInquiry === 1
                             ? 'cursor-not-allowed opacity-50'
                             : 'hover:bg-gray-200'
                             }`}
@@ -2007,7 +2007,7 @@ function Admin() {
                           <button
                             key={index}
                             onClick={() => gotoPageOfInquiry(index + 1)}
-                            className={`px-4 py-2 text-sm font-medium border rounded-md ${currentPageOfInquiry === index + 1
+                            className={`px-4 py-2 text-base font-medium border rounded-md ${currentPageOfInquiry === index + 1
                               ? 'font-bold bg-gray-300'
                               : 'hover:bg-gray-200'
                               }`}
@@ -2019,7 +2019,7 @@ function Admin() {
                         <button
                           onClick={nextPageOfInquiry}
                           disabled={currentPageOfInquiry === totalPagesOfInquiry}
-                          className={`px-4 py-2 text-sm font-medium border rounded-md ${currentPageOfInquiry === totalPagesOfInquiry
+                          className={`px-4 py-2 text-base font-medium border rounded-md ${currentPageOfInquiry === totalPagesOfInquiry
                             ? 'cursor-not-allowed opacity-50'
                             : 'hover:bg-gray-200'
                             }`}
