@@ -2145,7 +2145,7 @@ function Admin() {
                                     <TableCell>{item.inquiry_message}</TableCell>
                                     <TableCell>{item.Product.name}</TableCell>
                                     <TableCell>{item.quantity}</TableCell>
-                                    <TableCell>Price</TableCell>
+                                    <TableCell>{item.Product.price}</TableCell>
                                     <TableCell>{filteredColorData.map((item) => item.name).join(',')}</TableCell>
                                     <TableCell>{filteredData.map((item) => item.name).join(',')}</TableCell>
                                   </TableRow>
