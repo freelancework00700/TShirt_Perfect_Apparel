@@ -2,6 +2,7 @@ import { NextApiResponse } from 'next';
 import GetInTouch from '../models/get-in-touch.model';
 import { HttpStatus } from '../utils/http-status';
 import { MailHelper } from '../utils/mail-helper';
+import sequelize from 'sequelize';
 
 export class GetInTouchController extends HttpStatus {
     public mailHelper = new MailHelper();
@@ -24,9 +25,20 @@ export class GetInTouchController extends HttpStatus {
     };
 
     /** GET API: Get all get in touch */
-    public getAllGetInTouch = async (res: NextApiResponse) => {
+    public getAllGetInTouch = async (res: NextApiResponse, params: any) => {
         try {
-            const getInTouch = await GetInTouch.findAll();
+            // Sorting
+            let column = params.sortColumn;
+            let direction;
+            if (column == null || column == '') {
+                column = "id";
+            }
+
+            direction = params.sortDirection == null || params.sortDirection == "" ? "DESC" : params.sortDirection;
+            const orderBy = sequelize.literal(`${column} ${direction}`);
+
+            // Get all get-in-touch
+            const getInTouch = await GetInTouch.findAll({ order: [orderBy] });
 
             if (!getInTouch.length) {
                 return this.sendBadRequestResponse(res, "Record not found.", getInTouch);

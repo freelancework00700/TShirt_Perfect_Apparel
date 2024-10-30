@@ -45,7 +45,6 @@ const ProductDetail = () => {
     }
   };
 
-
   useEffect(() => {
     if (search) {
       getIdWiseProduct();
@@ -123,7 +122,6 @@ const ProductDetail = () => {
   }, [filteredData]);
 
   const handleCheckboxChange = (id: string) => {
-    console.log('id::::: :>> ', id);
     const selectedIds = new Set(formik.values.size_ids.split(',').filter(Boolean)); // Split into set of IDs
     if (selectedIds.has(id)) {
       selectedIds.delete(id); // Remove if already selected
@@ -212,9 +210,7 @@ const ProductDetail = () => {
             {sizeChart && (
               <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
                 <div className="bg-white w-full max-w-md p-6 rounded-lg shadow-lg relative">
-                  <button onClick={closeSizeChart}
-                    className="absolute top-2 right-2 text-gray-600 hover:text-gray-800"
-                  >
+                  <button onClick={closeSizeChart} className="absolute top-2 right-2 text-gray-600 hover:text-gray-800">
                     ✖️
                   </button>
 
@@ -224,54 +220,62 @@ const ProductDetail = () => {
                       <p className="text-center text-sm text-gray-500">Size Charts</p>
 
                       <div className="mt-4">
-                        <h3 className="text-sm font-semibold">Slim Fit Shirt Measurements</h3>
-
-                        <div className="flex mt-2 border-b border-gray-200">
-                          <button className="px-4 py-2 text-sm font-medium text-blue-600 border-b-2 border-blue-600">
-                            SHIRT SIZE CHART
-                          </button>
-                        </div>
-
-                        <div className="overflow-x-auto mt-4">
-                          <table className="w-full text-sm text-left text-gray-700">
-                            <thead className="bg-gray-100">
-                              <tr>
-                                <th className="px-4 py-2 font-medium">Size</th>
-                                <th className="px-4 py-2 font-medium">Chest</th>
-                                <th className="px-4 py-2 font-medium">Length</th>
-                                <th className="px-4 py-2 font-medium">Shoulder</th>
-                                <th className="px-4 py-2 font-medium">Sleeve</th>
-                              </tr>
-                            </thead>
-                            <tbody>
-                              <tr>
-                                <td className="px-4 py-2">XS</td>
-                                <td className="px-4 py-2">36</td>
-                                <td className="px-4 py-2">26</td>
-                                <td className="px-4 py-2">17</td>
-                                <td className="px-4 py-2">24 ¼</td>
-                              </tr>
-                              <tr>
-                                <td className="px-4 py-2">S</td>
-                                <td className="px-4 py-2">38</td>
-                                <td className="px-4 py-2">26 ½</td>
-                                <td className="px-4 py-2">17 ½</td>
-                                <td className="px-4 py-2">25</td>
-                              </tr>
-                              <tr>
-                                <td className="px-4 py-2">M</td>
-                                <td className="px-4 py-2">40</td>
-                                <td className="px-4 py-2">27</td>
-                                <td className="px-4 py-2">18</td>
-                                <td className="px-4 py-2">25 ½</td>
-                              </tr>
-                              {/* Add more rows as needed */}
-                            </tbody>
-                          </table>
-                        </div>
-
+                        {item.Category.id === 2 ? (
+                          <>
+                            <h3 className="text-sm font-semibold">T-Shirt Measurements</h3>
+                            <div className="overflow-x-auto mt-4">
+                              <table className="w-full text-sm text-left text-gray-700">
+                                <thead className="bg-gray-100">
+                                  <tr>
+                                    <th className="px-4 py-2 font-medium">Size</th>
+                                    <th className="px-4 py-2 font-medium">Chest</th>
+                                    <th className="px-4 py-2 font-medium">Length</th>
+                                    <th className="px-4 py-2 font-medium">Shoulder</th>
+                                    <th className="px-4 py-2 font-medium">Sleeve</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  <tr>
+                                    <td className="px-4 py-2">XS</td>
+                                    <td className="px-4 py-2">36</td>
+                                    <td className="px-4 py-2">26</td>
+                                    <td className="px-4 py-2">17</td>
+                                    <td className="px-4 py-2">24 ¼</td>
+                                  </tr>
+                                </tbody>
+                              </table>
+                            </div>
+                          </>
+                        ) : item.Category.id === 1 ? (
+                          <>
+                            <h3 className="text-sm font-semibold">Track Pants Measurements</h3>
+                            <div className="overflow-x-auto mt-4">
+                              <table className="w-full text-sm text-left text-gray-700">
+                                <thead className="bg-gray-100">
+                                  <tr>
+                                    <th className="px-4 py-2 font-medium">Size</th>
+                                    <th className="px-4 py-2 font-medium">Waist</th>
+                                    <th className="px-4 py-2 font-medium">Length</th>
+                                    <th className="px-4 py-2 font-medium">Hip</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  <tr>
+                                    <td className="px-4 py-2">XS</td>
+                                    <td className="px-4 py-2">28</td>
+                                    <td className="px-4 py-2">38</td>
+                                    <td className="px-4 py-2">36</td>
+                                  </tr>
+                                  {/* Add more sizes as needed */}
+                                </tbody>
+                              </table>
+                            </div>
+                          </>
+                        ) : (
+                          <p className="text-center text-sm text-gray-500">No size chart available.</p>
+                        )}
                         <p className="mt-4 text-xs text-center text-gray-500">
-                          If your measurements fall between sizes, we suggest that you size up for a better fit
+                          If your measurements fall between sizes, we suggest that you size up for a better fit.
                         </p>
                       </div>
                     </div>
@@ -290,11 +294,12 @@ const ProductDetail = () => {
                   </button>
                   <h2 className="text-lg font-semibold text-center mb-4">Product Inquiry</h2>
 
+                  <h3 className="text-lg font-semibold mb-4">Product Name: {filteredData?.name}</h3>
+
                   <form onSubmit={formik.handleSubmit}>
                     <input
                       type="text"
                       name="product_id"
-                      // value={filteredData?.name}
                       value={formik.values.product_id}
                       onChange={formik.handleChange}
                       readOnly
@@ -424,7 +429,18 @@ const ProductDetail = () => {
                       <div className="flex justify-between items-end">
                         <div>
                           <div className="flex items-center gap-x-2 text-xl text-gray-900 font-semibold mt-3">
-                            ₹{item.price}
+                            <div className="text-[#000] text-[16px] py-2">
+                              ₹{item.final_price}
+                              {
+                                item.discount_price > 0 && (
+                                  <>
+                                    <span className="line-through text-[12px] text-[#999]">₹{item.price}
+                                    </span>
+                                    <span className="text-[#3fac45] text-[12px]">{item.discount_price}% off</span>
+                                  </>
+                                )
+                              }
+                            </div>
                           </div>
                           <div className="text-[#999] text-[14px] ">
                             (incl. of all taxes)
@@ -432,7 +448,6 @@ const ProductDetail = () => {
                         </div>
                         <div className="pe-8 lg:pe-0 max-lg:hidden">
                           <div onClick={() => openProductInquiryModal(item.id)}
-                            // href="/contactUs"
                             className="bg-[#000] hover:bg-[#222] hover:text-[#f8885b] transition ease-in-out duration-200 rounded-full text-base flex items-center font-bold 
                           text-[#fff] py-2 px-6 max-[1023px]:hidden button button--nanuk button--border-thin button--round-s"
                           >
@@ -451,8 +466,7 @@ const ProductDetail = () => {
                       Select A Size
                       <div className="flex items-center" onClick={openSizeChart}>
                         <div className="flex items-center bg-[#eee] rounded-full px-3 cursor-pointer">
-                          <Image
-                            src={sizeChartIcon}
+                          <Image src={sizeChartIcon}
                             alt="sizeChart"
                             className="h-[16px] w-[16px] mr-2"
                           ></Image>
@@ -464,8 +478,7 @@ const ProductDetail = () => {
                     </div>
                     <div className="flex justify-start gap-2 mt-2">
                       {item.Sizes.map((item, index) => (
-                        <div
-                          key={index}
+                        <div key={index}
                           className="border border-black hover:bg-[#000] hover:text-white cursor-pointer rounded-md text-base h-[30px] w-[30px] flex justify-center items-center"
                         >
                           {item.name}
@@ -554,11 +567,6 @@ const ProductDetail = () => {
                           </div>
                         </div>
                         <div className="col-span-12 text-base mt-6">
-                          {/* Create a cool and lasting impression in thi hip hop,
-                          attitude, Loose fit, Round Neck, Half sleeves,
-                          printed, Oversized t-shirt, Back Printed T-shirts for
-                          men. Beautifully Crafted with a cotton fabric and a
-                          trendy loose fitting, drop shoulder t-shirts. */}
                           {item.description}
                         </div>
                       </div>

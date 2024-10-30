@@ -12,7 +12,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
        await initializeDatabase();
 
         if (req.method === 'GET') {
-            await getInTouchController.getAllGetInTouch(res);   
+            await getInTouchController.getAllGetInTouch(res, req.query);   
         } else if (req.method === 'POST') {
             await getInTouchController.createGetInTouch(res, req.body);
         } else {

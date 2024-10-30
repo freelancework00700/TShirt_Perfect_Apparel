@@ -34,6 +34,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { useRouter } from "next/navigation";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Textarea } from "@/components/ui/textarea";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 
 
 
@@ -78,6 +79,8 @@ function Admin() {
   const [loading, setLoading] = useState(false);
   const [allInquiry, setAllInquiry] = useState<Inquiry[]>([]);
   const [productInquiry, setProductInquiry] = useState<ProductInquiry[]>([])
+  const [openProductInquiry, setOpenProductInquiry] = useState(false);
+  const [selectedProductInquiry, setSelectedProductInquiry] = useState<number | null>(null);
   const router = useRouter();
 
 
@@ -491,6 +494,7 @@ function Admin() {
     setViewProduct(true)
   }
 
+
   const formik = useFormik({
     initialValues: {
       category_id: "",
@@ -516,6 +520,8 @@ function Admin() {
       sales_package: "",
       images: [] as File[],
       description: "",
+      discount_price: "",
+      final_price: "",
     },
     validationSchema: yup.object({
       category_id: yup.string().required("Select a category"),
@@ -541,6 +547,13 @@ function Admin() {
       sales_package: yup.string().min(1).max(30).required("Enter status"),
       images: yup.array().min(1, "At least one file is required").required("Required"),
       description: yup.string().min(10).max(500).required("Enter the description"),
+      // discount_price: yup.number().typeError("Only digits are allowed!")
+      //   .required("discount price is required").test("isDigits", "discount price is required",
+      //     (value: any) => {
+      //       return value && /^\d{1,5}$/.test(value.toString())
+      //     }),
+      discount_price: yup.number().required("Enter the discount price"),
+      final_price: yup.string().required("Enter the final price"),
     }),
     onSubmit: async (values) => {
       const formData = new FormData();
@@ -549,7 +562,9 @@ function Admin() {
       formData.append("color_ids", values.color_ids)
       formData.append("size_ids", values.size_ids)
       formData.append("name", values.name)
+      formData.append("discount_price", values.discount_price)
       formData.append("price", values.price)
+      formData.append("final_price", values.final_price)
       formData.append("type", values.type)
       formData.append("sleeve", values.sleeve)
       formData.append("fit", values.fit)
@@ -617,7 +632,22 @@ function Admin() {
     },
   });
 
+  const changeFinalPrice = async (value: number, type: string) => {
+    let price = 0;
+    let discount_price = 0
+    if (formik.values.price && formik.values.discount_price) {
+      if (type == "price") {
+        price = +value
+        discount_price = +formik.values.discount_price
+      } else if (type = "discount_price") {
+        price = +formik.values.price
+        discount_price = +value
+      }
+      let final_price = +price - ((+price * +discount_price) / 100)
+      formik.setFieldValue("final_price", final_price);
+    }
 
+  };
   const handleEditProduct = async (item: IProduct) => {
     getAllCategory();
     getAllSize();
@@ -629,7 +659,9 @@ function Admin() {
     formik.setFieldValue("color_ids", item.color_ids?.toString())
     formik.setFieldValue("size_ids", item.size_ids.toString())
     formik.setFieldValue("name", item.name)
+    formik.setFieldValue("discount_price", item.discount_price)
     formik.setFieldValue("price", item.price)
+    formik.setFieldValue("final_price", item.final_price)
     formik.setFieldValue("type", item.type)
     formik.setFieldValue("sleeve", item.sleeve)
     formik.setFieldValue("fit", item.fit)
@@ -692,7 +724,6 @@ function Admin() {
   }
 
   const handleUpdateStatus = async (item: IProduct, value: string) => {
-    console.log('item>>>>>>>>>> ', item);
     const formData = new FormData();
     formData.append("id", item.id.toString());
     formData.append("category_id", item.category_id.toString());
@@ -700,7 +731,9 @@ function Admin() {
     formData.append("color_ids", item.color_ids.toString());
     formData.append("size_ids", item.size_ids.toString());
     formData.append("name", item.name);
+    formData.append("discount_price", item.discount_price);
     formData.append("price", item.price);
+    formData.append("final_price", item.final_price);
     formData.append("type", item.type);
     formData.append("sleeve", item.sleeve);
     formData.append("fit", item.fit);
@@ -753,9 +786,8 @@ function Admin() {
   }
 
   const handleColorCheckBoxChange = async (id: string) => {
-    // console.log('iddddd :>> ', id);
-    const selectedIds = new Set(formik.values.color_ids?.split(',').filter(Boolean)); // Use a Set to handle uniqueness
-    // console.log('selectedIds: ', selectedIds);
+    console.log('iddddd :>> ', id);
+    const selectedIds = new Set(formik.values.color_ids?.split(',').filter(Boolean));
     if (selectedIds.has(id)) {
       selectedIds.delete(id);
     } else {
@@ -763,6 +795,41 @@ function Admin() {
     }
     formik.setFieldValue('color_ids', Array.from(selectedIds).join(','));
   }
+
+  const handleOpenDialog = (id: number) => {
+    setSelectedProductInquiry(id)
+    setOpenProductInquiry(true)
+  }
+
+  const handleCloseDialog = () => {
+    setOpenProductInquiry(false)
+    setSelectedProductInquiry(null)
+  }
+
+  const handleDeleteInquiry = async () => {
+    if (selectedProductInquiry) {
+      // onDelete(selectedProductInquiry) // Call delete function, pass the selected product ID
+      try {
+        const response = await axios.delete(`/api/product-inquiry?id=${selectedProductInquiry}`)
+        toast.success(response.data.message, {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+          transition: Bounce,
+        });
+        getProductInquiry();
+      } catch (error) {
+        console.error(error)
+      }
+      handleCloseDialog()
+    }
+  }
+
 
   const totalPages = Math.ceil(allProduct.length / recordsPerPage);
   const currentProducts = allProduct.slice(
@@ -832,9 +899,9 @@ function Admin() {
   }
 
   const gotoPageOfInquiry = (page: number) => {
-    console.log('page :>> ', page);
     setCurrentPageOfInquiry(page)
   }
+
 
 
 
@@ -1094,18 +1161,25 @@ function Admin() {
                                 <Label>Color</Label>
                                 <div className="w-[180px]">
                                   <div className="border rounded p-2">
-                                    {allColors.map((item) => (
-                                      <label key={item.id} className="flex items-center">
-                                        <input
-                                          type="checkbox"
-                                          value={item.id.toString()}
-                                          checked={formik.values.color_ids?.split(',').includes(item.id.toString())}
-                                          onChange={() => handleColorCheckBoxChange(item.id.toString())}
-                                          className="mr-2"
-                                        />
-                                        {item.name}
-                                      </label>
-                                    ))}
+                                    <Popover>
+                                      <PopoverTrigger>
+                                        <button type="button">Color</button>
+                                      </PopoverTrigger>
+                                      <PopoverContent>
+                                        {allColors.map((item) => (
+                                          <label key={item.id} className="flex items-center">
+                                            <input
+                                              type="checkbox"
+                                              value={item.id.toString()}
+                                              checked={formik.values.color_ids?.split(',').includes(item.id.toString())}
+                                              onChange={() => handleColorCheckBoxChange(item.id.toString())}
+                                              className="mr-2"
+                                            />
+                                            {item.name}
+                                          </label>
+                                        ))}
+                                      </PopoverContent>
+                                    </Popover>
                                   </div>
                                 </div>
                                 {formik.errors.color_ids && formik.touched.color_ids &&
@@ -1116,18 +1190,25 @@ function Admin() {
                                 <Label>Size</Label>
                                 <div className="w-[180px]">
                                   <div className="border rounded p-2">
-                                    {filteredSize.map((item) => (
-                                      <label key={item.id} className="flex items-center">
-                                        <input
-                                          type="checkbox"
-                                          value={item.id.toString()}
-                                          checked={formik.values.size_ids.split(',').includes(item.id.toString())}
-                                          onChange={() => handleCheckboxChange(item.id.toString())}
-                                          className="mr-2"
-                                        />
-                                        {item.name}
-                                      </label>
-                                    ))}
+                                    <Popover>
+                                      <PopoverTrigger>
+                                        <button type="button">Size</button>
+                                      </PopoverTrigger>
+                                      <PopoverContent>
+                                        {filteredSize.map((item) => (
+                                          <label key={item.id} className="flex items-center">
+                                            <input
+                                              type="checkbox"
+                                              value={item.id.toString()}
+                                              checked={formik.values.size_ids.split(',').includes(item.id.toString())}
+                                              onChange={() => handleCheckboxChange(item.id.toString())}
+                                              className="mr-2"
+                                            />
+                                            {item.name}
+                                          </label>
+                                        ))}
+                                      </PopoverContent>
+                                    </Popover>
                                   </div>
                                 </div>
                                 {formik.errors.size_ids && formik.touched.size_ids &&
@@ -1153,9 +1234,47 @@ function Admin() {
                                   placeholder="price"
                                   className="col-span-3"
                                   value={formik.values.price}
-                                  onChange={formik.handleChange} />
+                                  onChange={(e) => {
+                                    formik.handleChange(e); // Update Formik state
+                                    changeFinalPrice(e.target.value, "price"); // Call custom function
+                                  }}
+                                  onInput={() => console.log("input change", formik.values.price)} />
                                 {formik.errors.price && formik.touched.price &&
                                   (<p className="text-red-500">{formik.errors.price}</p>)}
+                              </div>
+
+                              <div className="col-span-4">
+                                <Label>Discount Price</Label>
+                                <Input
+                                  id="discount_price"
+                                  placeholder="Discount Price"
+                                  className="col-span-3"
+                                  type="number"
+                                  min={0}
+                                  max={100}
+                                  value={formik.values.discount_price}
+                                  onChange={(e) => {
+                                    const value = Math.min(Math.max(e.target.value, 0), 100);
+                                    formik.handleChange(e);
+                                    changeFinalPrice(value, "discount_price");
+                                  }}
+                                />
+                                {formik.errors.discount_price && formik.touched.discount_price &&
+                                  (<p className="text-red-500">{formik.errors.discount_price}</p>)}
+                              </div>
+
+                              <div className="col-span-4">
+                                <Label>Final Price</Label>
+                                <Input
+                                  id="final_price"
+                                  placeholder="final price"
+                                  className="col-span-3"
+                                  value={formik.values.final_price}
+                                  onChange={formik.handleChange}
+                                  readOnly
+                                />
+                                {formik.errors.final_price && formik.touched.final_price &&
+                                  (<p className="text-red-500">{formik.errors.final_price}</p>)}
                               </div>
 
                               <div className="col-span-4">
@@ -1425,6 +1544,8 @@ function Admin() {
                                   <TableCell>Category</TableCell>
                                   <TableCell className="text-center">Name</TableCell>
                                   <TableCell>Price</TableCell>
+                                  <TableCell>Discount Price</TableCell>
+                                  <TableCell>Final Price</TableCell>
                                   <TableCell>Fabric</TableCell>
                                   <TableCell>Color</TableCell>
                                   <TableCell>Size</TableCell>
@@ -1441,6 +1562,8 @@ function Admin() {
                                       <TableCell>{item.Category?.name}</TableCell>
                                       <TableCell>{item.name}</TableCell>
                                       <TableCell>{item.price}</TableCell>
+                                      <TableCell>{item.discount_price}</TableCell>
+                                      <TableCell>{item.final_price}</TableCell>
                                       <TableCell>{item.fabric}</TableCell>
                                       <TableCell>{item.Colors.map(color => color.name).join(',')}</TableCell>
                                       <TableCell>{item.Sizes.map(size => size.name).join(',')}</TableCell>
@@ -1988,7 +2111,7 @@ function Admin() {
                         </DialogTrigger>
                         <DialogContent className="sm:max-w-[425px] p-5">
                           <DialogHeader>
-                            <DialogTitle className="px-5 pt-5">New Product</DialogTitle>
+                            <DialogTitle className="px-5 pt-5">New Color</DialogTitle>
                             <DialogDescription className="px-5 pt-1">
                               Upload your New Color Here
                             </DialogDescription>
@@ -2108,6 +2231,7 @@ function Admin() {
                               <TableCell>Price</TableCell>
                               <TableCell>Color</TableCell>
                               <TableCell>Size</TableCell>
+                              <TableCell>Action</TableCell>
                             </TableRow>
                           </TableHead>
                           <TableBody>
@@ -2133,7 +2257,6 @@ function Admin() {
                               ))
                             ) : (
                               productInquiry.map((item, index) => {
-                                console.log('item :>> ', item);
                                 const filteredData = item.Sizes.filter((val) => item.size_ids.includes(val.id))
                                 const filteredColorData = item.Colors.filter(val => item.color_ids.includes(val.id))
                                 return (
@@ -2146,8 +2269,40 @@ function Admin() {
                                     <TableCell>{item.Product.name}</TableCell>
                                     <TableCell>{item.quantity}</TableCell>
                                     <TableCell>{item.Product.price}</TableCell>
-                                    <TableCell>{filteredColorData.map((item) => item.name).join(',')}</TableCell>
-                                    <TableCell>{filteredData.map((item) => item.name).join(',')}</TableCell>
+                                    <TableCell>{filteredColorData.map((item) => item.name).join(', ')}
+                                    </TableCell>
+                                    <TableCell>{filteredData.map((item) => item.name).join(', ')}
+                                    </TableCell>
+                                    <TableCell>
+                                      <AlertDialog open={openProductInquiry}>
+                                        <AlertDialogTrigger>
+                                          <svg
+                                            className="w-6 h-6 text-gray-800 dark:text-white cursor-pointer"
+                                            aria-hidden="true"
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            width="24"
+                                            height="24"
+                                            fill="none"
+                                            viewBox="0 0 24 24"
+                                            onClick={() => handleOpenDialog(item.id)}
+                                          >
+                                            <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 7h14m-9 3v8m4-8v8M10 3h4a1 1 0 0 1 1 1v3H9V4a1 1 0 0 1 1-1ZM6 7h12v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7Z" />
+                                          </svg>
+                                        </AlertDialogTrigger>
+                                        <AlertDialogContent>
+                                          <AlertDialogHeader>
+                                            <AlertDialogTitle>Are you sure you want to delete this Inquiry?</AlertDialogTitle>
+                                            <AlertDialogDescription>
+                                              Are you sure you want to delete the inquiry? This action cannot be undone.
+                                            </AlertDialogDescription>
+                                          </AlertDialogHeader>
+                                          <AlertDialogFooter>
+                                            <AlertDialogCancel onClick={() => handleCloseDialog()}>Cancel</AlertDialogCancel>
+                                            <AlertDialogAction onClick={() => handleDeleteInquiry()}>Confirm</AlertDialogAction>
+                                          </AlertDialogFooter>
+                                        </AlertDialogContent>
+                                      </AlertDialog>
+                                    </TableCell>
                                   </TableRow>
                                 )
                               })

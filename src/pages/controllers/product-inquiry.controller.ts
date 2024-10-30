@@ -5,17 +5,34 @@ import Product from "../models/product.model";
 import Size from "../models/size.model";
 import Color from "../models/color.model";
 import { Op } from "sequelize";
+import sequelize from "sequelize";
 
 export class ProductInquiryController extends HttpStatus {
 
     /** GET API: Get all product inquiries */
-    public getAllProductInquiries = async (res: NextApiResponse) => {
+    public getAllProductInquiries = async (res: NextApiResponse, params: any) => {
         try {
+
+            // Sorting
+            let column = params.sortColumn;
+            let direction;
+            if (column == null || column == '') {
+                column = "id";
+            } else if (column === "product_name") {
+                column = "Product.name";
+            } else if (column === "price") {
+                column = "Product.price";
+            }
+            direction = params.sortDirection == null || params.sortDirection == "" ? "DESC" : params.sortDirection;
+            const orderBy = sequelize.literal(`${column} ${direction}`);
+
+            // Get all product inquiries
             const product_inquiries: any = await ProductInquiry.findAll({
                 include: [
                     { model: Product }
                 ],
-                where: { isDeleted: false }
+                where: { isDeleted: false },
+                order: [orderBy]
             });
 
             if (!product_inquiries.length) {
@@ -55,10 +72,10 @@ export class ProductInquiryController extends HttpStatus {
             return this.sendOkResponse(res, "Product inquiries get successfully.", product_inquiries);
         } catch (error) {
             console.log('error: ', error);
-            return this.sendInternalServerResponse(res, "Error fetching categories.");
+            return this.sendInternalServerResponse(res, "Error fetching product inquiry.");
         }
     };
-
+    
     /** POST API: Create a new Product inquiry API */
     public createProductInquiry = async (res: NextApiResponse, params: any) => {
         try {
@@ -73,17 +90,32 @@ export class ProductInquiryController extends HttpStatus {
 
             // Conver color id string to array
             params.color_ids = params.color_ids?.split(',').map(Number);
-
+    
             // Create product inquiry
             const product_inquiry = await ProductInquiry.create(params);
-            if (!product_inquiry) {
+            if (!product_inquiry) { 
                 return this.sendBadRequestResponse(res, "Unable to create product inquiry.");
             }
-
+    
             return this.sendOkResponse(res, "Product inquiry create successfully.", product_inquiry);
         } catch (error) {
             console.log('error: ', error);
-            return this.sendInternalServerResponse(res, "Error creating product.");
+            return this.sendInternalServerResponse(res, "Error creating product inquiry.");
+        }
+    };
+
+    /** DELETE API: Delete a product inquiry */
+    public deleteProductInquiry = async (res: NextApiResponse, id: any) => {
+        try {
+            const product_inquiry: any = await ProductInquiry.findOne({ where: { id, isDeleted: false } });
+            if (!product_inquiry) return this.sendBadRequestResponse(res, "Product inquiry not found.");
+
+            product_inquiry.isDeleted = true;
+            await product_inquiry.save();
+
+            return this.sendOkResponse(res, "Product inquiry delete successfully.", product_inquiry);
+        } catch (error) {
+            return this.sendInternalServerResponse(res, "Error deleting product inquiry.");
         }
     };
 

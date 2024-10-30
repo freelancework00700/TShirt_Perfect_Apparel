@@ -12,7 +12,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
        await initializeDatabase();
 
         if (req.method === 'GET') {
-            await colorController.getAllColor(res);   
+            await colorController.getAllColor(res, req.query);   
         } else if (req.method === 'POST') {
             await colorController.createColor(res, req.body);
         } else if (req.method === 'PUT') {

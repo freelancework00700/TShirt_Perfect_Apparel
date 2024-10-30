@@ -3,17 +3,32 @@ import Size from '../models/size.model';
 import { HttpStatus } from '../utils/http-status';
 import { Op } from 'sequelize';
 import Category from '../models/category.model';
+import sequelize from 'sequelize';
 
 export class SizeController extends HttpStatus {
 
     /** GET API: Get all size */
-    public getAllSize = async (res: NextApiResponse) => {
+    public getAllSize = async (res: NextApiResponse, params: any) => {
         try {
+
+            // Sorting
+            let column = params.sortColumn;
+            let direction;
+            if (column == null || column == '') {
+                column = "id";
+            } else if (column === "category_name") {
+                column = 'Category.name';
+            }
+            direction = params.sortDirection == null || params.sortDirection == "" ? "DESC" : params.sortDirection;
+            const orderBy = sequelize.literal(`${column} ${direction}`);
+
+            // Get all size
             const size = await Size.findAll({
                 include: [
                     { model: Category }
                 ],
-                where: { isDeleted: false }
+                where: { isDeleted: false },
+                order: [orderBy]
             });
 
             if (!size.length) {
@@ -61,7 +76,7 @@ export class SizeController extends HttpStatus {
             }
 
             size.name = params.name || size.name;
-            size.category_id = params.category_id || size.category_id;
+            size.category_id = params.category_id || size.category_id; 
             await size.save();
 
             return this.sendOkResponse(res, "Size update successfully.", size);

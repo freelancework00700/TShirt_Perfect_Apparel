@@ -9,6 +9,7 @@ import path from 'path';
 import fs from 'fs';
 import { Op } from 'sequelize';
 import Category from '../models/category.model';
+import sequelize from 'sequelize';
 
 export class ProductController extends HttpStatus {
 
@@ -46,13 +47,26 @@ export class ProductController extends HttpStatus {
                 where[Op.and].push({ size_id: query.size_id });
             }
 
+            // Sorting
+            let column = query.sortColumn;
+            let direction;
+            if (column == null || column == '') {
+                column = "id";
+            } else if (column === 'category_name') {
+                column = "Category.name";
+            }
+            direction = query.sortDirection == null || query.sortDirection == "" ? "DESC" : query.sortDirection;
+            const orderBy = sequelize.literal(`${column} ${direction}`);
+
+            // Get all products
             const products: any = await Product.findAll({
                 include: [
                     { model: ProductImages, required: false, where: { isDeleted: false } },
                     { model: Category },
                     { model: SubCategory }
                 ],
-                where
+                where,
+                order: [orderBy]
             });
 
             if (!products.length) {
@@ -83,7 +97,6 @@ export class ProductController extends HttpStatus {
                             }
                         }
                     });
-                    console.log('colors: ', colors);
                     product.dataValues.Colors = colors;
                 } else {
                     product.dataValues.Colors = [];

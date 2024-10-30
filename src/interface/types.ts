@@ -14,6 +14,8 @@ export interface IProduct {
     pack_of: string,
     pattern: string,
     price: string,
+    discount_price: number,
+    final_price: string,
     reversible: string,
     sales_package: string,
     size_ids: number[],

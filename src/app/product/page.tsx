@@ -14,27 +14,27 @@ import {
 import Link from "next/link";
 import axios from "axios";
 import { ICategories, IColor, IProduct, ISize } from "@/interface/types";
-import { Slider } from "@/components/ui/slider";
 
 function Product() {
   const [toggleData, setToggleData] = useState(true);
   const [allData, setAllData] = useState<IProduct[]>([]);
-  // console.log('allData: ', allData);
+  // console.log('allData', allData);
   const [categories, setCategories] = useState<ICategories[]>([]);
+  console.log('categories', categories);
   const [allColor, setAllColor] = useState<IColor[]>([]);
   const [allSize, setAllSize] = useState<ISize[]>([]);
   const [selectedCategories, setSelectedCategories] = useState<number[]>([]);
+  console.log('selectedCategories :>> ', selectedCategories);
   const [selectedSizes, setSelectedSizes] = useState<number[]>([]);
   const [availableSizes, setAvailableSizes] = useState<ISize[]>([]);
-  const [availableColors, setAvailableColors] = useState<IColor[] | undefined>(
-    []
-  );
+  const [availableColors, setAvailableColors] = useState<IColor[] | undefined>([]);
   const [selectedColors, setSelectedColors] = useState<number[]>([]);
   const [filteredProducts, setFilteredProducts] = useState<IProduct[]>([]);
 
   const filteredData = toggleData
     ? allData.filter((item) => item.category_id === 2)
     : allData.filter((item) => item.category_id === 1);
+
 
   const getProduct = async () => {
     try {
@@ -92,8 +92,7 @@ function Product() {
     });
   };
 
-  const handleColorCheckboxChange = (id: any) => {
-    console.log("id: ", id);
+  const handleColorCheckboxChange = (id: number) => {
     setSelectedColors((prev) => {
       if (prev.includes(id)) {
         return prev.filter((item) => item !== id); // Deselect if already selected
@@ -151,10 +150,7 @@ function Product() {
                     <div className="flex flex-col gap-3 mt-3">
                       {categories.map((item, index) => (
                         <>
-                          <div
-                            key={index}
-                            className="flex items-center space-x-2"
-                          >
+                          <div key={index} className="flex items-center space-x-2">
                             <Checkbox
                               id={`category-${item.id}`}
                               checked={selectedCategories.includes(item.id)}
@@ -226,7 +222,6 @@ function Product() {
                   <AccordionContent>
                     <div className="flex flex-col gap-3 mt-3">
                       {allColor?.map((item, index) => {
-                        // console.log('availableColors: ', availableColors?.map((item) => item));
                         return (
                           <>
                             <div key={index} className="flex items-center space-x-2">
@@ -314,13 +309,32 @@ function Product() {
                                 </div>
                               </div>
                               <div className="text-[#000] text-[16px] py-1">
-                                ₹{item.price} <span className="line-through text-[12px] text-[#999]">₹100</span><span className="text-[#3fac45] text-[12px]"> 10% off</span>
+                                <div className="text-[#000] text-[16px] py-2">
+                                  ₹{item.final_price}
+                                  {
+                                    item.discount_price > 0 && (
+                                      <>
+                                        <span className="line-through text-[12px] text-[#999]">₹{item.price}
+                                        </span>
+                                        <span className="text-[#3fac45] text-[12px]">{item.discount_price}% off</span>
+                                      </>
+                                    )
+                                  }
+                                </div>
                               </div>
                               <div className="text-[#999] text-[14px]">
                                 Color:{" "}
                                 <span className="text-[#000]">
                                   {item.Colors?.map((item) => item.name).join(
                                     ","
+                                  )}
+                                </span>
+                              </div>
+                              <div className="text-[#999] text-[14px]">
+                                Size:{" "}
+                                <span className="text-[#000]">
+                                  {item.Sizes.map((item) => item.name).join(
+                                    " , "
                                   )}
                                 </span>
                               </div>
@@ -361,7 +375,18 @@ function Product() {
                               </div>
                             </div>
                             <div className="text-[#000] text-[16px] py-1">
-                              ₹{item.price} <span className="line-through text-[12px] text-[#999]">₹100</span><span className="text-[#3fac45] text-[12px]"> 10% off</span>
+                              <div className="text-[#000] text-[16px] py-2">
+                                ₹{item.final_price}
+                                {
+                                  item.discount_price > 0 && (
+                                    <>
+                                      <span className="line-through text-[12px] text-[#999]">₹{item.price}
+                                      </span>
+                                      <span className="text-[#3fac45] text-[12px]">{item.discount_price}% off</span>
+                                    </>
+                                  )
+                                }
+                              </div>
                             </div>
                             <div className="text-[#999] text-[14px]">
                               Color:{" "}

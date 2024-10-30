@@ -3,20 +3,34 @@ import SubCategory from '../models/sub-category.model';
 import { HttpStatus } from '../utils/http-status';
 import { Op } from 'sequelize';
 import Category from '../models/category.model';
+import sequelize from 'sequelize';
 
 export class SubCategoryController extends HttpStatus {
 
     /** GET API: Get all sub-categories */
-    public getAllSubCategories = async (res: NextApiResponse, id: any) => {
+    public getAllSubCategories = async (res: NextApiResponse, params: any) => {
         try {
-            if (!id) {
+            if (!params.id) {
                 return this.sendBadRequestResponse(res, "Category ID is required.");
             }
+
+            // Sorting
+            let column = params.sortColumn;
+            let direction;
+            if (column == null || column == '') {
+                column = "id";
+            }
+
+            direction = params.sortDirection == null || params.sortDirection == "" ? "DESC" : params.sortDirection;
+            const orderBy = sequelize.literal(`${column} ${direction}`);
+
+            // Get all sub categories
             const subCategories = await SubCategory.findAll({
                 include: [
                     { model: Category }
                 ],
-                where: { isDeleted: false, category_id: id }
+                where: { isDeleted: false, category_id: params.id },
+                order: [orderBy]
             });
 
             if (!subCategories.length) {

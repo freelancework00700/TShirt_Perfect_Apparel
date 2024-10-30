@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { ProductController } from '../controllers/product.controller';
+import  { ProductController } from '../controllers/product.controller';
 import { initializeDatabase } from './db';
 import multer from 'multer';
 import path from 'path';
@@ -37,11 +37,11 @@ export const config = {
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     try {
 
-        // Call the database initialization function
-        await initializeDatabase();
+      // Call the database initialization function
+      await initializeDatabase();
 
         if (req.method === 'GET') {
-            await productController.getAllProducts(res, req.query);
+            await productController.getAllProducts(res, req.query);   
         } else if (req.method === 'POST') {
 
             upload.array('images')(req as any, res as any, async (err) => {
@@ -51,10 +51,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 }
 
                 const files = (req as any).files;
-                console.log('files: ', files);
                 await productController.createProduct(res, req.body, files);
             });
-
+           
         } else if (req.method === 'PUT') {
 
             upload.array('images')(req as any, res as any, async (err) => {
@@ -62,9 +61,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                     console.log('err: ', err);
                     return res.status(500).json({ error: 'Image upload failed.' });
                 }
-
+            
                 const files = (req as any).files;
-
+                
                 await productController.updateProduct(res, req.body, files);
             });
 

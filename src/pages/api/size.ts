@@ -12,7 +12,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
        await initializeDatabase();
 
         if (req.method === 'GET') {
-            await sizeController.getAllSize(res);   
+            await sizeController.getAllSize(res, req.query);   
         } else if (req.method === 'POST') {
             await sizeController.createSize(res, req.body);
         } else if (req.method === 'PUT') {

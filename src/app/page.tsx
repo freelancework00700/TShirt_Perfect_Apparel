@@ -66,28 +66,28 @@ export default function Home() {
       <Header />
       <div className="min-h-[calc(100vh_-_385px)]">
         <div className="overflow-hidden">
-            <Swiper
-              slidesPerView={1}
-              spaceBetween={0}
-              modules={[Pagination, EffectFade]}
-              pagination={true}
-              effect={"fade"}
-              onSlideChange={() => console.log("slide change")}
-              onSwiper={() => console.log()}
-            >
-              <SwiperSlide>
-                <div>
-                  <Image src={heroImage1} alt="heroImage1" className="w-full h-[calc(100vh_-_70px)] object-cover"></Image>
-                </div>
-              </SwiperSlide>
-              <SwiperSlide>
-                <div>
-                  <Image src={heroImage2} alt="heroImage2" className="w-full h-[calc(100vh_-_70px)] object-cover"></Image>
-                </div>
-              </SwiperSlide>
-            </Swiper>
+          <Swiper
+            slidesPerView={1}
+            spaceBetween={0}
+            modules={[Pagination, EffectFade]}
+            pagination={true}
+            effect={"fade"}
+            onSlideChange={() => console.log("slide change")}
+            onSwiper={() => console.log()}
+          >
+            <SwiperSlide>
+              <div>
+                <Image src={heroImage1} alt="heroImage1" className="w-full h-[calc(100vh_-_70px)] object-cover"></Image>
+              </div>
+            </SwiperSlide>
+            <SwiperSlide>
+              <div>
+                <Image src={heroImage2} alt="heroImage2" className="w-full h-[calc(100vh_-_70px)] object-cover"></Image>
+              </div>
+            </SwiperSlide>
+          </Swiper>
         </div>
-        <div className="container mx-auto xl:max-w-7xl max-sm:px-4">        
+        <div className="container mx-auto xl:max-w-7xl max-sm:px-4">
           <div className="py-10">
             <div className="flex justify-center items-center gap-2 py-7">
               {Object.keys(segments).map((key: string) => (
@@ -133,10 +133,30 @@ export default function Home() {
                               <div className="font-bold">{item.name}</div>
                               <div className="text-[#999] text-[14px]">{item.name}</div>
                             </div>
-                            <div className="text-[#000] text-[16px] py-2">₹{item.price}</div>
-                            {/* <div className="text-[#999] text-[14px]">
-                            Color: <span className="text-[#000]">{item.Color?.name}</span>
-                          </div> */}
+                            <div className="text-[#000] text-[16px] py-2">
+                              ₹{item.final_price}
+                              {
+                                item.discount_price > 0 && (
+                                  <>
+                                    <span className="line-through text-[12px] text-[#999]">₹{item.price}
+                                    </span>
+                                    <span className="text-[#3fac45] text-[12px]">{item.discount_price}% off</span>
+                                  </>
+                                )
+                              }
+                            </div>
+                            <div className="text-[#999] text-[14px]">
+                              Color:{" "}
+                              <span className="text-[#000]">
+                                {item.Colors?.map((item) => item.name).join(", ")}
+                              </span>
+                            </div>
+                            <div className="text-[#999] text-[14px]">
+                              Size:{" "}
+                              <span className="text-[#000]">
+                                {item.Sizes.map((item) => item.name).join(" , ")}
+                              </span>
+                            </div>
                           </div>
                         </Link>
                       </div>
@@ -177,10 +197,32 @@ export default function Home() {
                                     <div className="font-bold">{item.name}</div>
                                     <div className="text-[#999] text-[14px]">{item.name}</div>
                                   </div>
-                                  <div className="text-[#000] text-[20px] py-2">₹{item.price}</div>
-                                  {/* <div className="text-[#999] text-[14px]">
-                                  Color: <span className="text-[#000]">{item.Color?.name}</span>
-                                </div> */}
+                                  <div className="text-[#000] text-[20px] py-2">
+                                    <div className="text-[#000] text-[16px] py-2">
+                                      ₹{item.final_price}
+                                      {
+                                        item.discount_price > 0 && (
+                                          <>
+                                            <span className="line-through text-[12px] text-[#999]">₹{item.price}
+                                            </span>
+                                            <span className="text-[#3fac45] text-[12px]">{item.discount_price}% off</span>
+                                          </>
+                                        )
+                                      }
+                                    </div>
+                                  </div>
+                                  <div className="text-[#999] text-[14px]">
+                                    Color:{" "}
+                                    <span className="text-[#000]">
+                                      {item.Colors?.map((item) => item.name).join(", ")}
+                                    </span>
+                                  </div>
+                                  <div className="text-[#999] text-[14px]">
+                                    Size:{" "}
+                                    <span className="text-[#000]">
+                                      {item.Sizes.map((item) => item.name).join(" , ")}
+                                    </span>
+                                  </div>
                                 </div>
                               </Link>
                             </div>
@@ -255,10 +297,32 @@ export default function Home() {
                             <div className="font-bold">{item.name}</div>
                             <div className="text-[#999] text-[14px]">{item.fit}</div>
                           </div>
-                          <div className="text-[#000] text-[20px] py-2">₹{item.price}</div>
-                          {/* <div className="text-[#999] text-[14px]">
-                          Color: <span className="text-[#000]">{item.Color?.name}</span>
-                        </div> */}
+                          <div className="text-[#000] text-[20px] py-2">
+                            <div className="text-[#000] text-[16px] py-2">
+                              ₹{item.final_price}
+                              {
+                                item.discount_price > 0 && (
+                                  <>
+                                    <span className="line-through text-[12px] text-[#999]">₹{item.price}
+                                    </span>
+                                    <span className="text-[#3fac45] text-[12px]">{item.discount_price}% off</span>
+                                  </>
+                                )
+                              }
+                            </div>
+                          </div>
+                          <div className="text-[#999] text-[14px]">
+                            Color:{" "}
+                            <span className="text-[#000]">
+                              {item.Colors?.map((item) => item.name).join(", ")}
+                            </span>
+                          </div>
+                          <div className="text-[#999] text-[14px]">
+                            Size:{" "}
+                            <span className="text-[#000]">
+                              {item.Sizes.map((item) => item.name).join(" , ")}
+                            </span>
+                          </div>
                         </div>
                       </Link>
                     </div>
@@ -299,10 +363,32 @@ export default function Home() {
                                     {item.fit}
                                   </div>
                                 </div>
-                                <div className="text-[#000] text-[20px] py-2">₹{item.price}</div>
-                                {/* <div className="text-[#999] text-[14px]">
-                                Color: <span className="text-[#000]">{item?.Color?.name}</span>
-                              </div> */}
+                                <div className="text-[#000] text-[20px] py-2">
+                                  <div className="text-[#000] text-[16px] py-2">
+                                    ₹{item.final_price}
+                                    {
+                                      item.discount_price > 0 && (
+                                        <>
+                                          <span className="line-through text-[12px] text-[#999]">₹{item.price}
+                                          </span>
+                                          <span className="text-[#3fac45] text-[12px]">{item.discount_price}% off</span>
+                                        </>
+                                      )
+                                    }
+                                  </div>
+                                </div>
+                                <div className="text-[#999] text-[14px]">
+                                  Color:{" "}
+                                  <span className="text-[#000]">
+                                    {item.Colors?.map((item) => item.name).join(", ")}
+                                  </span>
+                                </div>
+                                <div className="text-[#999] text-[14px]">
+                                  Size:{" "}
+                                  <span className="text-[#000]">
+                                    {item.Sizes?.map((item) => item.name).join(",")}
+                                  </span>
+                                </div>
                               </div>
                             </Link>
                           </div>

@@ -107,6 +107,10 @@ class Product extends Model {
                     type: DataTypes.INTEGER,
                     allowNull: true
                 },
+                final_price: {
+                    type: DataTypes.DECIMAL(10, 2),
+                    allowNull: true
+                },
                 isDeleted: {
                     type: DataTypes.BOOLEAN,
                     allowNull: false,

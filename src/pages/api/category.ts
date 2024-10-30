@@ -12,7 +12,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
        await initializeDatabase();
 
         if (req.method === 'GET') {
-            await categoryController.getAllCategories(res);   
+            await categoryController.getAllCategories(res, req.query);   
         } else if (req.method === 'POST') {
             await categoryController.createCategory(res, req.body);
         } else if (req.method === 'PUT') {

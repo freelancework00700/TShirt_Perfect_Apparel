@@ -2,13 +2,26 @@ import { NextApiResponse } from 'next';
 import Color from '../models/color.model';
 import { HttpStatus } from '../utils/http-status';
 import { Op } from 'sequelize';
+import sequelize from 'sequelize';
 
 export class ColorController extends HttpStatus {
 
     /** GET API: Get all color */
-    public getAllColor = async (res: NextApiResponse) => {
+    public getAllColor = async (res: NextApiResponse, params: any) => {
         try {
-            const color = await Color.findAll({ where: { isDeleted: false } });
+
+            // Sorting
+            let column = params.sortColumn;
+            let direction;
+            if (column == null || column == '') {
+                column = "id";
+            }
+
+            direction = params.sortDirection == null || params.sortDirection == "" ? "DESC" : params.sortDirection;
+            const orderBy = sequelize.literal(`${column} ${direction}`);
+
+            // Get all color
+            const color = await Color.findAll({ where: { isDeleted: false }, order: [orderBy] });
 
             if (!color.length) {
                 return this.sendBadRequestResponse(res, "Color not found.", color);

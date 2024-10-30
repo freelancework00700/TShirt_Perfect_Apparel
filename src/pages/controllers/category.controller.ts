@@ -2,13 +2,26 @@ import { NextApiResponse } from 'next';
 import Category from '../models/category.model';
 import { HttpStatus } from '../utils/http-status';
 import { Op } from 'sequelize';
+import sequelize from 'sequelize';
 
 export class CategoryController extends HttpStatus {
 
     /** GET API: Get all Categories */
-    public getAllCategories = async (res: NextApiResponse) => {
+    public getAllCategories = async (res: NextApiResponse, params: any) => {
         try {
-            const categories = await Category.findAll({ where: { isDeleted: false } });
+
+            // Sorting
+            let column = params.sortColumn;
+            let direction;
+            if (column == null || column == '') {
+                column = "id";
+            }
+            
+            direction = params.sortDirection == null || params.sortDirection == "" ? "DESC" : params.sortDirection;
+            const orderBy = sequelize.literal(`${column} ${direction}`);
+
+            // Get categories
+            const categories = await Category.findAll({ where: { isDeleted: false }, order: [orderBy] });
 
             if (!categories.length) {
                 return this.sendBadRequestResponse(res, "Categories not found.", categories);
