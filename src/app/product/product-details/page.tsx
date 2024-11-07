@@ -287,62 +287,77 @@ const ProductDetail = () => {
             {isModalOpen && (
               <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
                 <div className="bg-white w-full max-w-md p-6 rounded-lg shadow-lg relative">
-                  <button onClick={() => setIsModalOpen(false)}
+                  <button
+                    onClick={() => setIsModalOpen(false)}
                     className="absolute top-2 right-2 text-gray-600 hover:text-gray-800"
                   >
                     ✖️
                   </button>
-                  <h2 className="text-lg font-semibold text-center mb-4">Product Inquiry</h2>
+                  <h2 className="text-lg font-semibold text-center mb-4">
+                    Product Inquiry
+                  </h2>
 
-                  <h3 className="text-lg font-semibold mb-4">Product Name: {filteredData?.name}</h3>
+                  <h3 className="text-xl font-semibold mb-3">
+                    {filteredData?.name}
+                  </h3>
 
                   <form onSubmit={formik.handleSubmit}>
-                    <input
-                      type="text"
-                      name="product_id"
-                      value={formik.values.product_id}
-                      onChange={formik.handleChange}
-                      readOnly
-                      className="w-full px-4 py-2 mb-4 border rounded-md text-gray-500 bg-gray-100"
-                      placeholder="Product ID"
-                    />
-                    {formik.errors.product_id && formik.touched.product_id &&
-                      (<p className="text-red-500">{formik.errors.product_id}</p>)}
-
-                    <Label>Size:</Label>
-                    {filteredData?.Sizes.map((size) => (
-                      <label key={size.id} className="flex items-center mb-2">
-                        <input
-                          type="checkbox"
-                          name="size_ids"
-                          value={size.id.toString()}
-                          checked={formik.values.size_ids.split(',').includes(size.id.toString())} // Check if size is in string
-                          onChange={() => handleCheckboxChange(size.id.toString())}
-                          className="mr-2"
-                        />
-                        {size.name}
-                      </label>
-                    ))}
-                    {formik.errors.size_ids && formik.touched.size_ids && (
-                      <p className="text-red-500">{formik.errors.size_ids}</p>
-                    )}
-
-                    <Label>Color:</Label>
-                    {filteredData?.Colors.map((color) => (
-                      <label key={color.id} className="flex items-center mb-2">
-                        <input
-                          type="checkbox"
-                          name="color_ids"
-                          value={color.id.toString()}
-                          checked={formik.values.color_ids.split(',').includes(color.id.toString())}
-                          onChange={() => handleColorCheckboxChange(color.id.toString())}
-                          className="mr-2"
-                        />
-                        {color.name}
-                      </label>
-                    ))}
-                    {formik.errors.color_ids && formik.touched.color_ids &&
-                      (<p className="text-red-500">{formik.errors.color_ids}</p>)}
+                    <div className="flex flex-col gap-2 mb-2">
+                      <div className="flex items-center gap-5">
+                        <Label className="min-w-[40px]">Size:</Label>
+                        <div className="flex items-center gap-5">
+                          {filteredData?.Sizes.map((size) => (
+                            <label key={size.id} className="flex items-center">
+                              <input
+                                type="checkbox"
+                                name="size_ids"
+                                value={size.id.toString()}
+                                checked={formik.values.size_ids
+                                  .split(",")
+                                  .includes(size.id.toString())} // Check if size is in string
+                                onChange={() =>
+                                  handleCheckboxChange(size.id.toString())
+                                }
+                                className="mr-2"
+                              />
+                              {size.name}
+                            </label>
+                          ))}
+                        </div>
+                      </div>
+                      {formik.errors.size_ids && formik.touched.size_ids && (
+                        <p className="text-red-500">{formik.errors.size_ids}</p>
+                      )}
+                    </div>
+                    <div className="flex flex-col gap-2 mb-4">
+                      <div className="flex items-center gap-5">
+                        <Label className="min-w-[40px]">Color:</Label>
+                        <div className="flex items-center gap-5">
+                          {filteredData?.Colors.map((color) => (
+                            <label key={color.id} className="flex items-center">
+                              <input
+                                type="checkbox"
+                                name="color_ids"
+                                value={color.id.toString()}
+                                checked={formik.values.color_ids
+                                  .split(",")
+                                  .includes(color.id.toString())}
+                                onChange={() =>
+                                  handleColorCheckboxChange(color.id.toString())
+                                }
+                                className="mr-2"
+                              />
+                              {color.name}
+                            </label>
+                          ))}
+                        </div>
+                      </div>
+                      {formik.errors.color_ids && formik.touched.color_ids && (
+                        <p className="text-red-500">
+                          {formik.errors.color_ids}
+                        </p>
+                      )}
+                    </div>
 
                     <input
                       type="text"
@@ -353,8 +368,9 @@ const ProductDetail = () => {
                       placeholder="Quantity"
                       required
                     />
-                    {formik.errors.quantity && formik.touched.quantity &&
-                      (<p className="text-red-500">{formik.errors.quantity}</p>)}
+                    {formik.errors.quantity && formik.touched.quantity && (
+                      <p className="text-red-500">{formik.errors.quantity}</p>
+                    )}
 
                     <textarea
                       name="inquiry_message"
@@ -365,8 +381,12 @@ const ProductDetail = () => {
                       rows="3"
                       required
                     ></textarea>
-                    {formik.errors.inquiry_message && formik.touched.inquiry_message &&
-                      (<p className="text-red-500">{formik.errors.inquiry_message}</p>)}
+                    {formik.errors.inquiry_message &&
+                      formik.touched.inquiry_message && (
+                        <p className="text-red-500">
+                          {formik.errors.inquiry_message}
+                        </p>
+                      )}
 
                     {/* Name */}
                     <input
@@ -378,8 +398,9 @@ const ProductDetail = () => {
                       placeholder="Name"
                       required
                     />
-                    {formik.errors.name && formik.touched.name &&
-                      (<p className="text-red-500">{formik.errors.name}</p>)}
+                    {formik.errors.name && formik.touched.name && (
+                      <p className="text-red-500">{formik.errors.name}</p>
+                    )}
 
                     {/* Email */}
                     <input
@@ -391,8 +412,9 @@ const ProductDetail = () => {
                       placeholder="Email"
                       required
                     />
-                    {formik.errors.email && formik.touched.email &&
-                      (<p className="text-red-500">{formik.errors.email}</p>)}
+                    {formik.errors.email && formik.touched.email && (
+                      <p className="text-red-500">{formik.errors.email}</p>
+                    )}
 
                     {/* Mobile Number */}
                     <input
@@ -404,10 +426,12 @@ const ProductDetail = () => {
                       placeholder="Mobile No."
                       required
                     />
-                    {formik.errors.mobile_no && formik.touched.mobile_no &&
-                      (<p className="text-red-500">{formik.errors.mobile_no}</p>)}
+                    {formik.errors.mobile_no && formik.touched.mobile_no && (
+                      <p className="text-red-500">{formik.errors.mobile_no}</p>
+                    )}
 
-                    <button type="submit"
+                    <button
+                      type="submit"
                       className="w-full py-2 bg-[#000000] text-white font-semibold rounded-md hover:bg-[#272626] transition ease-in-out duration-200"
                     >
                       Submit
@@ -447,8 +471,9 @@ const ProductDetail = () => {
                           </div>
                         </div>
                         <div className="pe-8 lg:pe-0 max-lg:hidden">
-                          <div onClick={() => openProductInquiryModal(item.id)}
-                            className="bg-[#000] hover:bg-[#222] hover:text-[#f8885b] transition ease-in-out duration-200 rounded-full text-base flex items-center font-bold 
+                          <div
+                            onClick={() => openProductInquiryModal(item.id)}
+                            className="bg-[#000] hover:bg-[#222] hover:text-[#7ab01e] cursor-pointer transition ease-in-out duration-200 rounded-full text-base flex items-center font-bold 
                           text-[#fff] py-2 px-6 max-[1023px]:hidden button button--nanuk button--border-thin button--round-s"
                           >
                             <span>Product Inquiry</span>

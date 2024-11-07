@@ -153,8 +153,8 @@ const Footer = () => {
               <li className=" py-[23px] cursor-pointer">
                 <Link
                   href="/"
-                  className={`text-base uppercase font-medium leading-[16px]  hover:text-[#f8a25b] ${
-                    router === "/" ? "text-[#f8a25b]" : "text-[#000]"
+                  className={`text-base uppercase font-medium leading-[16px]  hover:text-[#7ab01e] ${
+                    router === "/" ? "text-[#7ab01e]" : "text-[#000]"
                   }`}
                 >
                   Home
@@ -163,8 +163,8 @@ const Footer = () => {
               <li className=" py-[23px] cursor-pointer">
                 <Link
                   href="/product"
-                  className={`text-base uppercase font-medium leading-[16px]  hover:text-[#f8a25b] ${
-                    router === "/product" ? "text-[#f8a25b]" : "text-[#000]"
+                  className={`text-base uppercase font-medium leading-[16px]  hover:text-[#7ab01e] ${
+                    router === "/product" ? "text-[#7ab01e]" : "text-[#000]"
                   }`}
                 >
                   Product
@@ -173,8 +173,8 @@ const Footer = () => {
               <li className=" py-[23px] cursor-pointer">
                 <Link
                   href="/customer-service"
-                  className={`text-base uppercase font-medium leading-[16px]  hover:text-[#f8a25b] ${
-                    router === "/service" ? "text-[#f8a25b]" : "text-[#000]"
+                  className={`text-base uppercase font-medium leading-[16px]  hover:text-[#7ab01e] ${
+                    router === "/service" ? "text-[#7ab01e]" : "text-[#000]"
                   }`}
                 >
                   Customer Service
@@ -183,9 +183,9 @@ const Footer = () => {
               <li className=" py-[23px] cursor-pointer">
                 <Link
                   href="/privacy-policy"
-                  className={`text-base uppercase font-medium leading-[16px]  hover:text-[#f8a25b] ${
+                  className={`text-base uppercase font-medium leading-[16px]  hover:text-[#7ab01e] ${
                     router === "/privacy-policy"
-                      ? "text-[#f8a25b]"
+                      ? "text-[#7ab01e]"
                       : "text-[#000]"
                   }`}
                 >

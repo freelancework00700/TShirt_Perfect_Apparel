@@ -27,8 +27,8 @@ function CustomerService() {
               How can we help you today?
             </div>
           </div>
-          <div className="grid grid-cols-12 gap-4 py-10 px-20">
-            <div className="col-span-6 pt-10">
+          <div className="grid grid-cols-12 gap-4 py-10 lg:px-20">
+            <div className="lg:col-span-6 col-span-12 lg:pt-10">
               <div className="shadow-md p-10 m-1 rounded-[10px]">
                 <svg
                   className="w-10 h-10 mb-6 mx-auto text-gray-800 dark:text-white"
@@ -45,10 +45,10 @@ function CustomerService() {
                     clip-rule="evenodd"
                   />
                 </svg>
-                <div className="text-center text-[18px] mb-6 font-medium">
+                <div className="text-center text-[24px] mb-6 font-medium">
                   Bulk order Discuss
                 </div>
-                <div className="text-center text-[14px] mb-6">
+                <div className="text-center text-[16px] mb-6">
                   Direct contact and follow-up with customers are crucial steps in
                   managing bulk orders effectively.
                 </div>
@@ -58,7 +58,7 @@ function CustomerService() {
                 </div>
               </div>
             </div>
-            <div className="col-span-6 pt-10">
+            <div className="lg:col-span-6 col-span-12 lg:pt-10">
               <div className="shadow-md p-10 m-1 rounded-[10px] h-full">
                 <svg
                   className="w-10 h-10 mb-6 mx-auto text-gray-800 dark:text-white"
@@ -77,10 +77,10 @@ function CustomerService() {
                     d="M4.248 19C3.22 15.77 5.275 8.232 12.466 8.232V6.079a1.025 1.025 0 0 1 1.644-.862l5.479 4.307a1.108 1.108 0 0 1 0 1.723l-5.48 4.307a1.026 1.026 0 0 1-1.643-.861v-2.154C5.275 13.616 4.248 19 4.248 19Z"
                   />
                 </svg>
-                <div className="text-center text-[18px] mb-6 font-medium">
+                <div className="text-center text-[24px] mb-6 font-medium">
                   Return Policy
                 </div>
-                <div className="text-center text-[14px] mb-6">
+                <div className="text-center text-[16px] mb-6">
                   Thank you for shopping with Perfect Apparels. We take pride in
                   the quality of our t-shirts and aim to ensure our customers are
                   fully satisfied. If you are not completely happy with your
@@ -91,7 +91,7 @@ function CustomerService() {
                 </div>
               </div>
             </div>
-            <div className="col-span-6 pt-10">
+            <div className="lg:col-span-6 col-span-12 lg:pt-10">
               <div className="shadow-md p-10 m-1 rounded-[10px] h-full">
                 <svg
                   className="w-10 h-10 mb-6 mx-auto text-gray-800 dark:text-white"
@@ -109,26 +109,23 @@ function CustomerService() {
                     d="M4.37 7.657c2.063.528 2.396 2.806 3.202 3.87 1.07 1.413 2.075 1.228 3.192 2.644 1.805 2.289 1.312 5.705 1.312 6.705M20 15h-1a4 4 0 0 0-4 4v1M8.587 3.992c0 .822.112 1.886 1.515 2.58 1.402.693 2.918.351 2.918 2.334 0 .276 0 2.008 1.972 2.008 2.026.031 2.026-1.678 2.026-2.008 0-.65.527-.9 1.177-.9H20M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
                   />
                 </svg>
-                <div className="text-center text-[18px] mb-6 font-medium">
+                <div className="text-center text-[24px] mb-6 font-medium">
                   Contact US
                 </div>
-                <div className="text-center text-[14px] mb-3">
+                <div className="text-center text-[16px] mb-3">
                   Address: Plot No.40 GF, Shidhi Park Society, L.H.Road, Varachha,
                   Surat, 395006
                 </div>
-                <div className="text-center text-[14px] mb-6">
-                  Call or WhatsApp: +91 94268 66467 / +91 94268 66467
+                <div className="text-center text-[16px] mb-6">
+                  Call or WhatsApp: +91 94268 66467 / +91 94281 49160
                 </div>
-                <div className="text-center text-[14px] mb-6">
-                  Email: hardik.disolutions@gmail.com
+                <div className="text-center text-[16px] mb-6">
+                  Email: pravinbudheliya99@gmail.com
                 </div>
-                {/* <div className="flex justify-center mt-6">
-                  <Button className="px-10">Get In Touch</Button>
-                </div> */}
               </div>
             </div>
-            <div className="col-span-6 pt-10">
-              <div className="shadow-md rounded-[10px] h-full">
+            <div className="lg:col-span-6 col-span-12 lg:pt-10">
+              <div className="shadow-md rounded-[10px] h-full overflow-hidden">
                 <iframe
                   src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3719.5463767329775!2d72.85479911133164!3d21.21017188040356!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3be04f045d3372d3%3A0x9de6cb505990773a!2sLambe%20Hanuman%20Rd%2C%20Surat%2C%20Gujarat!5e0!3m2!1sen!2sin!4v1728383501964!5m2!1sen!2sin"
                   width="100%"

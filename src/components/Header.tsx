@@ -7,6 +7,7 @@ import { usePathname } from "next/navigation";
 import Image from "next/image";
 import menu from "../../public/images/menu.png";
 import close from "../../public/images/close.png";
+import mainLogo from "../../public/images/PerfectApparels.png";
 
 const Header = () => {
   const [menuShowResponsive, setMenuShowResponsive] = useState(false);
@@ -19,8 +20,8 @@ const Header = () => {
         <div className="container mx-auto xl:max-w-8xl">
           <div className="flex items-center justify-between max-lg:p-3">
             <div className="flex items-center">
-              <div className="font-bold xl:me-[2rem] text-[24px]">
-                Perfect Apparels
+              <div className="mr-3">
+                <Image src={mainLogo} alt="PerfectApparels" className="h-8 w-full object-contain"></Image>
               </div>
               <div className="hidden lg:flex">
                 <nav>
@@ -28,8 +29,9 @@ const Header = () => {
                     <li className=" py-[23px] cursor-pointer">
                       <Link
                         href="/"
-                        className={`text-base uppercase font-bold leading-[16px]  hover:text-[#f8a25b] ${router === "/" ? "text-[#f8a25b]" : "text-[#000]"
-                          }`}
+                        className={`text-base uppercase font-bold leading-[16px]  hover:text-[#7ab01e] ${
+                          router === "/" ? "text-[#7ab01e]" : "text-[#000]"
+                        }`}
                       >
                         Home
                       </Link>
@@ -37,10 +39,11 @@ const Header = () => {
                     <li className=" py-[23px] cursor-pointer">
                       <Link
                         href="/product"
-                        className={`text-base uppercase font-bold leading-[16px]  hover:text-[#f8a25b] ${router === "/product"
-                          ? "text-[#f8a25b]"
-                          : "text-[#000]"
-                          }`}
+                        className={`text-base uppercase font-bold leading-[16px]  hover:text-[#7ab01e] ${
+                          router === "/product"
+                            ? "text-[#7ab01e]"
+                            : "text-[#000]"
+                        }`}
                       >
                         Product
                       </Link>
@@ -48,10 +51,11 @@ const Header = () => {
                     <li className=" py-[23px] cursor-pointer">
                       <Link
                         href="/customer-service"
-                        className={`text-base uppercase font-bold leading-[16px]  hover:text-[#f8a25b] ${router === "/service"
-                          ? "text-[#f8a25b]"
-                          : "text-[#000]"
-                          }`}
+                        className={`text-base uppercase font-bold leading-[16px]  hover:text-[#7ab01e] ${
+                          router === "/service"
+                            ? "text-[#7ab01e]"
+                            : "text-[#000]"
+                        }`}
                       >
                         Customer Service
                       </Link>
@@ -64,7 +68,7 @@ const Header = () => {
               <div className="ps-4 pe-8 lg:pe-0 max-lg:hidden">
                 <Link
                   href="tel:+91 94268 66467"
-                  className="bg-[#f8a25b] hover:bg-[#000] hover:text-[#f8885b] transition ease-in-out duration-200 rounded-full text-base flex items-center  font-bold text-[#000] py-2 px-4 max-[1023px]:hidden button button--nanuk button--border-thin button--round-s"
+                  className="bg-[#7ab01e] hover:bg-[#000] hover:text-[#7ab01e] transition ease-in-out duration-200 rounded-full text-base flex items-center  font-bold text-[#000] py-2 px-4 max-[1023px]:hidden button button--nanuk button--border-thin button--round-s"
                 >
                   <span>Contact Us: +91 94268 66467</span>
                 </Link>
@@ -98,16 +102,40 @@ const Header = () => {
             </div>
 
             {menuShowResponsive && (
-              <div className="fixed w-full left-0 top-[60px] lg:hidden z-20 h-[calc(100vh_-_60px)]">
+              <div className="fixed w-full left-0 top-[58px] lg:hidden z-20 h-[calc(100vh_-_58px)]">
                 <div className="bg-[#fff] p-3 px-5 shadow-md h-full">
                   <nav>
                     <ul className="flex items-center flex-col">
                       <li className="py-4">
                         <Link
                           href="/"
-                          className="text-base uppercase font-medium leading-[16px] text-[#000] hover:text-[#f8a25b] cursor-pointer "
+                          className="text-base uppercase font-medium leading-[16px] text-[#000] hover:text-[#7ab01e] cursor-pointer "
                         >
                           Home
+                        </Link>
+                      </li>
+                      <li className="py-4">
+                        <Link
+                          href="/product"
+                          className={`text-base uppercase font-bold leading-[16px]  hover:text-[#7ab01e] ${
+                            router === "/product"
+                              ? "text-[#7ab01e]"
+                              : "text-[#000]"
+                          }`}
+                        >
+                          Product
+                        </Link>
+                      </li>
+                      <li className=" py-4">
+                        <Link
+                          href="/customer-service"
+                          className={`text-base uppercase font-bold leading-[16px]  hover:text-[#7ab01e] ${
+                            router === "/service"
+                              ? "text-[#7ab01e]"
+                              : "text-[#000]"
+                          }`}
+                        >
+                          Customer Service
                         </Link>
                       </li>
                     </ul>

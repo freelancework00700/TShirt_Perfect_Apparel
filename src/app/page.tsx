@@ -6,8 +6,6 @@ import Footer from "../components/Footer";
 import Header from "../components/Header";
 import heroImage1 from "../../public/Images/5_WebBanner_1920x1080_4eacfb85-fcb6-4205-9741-ed79d7545780_1400x.webp";
 import heroImage2 from "../../public/Images/3_WebBanner_1920x1080_76a24f61-cdd7-482b-ab80-52a350547e6b_1400x.webp";
-// import product1 from "../../public/Images/525eebd82dd31d96fd518e97e5234fe0_78eb7754-39e4-4adc-b66c-acbaa089bfe7.webp";
-// import track1 from "../../public/Images/pantTracks.png";
 import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/effect-fade";
@@ -15,7 +13,7 @@ import "swiper/css/navigation";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { EffectFade, Navigation, Pagination } from "swiper/modules";
 import axios from "axios";
-import { Filter, IProduct } from "@/interface/types";
+import { IProduct } from "@/interface/types";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
@@ -25,17 +23,10 @@ type SegmentKey = "newDrops" | "mostTrending";
 export default function Home() {
   const [activeSegment, setActiveSegment] = useState<SegmentKey>("newDrops");
   const [product, setProduct] = useState<IProduct[]>([]);
-  // console.log('product:::::::::::::::::: ', product);
-  // const [category, setCategory] = useState<ICategories[]>([]);
-  // console.log('category :>> ', category);
   const router = useRouter();
-
-
   const TrackPants = product.filter(item => item.Category.name === "Track-Pants");
   console.log('TrackPants :>> ', TrackPants);
   const Tshirt = product.filter(item => item.Category.name === "T-Shirts");
-
-
   const segments = {
     newDrops: {
       title: "New Drops",
@@ -49,7 +40,6 @@ export default function Home() {
     try {
       const response = await axios.get(`/api/product`)
       const getData = response.data?.data
-      // console.log('getData :>> ', getData);
       setProduct(getData)
     } catch (error) {
       console.error(error)
@@ -133,8 +123,8 @@ export default function Home() {
                           </div>
                           <div className="py-3 px-4">
                             <div>
-                              <div className="font-bold">{item.name}</div>
-                              <div className="text-[#999] text-[14px]">{item.name}</div>
+                              <div className="font-bold line-clamp-1">{item.name}</div>
+                              <div className="text-[#999] text-[14px] line-clamp-1">{item.name}</div>
                             </div>
                             <div className="text-[#000] text-[16px] py-2">
                               ₹{item.final_price}
@@ -197,11 +187,10 @@ export default function Home() {
                                 </div>
                                 <div className="py-3 px-4">
                                   <div>
-                                    <div className="font-bold">{item.name}</div>
-                                    <div className="text-[#999] text-[14px]">{item.name}</div>
+                                    <div className="font-bold line-clamp-1">{item.name}</div>
+                                    <div className="text-[#999] text-[14px] line-clamp-1">{item.name}</div>
                                   </div>
-                                  <div className="text-[#000] text-[20px] py-2">
-                                    <div className="text-[#000] text-[16px] py-2">
+                                  <div className="text-[#000] text-[16px] py-2">
                                       ₹{item.final_price}
                                       {
                                         item.discount_price > 0 && (
@@ -213,7 +202,6 @@ export default function Home() {
                                         )
                                       }
                                     </div>
-                                  </div>
                                   <div className="text-[#999] text-[14px]">
                                     Color:{" "}
                                     <span className="text-[#000]">
@@ -297,8 +285,8 @@ export default function Home() {
                         </div>
                         <div className="py-3 px-4">
                           <div>
-                            <div className="font-bold">{item.name}</div>
-                            <div className="text-[#999] text-[14px]">{item.fit}</div>
+                            <div className="font-bold line-clamp-1">{item.name}</div>
+                            <div className="text-[#999] text-[14px] line-clamp-1">{item.fit}</div>
                           </div>
                           <div className="text-[#000] text-[20px] py-2">
                             <div className="text-[#000] text-[16px] py-2">
@@ -361,8 +349,8 @@ export default function Home() {
                               </div>
                               <div className="py-3 px-4">
                                 <div>
-                                  <div className="font-bold">{item.name}</div>
-                                  <div className="text-[#999] text-[14px]">
+                                  <div className="font-bold line-clamp-1">{item.name}</div>
+                                  <div className="text-[#999] text-[14px] line-clamp-1">
                                     {item.fit}
                                   </div>
                                 </div>
