@@ -1569,6 +1569,7 @@ function Admin() {
                                   <TableCell>Discount Price</TableCell>
                                   <TableCell>Final Price</TableCell>
                                   <TableCell>Fabric</TableCell>
+                                  <TableCell>Type</TableCell>
                                   <TableCell>Color</TableCell>
                                   <TableCell>Size</TableCell>
                                   <TableCell>Status</TableCell>
@@ -1587,6 +1588,7 @@ function Admin() {
                                       <TableCell>{item.discount_price}</TableCell>
                                       <TableCell>{item.final_price}</TableCell>
                                       <TableCell>{item.fabric}</TableCell>
+                                      <TableCell>{item.type}</TableCell>
                                       <TableCell>{item.Colors.map(color => color.name).join(',')}</TableCell>
                                       <TableCell>{item.Sizes.map(size => size.name).join(',')}</TableCell>
                                       <TableCell>

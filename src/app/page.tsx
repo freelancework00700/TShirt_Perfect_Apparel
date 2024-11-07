@@ -25,8 +25,8 @@ export default function Home() {
   const [product, setProduct] = useState<IProduct[]>([]);
   const router = useRouter();
   const TrackPants = product.filter(item => item.Category.name === "Track-Pants");
-  console.log('TrackPants :>> ', TrackPants);
   const Tshirt = product.filter(item => item.Category.name === "T-Shirts");
+
   const segments = {
     newDrops: {
       title: "New Drops",
@@ -191,17 +191,17 @@ export default function Home() {
                                     <div className="text-[#999] text-[14px] line-clamp-1">{item.name}</div>
                                   </div>
                                   <div className="text-[#000] text-[16px] py-2">
-                                      ₹{item.final_price}
-                                      {
-                                        item.discount_price > 0 && (
-                                          <>
-                                            <span className="line-through text-[12px] text-[#999] ml-1">₹{item.price}
-                                            </span>
-                                            <span className="text-[#3fac45] text-[12px]">{item.discount_price}% off</span>
-                                          </>
-                                        )
-                                      }
-                                    </div>
+                                    ₹{item.final_price}
+                                    {
+                                      item.discount_price > 0 && (
+                                        <>
+                                          <span className="line-through text-[12px] text-[#999] ml-1">₹{item.price}
+                                          </span>
+                                          <span className="text-[#3fac45] text-[12px]">{item.discount_price}% off</span>
+                                        </>
+                                      )
+                                    }
+                                  </div>
                                   <div className="text-[#999] text-[14px]">
                                     Color:{" "}
                                     <span className="text-[#000]">

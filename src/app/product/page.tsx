@@ -14,10 +14,12 @@ import {
 import Link from "next/link";
 import axios from "axios";
 import { Filter, ICategories, IColor, IProduct, ISize } from "@/interface/types";
+import { Slider } from "@/components/ui/slider";
+import { Label } from "@/components/ui/label";
 
 function Product() {
   const [allData, setAllData] = useState<IProduct[]>([]);
-  console.log('allData', allData);
+  // console.log('allData', allData);
   const [categories, setCategories] = useState<ICategories[]>([]);
   // console.log('categories', categories);
   const [allColor, setAllColor] = useState<IColor[]>([]);
@@ -34,6 +36,25 @@ function Product() {
   const filteredData =
     allData.filter((item) => item.Category.name === filter)
   // : allData.filter((item) => item.category_id === 1);
+
+  const prices = allData.map((product) => parseFloat(product.price));
+  const maxPrice = Math.max(...prices, 3000); // set default max of 3000 if no prices available
+  const [selectedPrice, setSelectedPrice] = useState(maxPrice);
+
+  const fabricOptions = Array.from(new Set(allData
+    .map((product) => product.fabric?.toLowerCase().trim()) // Normalize to lowercase and trim whitespace
+    .filter(Boolean)));
+  // console.log('fabricOptions :>> ', fabricOptions);
+  const [selectedFabrics, setSelectedFabrics] = useState<string[]>([]);
+
+  const handleFabricChange = (fabric: string) => {
+    console.log('fabric :>> ', fabric);
+    setSelectedFabrics((prev) => (
+      console.log('prev :>> ', prev),
+      prev.includes(fabric) ? prev.filter((f) => f !== fabric) : [...prev, fabric])
+    );
+  };
+
 
 
   const getProduct = async () => {
@@ -62,23 +83,27 @@ function Product() {
     getProduct();
   }, []);
 
-  useEffect(() => {
-    const filteredData = allData.filter((val) => selectedCategories.includes(val.category_id));
-    // console.log('filteredData :>> ', filteredData) ;
+  // useEffect(() => {
+  //   const filteredData = allData.filter((val) => selectedCategories.includes(val.category_id));
+  //   // console.log('filteredData :>> ', filteredData) ;
 
-    const sizeFilter = filteredData.filter((val) =>
-      val.size_ids.some((size) => selectedSizes.includes(size)));
-    console.log('sizeFilter:::::', sizeFilter);
+  //   const sizeFilter = filteredData.filter((val) =>
+  //     val.size_ids.some((size) => selectedSizes.includes(size)));
+  //   console.log('sizeFilter:::::', sizeFilter);
 
-    // const dataByPrice = sizeFilter.filter((val) => parseFloat(val.price) <= priceRange)
-    // console.log('dataByPrice :>> ', dataByPrice);
+  //   const filteredPrice = sizeFilter.filter(
+  //     (product) => parseFloat(product.price) <= selectedPrice
+  //   );
+  //   console.log('filteredPrice :>> ', filteredPrice);
+  //   // const dataByPrice = sizeFilter.filter((val) => parseFloat(val.price) <= priceRange)
+  //   // console.log('dataByPrice :>> ', dataByPrice);
 
-    // const dataByPrice = sizeFilter.filter(
-    //   (val) => parseFloat(val.price) >= priceRange[0] && parseFloat(val.price) <= priceRange[1]
-    // );
-    // console.log('dataByPrice :>> ', dataByPrice);
+  //   // const dataByPrice = sizeFilter.filter(
+  //   //   (val) => parseFloat(val.price) >= priceRange[0] && parseFloat(val.price) <= priceRange[1]
+  //   // );
+  //   // console.log('dataByPrice :>> ', dataByPrice);
 
-  }, [allData, selectedCategories, allSize, selectedSizes])
+  // }, [allData, selectedCategories, allSize, selectedSizes])
 
   const handleCheckboxChange = (id: number) => {
     setSelectedCategories((prev) => {
@@ -138,10 +163,25 @@ function Product() {
       (product) =>
         selectedCategories.includes(product.category_id) &&
         product.size_ids?.some((sizeId) => selectedSizes.includes(sizeId)) &&
-        product.color_ids?.some((colorId: any) => selectedColors.includes(colorId))
+        product.color_ids?.some((colorId: any) => selectedColors.includes(colorId)) &&
+        (selectedFabrics.length === 0 || selectedFabrics.includes(product.fabric?.toLowerCase().trim())) &&
+        parseFloat(product.final_price) <= selectedPrice
     );
+    console.log('products :>> ', products);
     setFilteredProducts(products);
-  }, [selectedCategories, selectedSizes, selectedColors, allData]);
+  }, [selectedCategories, selectedSizes, selectedColors, selectedPrice, selectedFabrics, allData]);
+
+  const handleResetFilters = () => {
+    setSelectedCategories([]);
+    setSelectedSizes([]);
+    setSelectedColors([]);
+    setSelectedFabrics([]);
+    setSelectedPrice(3000);
+    setFilteredProducts(allData);
+  }
+
+  const isActiveFilterData = selectedCategories.length > 0 || selectedSizes.length > 0 ||
+    selectedColors.length > 0 || selectedFabrics.length > 0 || selectedPrice < 3000;
 
   return (
     <main className="max-[1024px]:mt-[77px] max-[767px]:mt-[50px] relative">
@@ -150,7 +190,12 @@ function Product() {
         <div className="container mx-auto xl:max-w-8xl max-sm:px-4">
           <div className="grid grid-cols-12 gap-4 lg:py-10">
             <div className="xl:col-span-2 lg:col-span-3 col-span-12">
-              <div className="mb-2 text-[24px] font-medium">Filter</div>
+              <div className="mb-2 text-[24px] font-medium">Filter
+                {
+                  isActiveFilterData &&
+                  <button onClick={handleResetFilters} className="ml-28 text-sm">Reset Filter</button>
+                }
+              </div>
               <Accordion type="single" collapsible className="w-full">
                 <AccordionItem value="item-1">
                   <AccordionTrigger>Collection</AccordionTrigger>
@@ -253,12 +298,41 @@ function Product() {
                     </div>
                   </AccordionContent>
                 </AccordionItem>
+
+                <Label>Price</Label>
+                <div className="flex flex-col gap-3 mt-3">
+                  <Slider
+                    onValueChange={(value) => setSelectedPrice(value[0])}
+                    defaultValue={[maxPrice / 3]}
+                    max={maxPrice}
+                    step={1}
+                  />
+                  <span>Selected Price: {selectedPrice}</span>
+                </div>
+
+                <AccordionItem value="item-4">
+                  <AccordionTrigger>Fabric</AccordionTrigger>
+                  <AccordionContent>
+                    <div className="flex flex-col gap-3 mt-3">
+                      {fabricOptions.map((fabric) => (
+                        <label key={fabric} className="flex items-center">
+                          <input
+                            type="checkbox"
+                            checked={selectedFabrics.includes(fabric)}
+                            onChange={() => handleFabricChange(fabric)}
+                          />
+                          <span className="ml-2">{fabric}</span>
+                        </label>
+                      ))}
+                    </div>
+                  </AccordionContent>
+                </AccordionItem>
               </Accordion>
             </div>
             <div className="xl:col-span-10 lg:col-span-9 col-span-12">
               <div className="flex justify-between items-center lg:sticky lg:top-0 bg-white max-lg:flex-wrap max-md:mb-2">
                 <div className="mb-4 text-[24px] font-medium">
-                  {filter ? "T-Shirts Collection" : "Track Pant Collection"}
+                  {filter === "T-Shirts" ? "T-Shirts Collection" : "Track Pant Collection"}
                 </div>
                 <div
                   onClick={() => setFilter(filter === "T-Shirts" ? "Track-Pants" : "T-Shirts")}
@@ -289,125 +363,111 @@ function Product() {
               <div className="grid grid-cols-12 gap-4 gap-y-10">
                 {filteredProducts.length > 0 ? (
                   // Display filteredProducts when data is available
-                  filteredProducts.map((item, index) => {
-                    return (
-                      <>
-                        <Link
-                          key={index}
-                          className="lg:col-span-3 md:col-span-6 col-span-12"
-                          href={`/product/product-details?id=${item.id}`}
-                        >
-                          <div className="shadow-md h-full w-full rounded-lg">
-                            <div className="productImage rounded-[12px] overflow-hidden max-h-[400px] flex justify-center">
-                              <Image
-                                src={`/product-image/${item.ProductImages[0]?.sysFileName}`}
-                                width={200}
-                                height={200}
-                                alt={item.name}
-                                className="min-h-[245px] max-h-[245px] object-cover"
-                              />
-                            </div>
-                            <div className="py-3 px-4">
-                              <div>
-                                <div className="font-bold text-base">
-                                  {item.name}
-                                </div>
-                                <div className="text-[#999] text-[14px]">
-                                  {item.fit}
-                                </div>
-                              </div>
-                              <div className="text-[#000] text-[16px] py-1">
-                                <div className="text-[#000] text-[16px] py-2 5px">
-                                  ₹{item.final_price}
-                                  {
-                                    item.discount_price > 0 && (
-                                      <>
-                                        <span className="line-through text-[12px] text-[#999] ml-1">₹{item.price}
-                                        </span>
-                                        <span className="text-[#3fac45] text-[12px]">{item.discount_price}% off</span>
-                                      </>
-                                    )
-                                  }
-                                </div>
-                              </div>
-                              <div className="text-[#999] text-[14px]">
-                                Color:{" "}
-                                <span className="text-[#000]">
-                                  {item.Colors?.map((item) => item.name).join(" , ")}
-                                </span>
-                              </div>
-                              <div className="text-[#999] text-[14px]">
-                                Size:{" "}
-                                <span className="text-[#000]">
-                                  {item.Sizes.map((item) => item.name).join(" , ")}
-                                </span>
-                              </div>
+                  filteredProducts.map((item, index) => (
+                    <Link
+                      key={index}
+                      className="lg:col-span-3 md:col-span-6 col-span-12"
+                      href={`/product/product-details?id=${item.id}`}
+                    >
+                      <div className="shadow-md h-full w-full rounded-lg">
+                        <div className="productImage rounded-[12px] overflow-hidden max-h-[400px] flex justify-center">
+                          <Image
+                            src={`/product-image/${item.ProductImages[0]?.sysFileName}`}
+                            width={200}
+                            height={200}
+                            alt={item.name}
+                            className="min-h-[245px] max-h-[245px] object-cover"
+                          />
+                        </div>
+                        <div className="py-3 px-4">
+                          <div>
+                            <div className="font-bold text-base">{item.name}</div>
+                            <div className="text-[#999] text-[14px]">{item.fit}</div>
+                          </div>
+                          <div className="text-[#000] text-[16px] py-1">
+                            <div className="text-[#000] text-[16px] py-2 5px">
+                              ₹{item.final_price}
+                              {item.discount_price > 0 && (
+                                <>
+                                  <span className="line-through text-[12px] text-[#999] ml-1">
+                                    ₹{item.price}
+                                  </span>
+                                  <span className="text-[#3fac45] text-[12px]">
+                                    {item.discount_price}% off
+                                  </span>
+                                </>
+                              )}
                             </div>
                           </div>
-                        </Link>
-                      </>
-                    );
-                  })
+                          <div className="text-[#999] text-[14px]">
+                            Color:{" "}
+                            <span className="text-[#000]">
+                              {item.Colors?.map((color) => color.name).join(", ")}
+                            </span>
+                          </div>
+                          <div className="text-[#999] text-[14px]">
+                            Size:{" "}
+                            <span className="text-[#000]">
+                              {item.Sizes.map((size) => size.name).join(", ")}
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    </Link>
+                  ))
                 ) : filteredData.length > 0 ? (
                   // If filteredProducts is not available, fallback to filteredData
                   filteredData.map((item, index) => (
-                    <>
-                      <Link
-                        key={index}
-                        className={
-                          filter
-                            ? "lg:col-span-3 md:col-span-6 col-span-12"
-                            : "col-span-3"
-                        }
-                        href={`/product/product-details?id=${item.id}`}
-                      >
-                        <div className="shadow-md h-full w-full rounded-lg">
-                          <div className="productImage rounded-[12px] overflow-hidden max-h-[400px] flex justify-center">
-                            <Image
-                              src={`/product-image/${item.ProductImages[0]?.sysFileName}`}
-                              width={200}
-                              height={200}
-                              alt={item.name}
-                              className="min-h-[245px] max-h-[245px] object-cover"
-                            />
+                    <Link
+                      key={index}
+                      className={filter ? "lg:col-span-3 md:col-span-6 col-span-12" : "col-span-3"}
+                      href={`/product/product-details?id=${item.id}`}
+                    >
+                      <div className="shadow-md h-full w-full rounded-lg">
+                        <div className="productImage rounded-[12px] overflow-hidden max-h-[400px] flex justify-center">
+                          <Image
+                            src={`/product-image/${item.ProductImages[0]?.sysFileName}`}
+                            width={200}
+                            height={200}
+                            alt={item.name}
+                            className="min-h-[245px] max-h-[245px] object-cover"
+                          />
+                        </div>
+                        <div className="py-3 px-4">
+                          <div>
+                            <div className="font-bold">{item.name}</div>
+                            <div className="text-[#999] text-[14px]">{item.fit}</div>
                           </div>
-                          <div className="py-3 px-4">
-                            <div>
-                              <div className="font-bold">{item.name}</div>
-                              <div className="text-[#999] text-[14px]">
-                                {item.fit}
-                              </div>
+                          <div className="text-[#000] text-[16px] py-1">
+                            <div className="text-[#000] text-[16px] py-2">
+                              ₹{item.final_price}
+                              {item.discount_price > 0 && (
+                                <>
+                                  <span className="line-through text-[12px] text-[#999] ml-1">
+                                    ₹{item.price}
+                                  </span>
+                                  <span className="text-[#3fac45] text-[12px]">
+                                    {item.discount_price}% off
+                                  </span>
+                                </>
+                              )}
                             </div>
-                            <div className="text-[#000] text-[16px] py-1">
-                              <div className="text-[#000] text-[16px] py-2">
-                                ₹{item.final_price}
-                                {
-                                  item.discount_price > 0 && (
-                                    <>
-                                      <span className="line-through text-[12px] text-[#999] ml-1">₹{item.price}
-                                      </span>
-                                      <span className="text-[#3fac45] text-[12px]">{item.discount_price}% off</span>
-                                    </>
-                                  )
-                                }
-                              </div>
-                            </div>
-                            <div className="text-[#999] text-[14px]">
-                              Color:{" "}
-                              <span className="text-[#000]">
-                                {item.Colors.map((item) => item.name).join(", ")}
-                              </span>
-                            </div>
-                            <div className="text-[#999] text-[14px]">
-                              Size:{" "}
-                              <span className="text-[#000]">
-                                {item.Sizes.map((item) => item.name).join(" , ")}
-                              </span>
-                            </div>
+                          </div>
+                          <div className="text-[#999] text-[14px]">
+                            Color:{" "}
+                            <span className="text-[#000]">
+                              {item.Colors.map((color) => color.name).join(", ")}
+                            </span>
+                          </div>
+                          <div className="text-[#999] text-[14px]">
+                            Size:{" "}
+                            <span className="text-[#000]">
+                              {item.Sizes.map((size) => size.name).join(", ")}
+                            </span>
                           </div>
                         </div>
-                      </Link>
-                    </>
+                      </div>
+                    </Link>
                   ))
                 ) : (
                   // Display a message when no products are available
