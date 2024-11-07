@@ -1170,7 +1170,14 @@ function Admin() {
                                   <div className="border rounded p-2">
                                     <Popover>
                                       <PopoverTrigger>
-                                        <button type="button">Color</button>
+                                        <button type="button">
+                                          {formik.values.color_ids && formik.values.color_ids.length > 0
+                                            ? formik.values.color_ids.split(',').map((colorId) => {
+                                              const selectedColor = allColors.find((color) => color.id.toString() === colorId);
+                                              return selectedColor ? selectedColor.name : '';
+                                            }).join(', ')
+                                            : 'Color'}
+                                        </button>
                                       </PopoverTrigger>
                                       <PopoverContent>
                                         {allColors.map((item) => (
@@ -1199,7 +1206,14 @@ function Admin() {
                                   <div className="border rounded p-2">
                                     <Popover>
                                       <PopoverTrigger>
-                                        <button type="button">Size</button>
+                                        <button type="button">
+                                          {formik.values.size_ids && formik.values.size_ids.length > 0
+                                            ? formik.values.size_ids.split(',').map((sizeId) => {
+                                              const selectedSize = allSize.find((size) => size.id.toString() === sizeId);
+                                              return selectedSize ? selectedSize.name : '';
+                                            }).join(', ')
+                                            : 'Size'}
+                                        </button>
                                       </PopoverTrigger>
                                       <PopoverContent>
                                         {filteredSize.map((item) => (

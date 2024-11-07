@@ -220,7 +220,7 @@ const ProductDetail = () => {
                       <p className="text-center text-sm text-gray-500">Size Charts</p>
 
                       <div className="mt-4">
-                        {item.Category.id === 2 ? (
+                        {item.Category.name === "T-Shirts" ? (
                           <>
                             <h3 className="text-sm font-semibold">T-Shirt Measurements</h3>
                             <div className="overflow-x-auto mt-4">
@@ -246,7 +246,7 @@ const ProductDetail = () => {
                               </table>
                             </div>
                           </>
-                        ) : item.Category.id === 1 ? (
+                        ) : item.Category.name === "Track-Pants" ? (
                           <>
                             <h3 className="text-sm font-semibold">Track Pants Measurements</h3>
                             <div className="overflow-x-auto mt-4">
