@@ -50,7 +50,7 @@ function Admin() {
   const [error, setError] = useState<string>("");
   const [allProduct, setAllProduct] = useState<IProduct[]>([]);
   const [category, setCategory] = useState("")
-  const [subCategory, setSubCategory] = useState("")
+  // const [subCategory, setSubCategory] = useState("")
   const [colors, setColors] = useState("")
   const [allCategory, setAllCategory] = useState<ICategories[]>([]);
   const [allColors, setAllColors] = useState<ICategories[]>([]);
@@ -503,7 +503,7 @@ function Admin() {
   const formik = useFormik({
     initialValues: {
       category_id: "",
-      subcategory_id: "",
+      // subcategory_id: "",
       color_ids: "",
       size_ids: "",
       name: "",
@@ -530,7 +530,7 @@ function Admin() {
     },
     validationSchema: yup.object({
       category_id: yup.string().required("Select a category"),
-      subcategory_id: yup.string().required("Select a sub category"),
+      // subcategory_id: yup.string().required("Select a sub category"),
       color_ids: yup.string().required("Select a color"),
       size_ids: yup.string().required("Select a size"),
       name: yup.string().min(1).max(100).required("Enter product name"),
@@ -563,7 +563,7 @@ function Admin() {
     onSubmit: async (values) => {
       const formData = new FormData();
       formData.append("category_id", values.category_id)
-      formData.append("subcategory_id", values.subcategory_id)
+      // formData.append("subcategory_id", values.subcategory_id)
       formData.append("color_ids", values.color_ids)
       formData.append("size_ids", values.size_ids)
       formData.append("name", values.name)
@@ -660,7 +660,7 @@ function Admin() {
     setOpenModel(true)
     setId(item.id.toString())
     formik.setFieldValue("category_id", item.category_id)
-    formik.setFieldValue("subcategory_id", item.subcategory_id)
+    // formik.setFieldValue("subcategory_id", item.subcategory_id)
     formik.setFieldValue("color_ids", item.color_ids?.toString())
     formik.setFieldValue("size_ids", item.size_ids.toString())
     formik.setFieldValue("name", item.name)
@@ -734,7 +734,7 @@ function Admin() {
     const formData = new FormData();
     formData.append("id", item.id.toString());
     formData.append("category_id", item.category_id.toString());
-    formData.append("subcategory_id", item.subcategory_id.toString());
+    // formData.append("subcategory_id", item.subcategory_id.toString());
     formData.append("color_ids", item.color_ids.toString());
     formData.append("size_ids", item.size_ids.toString());
     formData.append("name", item.name);
@@ -967,16 +967,17 @@ function Admin() {
                 <div className="font-bold text-[24px] p-[10px]">
                   Perfect Apparels
                 </div>
-                <div className="p-3 flex flex-col gap-3">
+                <div className="p-3 flex flex-col justify-between gap-3 h-full">
+                  <div className="max-h-[calc(100vh_-_180px)]">
                   <div onClick={() => setPage(1)} className={`${page === 1 && "bg-[#222]"} hover:bg-[#141414] p-2 px-5 rounded-md cursor-pointer`}>
                     Product
                   </div>
                   <div onClick={() => setPage(2)} className={`${page === 2 && "bg-[#222]"} hover:bg-[#141414] p-2 px-5 rounded-md cursor-pointer`}>
                     Categories
                   </div>
-                  <div onClick={() => setPage(3)} className={`${page === 3 && "bg-[#222]"} hover:bg-[#141414] p-2 px-5 rounded-md cursor-pointer`}>
+                  {/* <div onClick={() => setPage(3)} className={`${page === 3 && "bg-[#222]"} hover:bg-[#141414] p-2 px-5 rounded-md cursor-pointer`}>
                     Sub Categories
-                  </div>
+                  </div> */}
                   <div onClick={() => setPage(4)} className={`${page === 4 && "bg-[#222]"} hover:bg-[#141414] p-2 px-5 rounded-md cursor-pointer`}>
                     Size
                   </div>
@@ -989,7 +990,8 @@ function Admin() {
                   <div onClick={() => setPage(7)} className={`${page === 7 && "bg-[#222]"} hover:bg-[#141414] p-2 px-5 rounded-md cursor-pointer`}>
                     Get in Touch
                   </div>
-                  <div className="mt-60">
+                  </div>
+                  <div>
                     <div onClick={handleLogout} className="p-2 px-5 rounded-md cursor-pointer text-lg font-semibold">
                       Logout
                     </div>
@@ -1119,420 +1121,424 @@ function Admin() {
                           </DialogHeader>
 
                           <form onSubmit={formik.handleSubmit}>
-                            <div className="grid grid-cols-12 gap-4 gap-y-2 pb-4 px-5 pt-2">
-                              <div className="col-span-4">
-                                <Label>Category</Label>
-                                <Select value={formik.values.category_id.toString()}
-                                  onValueChange={(value) => formik.setFieldValue("category_id", value)}>
-                                  <SelectTrigger className="w-[180px]">
-                                    <SelectValue placeholder="Select a category" />
-                                  </SelectTrigger>
-                                  <SelectContent>
-                                    <SelectGroup>
-                                      <SelectLabel>Category</SelectLabel>
-                                      {allCategory.map((item, index) => (
-                                        <SelectItem key={index} value={item.id.toString()}>{item.name}</SelectItem>
-                                      ))}
-                                    </SelectGroup>
-                                  </SelectContent>
-                                </Select>
-                                {formik.errors.category_id && formik.touched.category_id && (
-                                  <p className="text-red-500">{formik.errors.category_id}</p>)}
-                              </div>
-
-                              <div className="col-span-4">
-                                <Label>Sub Category</Label>
-                                <Select value={formik.values.subcategory_id?.toString()}
-                                  onValueChange={(value) =>
-                                    formik.setFieldValue('subcategory_id', value)
-                                  }>
-                                  <SelectTrigger className="w-[180px]">
-                                    <SelectValue placeholder="Select sub-category" />
-                                  </SelectTrigger>
-                                  <SelectContent>
-                                    <SelectGroup>
-                                      <SelectLabel>Sub Category</SelectLabel>
-                                      {allSubCategory.map((item, index) => (
-                                        <SelectItem key={index} value={item.id.toString()}>
-                                          {item.name}
-                                        </SelectItem>
-                                      ))}
-                                    </SelectGroup>
-                                  </SelectContent>
-                                </Select>
-                                {formik.errors.subcategory_id && formik.touched.subcategory_id &&
-                                  (<p className="text-red-500">{formik.errors.subcategory_id}</p>)}
-                              </div>
-
-                              <div className="col-span-4">
-                                <Label>Color</Label>
-                                <div className="w-[180px]">
-                                  <div className="border rounded p-2">
-                                    <Popover>
-                                      <PopoverTrigger>
-                                        <button type="button">
-                                          {formik.values.color_ids && formik.values.color_ids.length > 0
-                                            ? formik.values.color_ids.split(',').map((colorId) => {
-                                              const selectedColor = allColors.find((color) => color.id.toString() === colorId);
-                                              return selectedColor ? selectedColor.name : '';
-                                            }).join(', ')
-                                            : 'Color'}
-                                        </button>
-                                      </PopoverTrigger>
-                                      <PopoverContent>
-                                        {allColors.map((item) => (
-                                          <label key={item.id} className="flex items-center">
-                                            <input
-                                              type="checkbox"
-                                              value={item.id.toString()}
-                                              checked={formik.values.color_ids?.split(',').includes(item.id.toString())}
-                                              onChange={() => handleColorCheckBoxChange(item.id.toString())}
-                                              className="mr-2"
-                                            />
-                                            {item.name}
-                                          </label>
+                            <div className="max-h-[calc(100vh_-_190px)] overflow-auto">
+                              <div className="grid grid-cols-12 gap-4 gap-y-2 pb-4 px-5 pt-2">
+                                <div className="col-span-4">
+                                  <Label>Category</Label>
+                                  <Select value={formik.values.category_id.toString()}
+                                    onValueChange={(value) => formik.setFieldValue("category_id", value)}>
+                                    <SelectTrigger className="w-[180px]">
+                                      <SelectValue placeholder="Select a category" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                      <SelectGroup>
+                                        <SelectLabel>Category</SelectLabel>
+                                        {allCategory.map((item, index) => (
+                                          <SelectItem key={index} value={item.id.toString()}>{item.name}</SelectItem>
                                         ))}
-                                      </PopoverContent>
-                                    </Popover>
-                                  </div>
+                                      </SelectGroup>
+                                    </SelectContent>
+                                  </Select>
+                                  {formik.errors.category_id && formik.touched.category_id && (
+                                    <p className="text-red-500">{formik.errors.category_id}</p>)}
                                 </div>
-                                {formik.errors.color_ids && formik.touched.color_ids &&
-                                  (<p className="text-red-500">{formik.errors.color_ids}</p>)}
-                              </div>
 
-                              <div className="col-span-4">
-                                <Label>Size</Label>
-                                <div className="w-[180px]">
-                                  <div className="border rounded p-2">
-                                    <Popover>
-                                      <PopoverTrigger>
-                                        <button type="button">
-                                          {formik.values.size_ids && formik.values.size_ids.length > 0
-                                            ? formik.values.size_ids.split(',').map((sizeId) => {
-                                              const selectedSize = allSize.find((size) => size.id.toString() === sizeId);
-                                              return selectedSize ? selectedSize.name : '';
-                                            }).join(', ')
-                                            : 'Size'}
-                                        </button>
-                                      </PopoverTrigger>
-                                      <PopoverContent>
-                                        {filteredSize.map((item) => (
-                                          <label key={item.id} className="flex items-center">
-                                            <input
-                                              type="checkbox"
-                                              value={item.id.toString()}
-                                              checked={formik.values.size_ids.split(',').includes(item.id.toString())}
-                                              onChange={() => handleCheckboxChange(item.id.toString())}
-                                              className="mr-2"
-                                            />
+                                {/* <div className="col-span-4">
+                                  <Label>Sub Category</Label>
+                                  <Select value={formik.values.subcategory_id?.toString()}
+                                    onValueChange={(value) =>
+                                      formik.setFieldValue('subcategory_id', value)
+                                    }>
+                                    <SelectTrigger className="w-[180px]">
+                                      <SelectValue placeholder="Select sub-category" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                      <SelectGroup>
+                                        <SelectLabel>Sub Category</SelectLabel>
+                                        {allSubCategory.map((item, index) => (
+                                          <SelectItem key={index} value={item.id.toString()}>
                                             {item.name}
-                                          </label>
+                                          </SelectItem>
                                         ))}
-                                      </PopoverContent>
-                                    </Popover>
-                                  </div>
-                                </div>
-                                {formik.errors.size_ids && formik.touched.size_ids &&
-                                  (<p className="text-red-500">{formik.errors.size_ids}</p>)}
-                              </div>
+                                      </SelectGroup>
+                                    </SelectContent>
+                                  </Select>
+                                  {formik.errors.subcategory_id && formik.touched.subcategory_id &&
+                                    (<p className="text-red-500">{formik.errors.subcategory_id}</p>)}
+                                </div> */}
 
-                              <div className="col-span-4">
-                                <Label>Product Name</Label>
-                                <Input
-                                  id="name"
-                                  placeholder="Product Name"
-                                  className="col-span-3"
-                                  value={formik.values.name}
-                                  onChange={formik.handleChange} />
-                                {formik.errors.name && formik.touched.name &&
-                                  (<p className="text-red-500">{formik.errors.name}</p>)}
-                              </div>
-
-                              <div className="col-span-4">
-                                <Label>Price</Label>
-                                <Input
-                                  id="price"
-                                  placeholder="price"
-                                  className="col-span-3"
-                                  value={formik.values.price}
-                                  onChange={(e) => {
-                                    formik.handleChange(e); // Update Formik state
-                                    changeFinalPrice(e.target.value, "price"); // Call custom function
-                                  }}
-                                  onInput={() => console.log("input change", formik.values.price)} />
-                                {formik.errors.price && formik.touched.price &&
-                                  (<p className="text-red-500">{formik.errors.price}</p>)}
-                              </div>
-
-                              <div className="col-span-4">
-                                <Label>Discount Price</Label>
-                                <Input
-                                  id="discount_price"
-                                  placeholder="Discount Price"
-                                  className="col-span-3"
-                                  type="number"
-                                  min={0}
-                                  max={100}
-                                  value={formik.values.discount_price}
-                                  onChange={(e) => {
-                                    const value = Math.min(Math.max(e.target.value, 0), 100);
-                                    formik.handleChange(e);
-                                    changeFinalPrice(value, "discount_price");
-                                  }}
-                                />
-                                {formik.errors.discount_price && formik.touched.discount_price &&
-                                  (<p className="text-red-500">{formik.errors.discount_price}</p>)}
-                              </div>
-
-                              <div className="col-span-4">
-                                <Label>Final Price</Label>
-                                <Input
-                                  id="final_price"
-                                  placeholder="final price"
-                                  className="col-span-3"
-                                  value={formik.values.final_price}
-                                  onChange={formik.handleChange}
-                                  readOnly
-                                />
-                                {formik.errors.final_price && formik.touched.final_price &&
-                                  (<p className="text-red-500">{formik.errors.final_price}</p>)}
-                              </div>
-
-                              <div className="col-span-4">
-                                <Label>type</Label>
-                                <Input
-                                  id="type"
-                                  placeholder="type"
-                                  className="col-span-3"
-                                  value={formik.values.type}
-                                  onChange={formik.handleChange} />
-                                {formik.errors.type && formik.touched.type &&
-                                  (<p className="text-red-500">{formik.errors.type}</p>)}
-                              </div>
-
-                              <div className="col-span-4">
-                                <Label>Sleeve</Label>
-                                <Input
-                                  id="sleeve"
-                                  placeholder="sleeve"
-                                  className="col-span-3"
-                                  value={formik.values.sleeve}
-                                  onChange={formik.handleChange} />
-                                {formik.errors.sleeve && formik.touched.sleeve &&
-                                  (<p className="text-red-500">{formik.errors.sleeve}</p>)}
-                              </div>
-
-                              <div className="col-span-4">
-                                <Label>Fit</Label>
-                                <Input
-                                  id="fit"
-                                  placeholder="fit"
-                                  className="col-span-3"
-                                  value={formik.values.fit}
-                                  onChange={formik.handleChange} />
-                                {formik.errors.fit && formik.touched.fit &&
-                                  (<p className="text-red-500">{formik.errors.fit}</p>)}
-                              </div>
-
-                              <div className="col-span-4">
-                                <Label>fabric</Label>
-                                <Input
-                                  id="fabric"
-                                  placeholder="fabric"
-                                  className="col-span-3"
-                                  value={formik.values.fabric}
-                                  onChange={formik.handleChange} />
-                                {formik.errors.fabric && formik.touched.fabric &&
-                                  (<p className="text-red-500">{formik.errors.fabric}</p>)}
-                              </div>
-
-                              <div className="col-span-4">
-                                <Label>Pack Of</Label>
-                                <Input
-                                  id="pack_of"
-                                  placeholder="Pack Of"
-                                  className="col-span-3"
-                                  value={formik.values.pack_of}
-                                  onChange={formik.handleChange} />
-                                {formik.errors.pack_of && formik.touched.pack_of &&
-                                  (<p className="text-red-500">{formik.errors.pack_of}</p>)}
-                              </div>
-
-                              <div className="col-span-4">
-                                <Label>Style Code</Label>
-                                <Input
-                                  id="style_code"
-                                  placeholder="Style Code"
-                                  className="col-span-3"
-                                  value={formik.values.style_code}
-                                  onChange={formik.handleChange} />
-                                {formik.errors.style_code && formik.touched.style_code &&
-                                  (<p className="text-red-500">{formik.errors.style_code}</p>)}
-                              </div>
-
-                              <div className="col-span-4">
-                                <Label>Neck Type</Label>
-                                <Input
-                                  id="neck_type"
-                                  placeholder="Neck Type"
-                                  className="col-span-3"
-                                  value={formik.values.neck_type}
-                                  onChange={formik.handleChange} />
-                                {formik.errors.neck_type && formik.touched.neck_type &&
-                                  (<p className="text-red-500">{formik.errors.neck_type}</p>)}
-                              </div>
-
-                              <div className="col-span-4">
-                                <Label>Ideal For</Label>
-                                <Input
-                                  id="ideal_for"
-                                  placeholder="Ideal For"
-                                  className="col-span-3"
-                                  value={formik.values.ideal_for}
-                                  onChange={formik.handleChange} />
-                                {formik.errors.ideal_for && formik.touched.ideal_for &&
-                                  (<p className="text-red-500">{formik.errors.ideal_for}</p>)}
-                              </div>
-
-                              <div className="col-span-4">
-                                <Label>Pattern</Label>
-                                <Input
-                                  id="pattern"
-                                  placeholder="pattern"
-                                  className="col-span-3"
-                                  value={formik.values.pattern}
-                                  onChange={formik.handleChange} />
-                                {formik.errors.pattern && formik.touched.pattern &&
-                                  (<p className="text-red-500">{formik.errors.pattern}</p>)}
-                              </div>
-
-                              <div className="col-span-4">
-                                <Label>Suitable For</Label>
-                                <Input
-                                  id="suitable_for"
-                                  placeholder="Suitable For"
-                                  className="col-span-3"
-                                  value={formik.values.suitable_for}
-                                  onChange={formik.handleChange} />
-                                {formik.errors.suitable_for && formik.touched.suitable_for &&
-                                  (<p className="text-red-500">{formik.errors.suitable_for}</p>)}
-                              </div>
-
-                              <div className="col-span-4">
-                                <Label>Reversible</Label>
-                                <Input
-                                  id="reversible"
-                                  placeholder="reversible"
-                                  className="col-span-3"
-                                  value={formik.values.reversible}
-                                  onChange={formik.handleChange} />
-                                {formik.errors.reversible && formik.touched.reversible &&
-                                  (<p className="text-red-500">{formik.errors.reversible}</p>)}
-                              </div>
-
-                              <div className="col-span-4">
-                                <Label>Fabric Care</Label>
-                                <Input
-                                  id="fabric_care"
-                                  placeholder="fabric Care"
-                                  className="col-span-3"
-                                  value={formik.values.fabric_care}
-                                  onChange={formik.handleChange} />
-                                {formik.errors.fabric_care && formik.touched.fabric_care &&
-                                  (<p className="text-red-500">{formik.errors.fabric_care}</p>)}
-                              </div>
-
-                              <div className="col-span-4">
-                                <Label>Net Quantity</Label>
-                                <Input
-                                  id="net_quantity"
-                                  placeholder="Net Quantity"
-                                  className="col-span-3"
-                                  value={formik.values.net_quantity}
-                                  onChange={formik.handleChange} />
-                                {formik.errors.net_quantity && formik.touched.net_quantity &&
-                                  (<p className="text-red-500">{formik.errors.net_quantity}</p>)}
-                              </div>
-
-                              <div className="col-span-4">
-                                <Label>Status</Label>
-                                <Select
-                                  value={formik.values.status}
-                                  onValueChange={(value) => formik.setFieldValue("status", value)}
-                                >
-                                  <SelectTrigger className="col-span-3">
-                                    <SelectValue placeholder="Select a status" />
-                                  </SelectTrigger>
-                                  <SelectContent>
-                                    <SelectItem value="New Drops">New Drops</SelectItem>
-                                    <SelectItem value="Most Trending">Most Trending</SelectItem>
-                                    <SelectItem value="Not Display">Not Display</SelectItem>
-                                  </SelectContent>
-                                </Select>
-                                {formik.errors.status && formik.touched.status && (
-                                  <p className="text-red-500">{formik.errors.status}</p>
-                                )}
-                              </div>
-
-                              <div className="col-span-4">
-                                <Label>Sales Package</Label>
-                                <Input
-                                  id="sales_package"
-                                  placeholder="Sale Package"
-                                  className="col-span-3"
-                                  value={formik.values.sales_package}
-                                  onChange={formik.handleChange} />
-                                {formik.errors.sales_package && formik.touched.sales_package &&
-                                  (<p className="text-red-500">{formik.errors.sales_package}</p>)}
-                              </div>
-
-                              <div className="col-span-4">
-                                <Label>Image Upload</Label>
-                                <Input
-                                  type="file"
-                                  name="images"
-                                  ref={fileInputRef}
-                                  onChange={handleChangeChooseFile}
-                                  placeholder="Choose File"
-                                  multiple
-                                />
-                                {formik.touched.images && formik.errors.images && (
-                                  <p className="text-red-500">
-                                    {Array.isArray(formik.errors.images)
-                                      ? formik.errors.images.join(', ') // Join the error messages if it's an array
-                                      : formik.errors.images}
-                                  </p>
-                                )}
-
-                                {
-                                  selectedImages.length > 0 && (
-                                    <div className="mt-2">
-                                      <ul>
-                                        {selectedImages.map((file, index) => (
-                                          <>
-                                            <li key={index} className="flex items-center justify-between">
-                                              {typeof file === 'string' ? file : file.name}
-                                            </li>
-                                            <button type="button" onClick={() => removeImage(index)}
-                                              className="text-red-500 ml-4">✖️</button>
-                                          </>
-                                        ))}
-                                      </ul>
+                                <div className="col-span-4">
+                                  <Label>Color</Label>
+                                  <div className="w-[180px]">
+                                    <div className="border rounded p-2">
+                                      <Popover>
+                                        <PopoverTrigger>
+                                          <button type="button">
+                                            {formik.values.color_ids && formik.values.color_ids.length > 0
+                                              ? formik.values.color_ids.split(',').map((colorId) => {
+                                                const selectedColor = allColors.find((color) => color.id.toString() === colorId);
+                                                return selectedColor ? selectedColor.name : '';
+                                              }).join(', ')
+                                              : 'Color'}
+                                          </button>
+                                        </PopoverTrigger>
+                                        <PopoverContent>
+                                          {allColors.map((item) => (
+                                            <label key={item.id} className="flex items-center">
+                                              <input
+                                                type="checkbox"
+                                                value={item.id.toString()}
+                                                checked={formik.values.color_ids?.split(',').includes(item.id.toString())}
+                                                onChange={() => handleColorCheckBoxChange(item.id.toString())}
+                                                className="mr-2"
+                                              />
+                                              {item.name}
+                                            </label>
+                                          ))}
+                                        </PopoverContent>
+                                      </Popover>
                                     </div>
-                                  )
-                                }
-                              </div>
+                                  </div>
+                                  {formik.errors.color_ids && formik.touched.color_ids &&
+                                    (<p className="text-red-500">{formik.errors.color_ids}</p>)}
+                                </div>
 
-                              <div className="col-span-4">
-                                <Label>Product Description</Label>
-                                <Textarea
-                                  placeholder="type your message here."
-                                  name="description"
-                                  value={formik.values.description}
-                                  onChange={formik.handleChange}
-                                />
-                                {formik.errors.description && formik.touched.description &&
-                                  (<p className="text-red-500">{formik.errors.description}</p>)}
+                                <div className="col-span-4">
+                                  <Label>Size</Label>
+                                  <div className="w-[180px]">
+                                    <div className="border rounded p-2">
+                                      <Popover>
+                                        <PopoverTrigger>
+                                          <button type="button">
+                                            {formik.values.size_ids && formik.values.size_ids.length > 0
+                                              ? formik.values.size_ids.split(',').map((sizeId) => {
+                                                const selectedSize = allSize.find((size) => size.id.toString() === sizeId);
+                                                return selectedSize ? selectedSize.name : '';
+                                              }).join(', ')
+                                              : 'Size'}
+                                          </button>
+                                        </PopoverTrigger>
+                                        <PopoverContent>
+                                          {filteredSize.map((item) => (
+                                            <label key={item.id} className="flex items-center">
+                                              <input
+                                                type="checkbox"
+                                                value={item.id.toString()}
+                                                checked={formik.values.size_ids.split(',').includes(item.id.toString())}
+                                                onChange={() => handleCheckboxChange(item.id.toString())}
+                                                className="mr-2"
+                                              />
+                                              {item.name}
+                                            </label>
+                                          ))}
+                                        </PopoverContent>
+                                      </Popover>
+                                    </div>
+                                  </div>
+                                  {formik.errors.size_ids && formik.touched.size_ids &&
+                                    (<p className="text-red-500">{formik.errors.size_ids}</p>)}
+                                </div>
+
+                                <div className="col-span-4">
+                                  <Label>Product Name</Label>
+                                  <Input
+                                    id="name"
+                                    placeholder="Product Name"
+                                    className="col-span-3"
+                                    value={formik.values.name}
+                                    onChange={formik.handleChange} />
+                                  {formik.errors.name && formik.touched.name &&
+                                    (<p className="text-red-500">{formik.errors.name}</p>)}
+                                </div>
+
+                                <div className="col-span-4">
+                                  <Label>Price</Label>
+                                  <Input
+                                    id="price"
+                                    placeholder="price"
+                                    className="col-span-3"
+                                    value={formik.values.price}
+                                    onChange={(e) => {
+                                      formik.handleChange(e); // Update Formik state
+                                      changeFinalPrice(e.target.value, "price"); // Call custom function
+                                    }}
+                                    onInput={() => console.log("input change", formik.values.price)} />
+                                  {formik.errors.price && formik.touched.price &&
+                                    (<p className="text-red-500">{formik.errors.price}</p>)}
+                                </div>
+
+                                <div className="col-span-4">
+                                  <Label>Discount Price</Label>
+                                  <Input
+                                    id="discount_price"
+                                    placeholder="Discount Price"
+                                    className="col-span-3"
+                                    type="number"
+                                    min={0}
+                                    max={100}
+                                    value={formik.values.discount_price}
+                                    onChange={(e) => {
+                                      const value = Math.min(Math.max(e.target.value, 0), 100);
+                                      formik.handleChange(e);
+                                      changeFinalPrice(value, "discount_price");
+                                    }}
+                                  />
+                                  {formik.errors.discount_price && formik.touched.discount_price &&
+                                    (<p className="text-red-500">{formik.errors.discount_price}</p>)}
+                                </div>
+
+                                <div className="col-span-4">
+                                  <Label>Final Price</Label>
+                                  <Input
+                                    id="final_price"
+                                    placeholder="final price"
+                                    className="col-span-3"
+                                    value={formik.values.final_price}
+                                    onChange={formik.handleChange}
+                                    readOnly
+                                  />
+                                  {formik.errors.final_price && formik.touched.final_price &&
+                                    (<p className="text-red-500">{formik.errors.final_price}</p>)}
+                                </div>
+
+                                <div className="col-span-4">
+                                  <Label>type</Label>
+                                  <Input
+                                    id="type"
+                                    placeholder="type"
+                                    className="col-span-3"
+                                    value={formik.values.type}
+                                    onChange={formik.handleChange} />
+                                  {formik.errors.type && formik.touched.type &&
+                                    (<p className="text-red-500">{formik.errors.type}</p>)}
+                                </div>
+
+                                <div className="col-span-4">
+                                  <Label>Sleeve</Label>
+                                  <Input
+                                    id="sleeve"
+                                    placeholder="sleeve"
+                                    className="col-span-3"
+                                    value={formik.values.sleeve}
+                                    onChange={formik.handleChange} />
+                                  {formik.errors.sleeve && formik.touched.sleeve &&
+                                    (<p className="text-red-500">{formik.errors.sleeve}</p>)}
+                                </div>
+
+                                <div className="col-span-4">
+                                  <Label>Fit</Label>
+                                  <Input
+                                    id="fit"
+                                    placeholder="fit"
+                                    className="col-span-3"
+                                    value={formik.values.fit}
+                                    onChange={formik.handleChange} />
+                                  {formik.errors.fit && formik.touched.fit &&
+                                    (<p className="text-red-500">{formik.errors.fit}</p>)}
+                                </div>
+
+                                <div className="col-span-4">
+                                  <Label>fabric</Label>
+                                  <Input
+                                    id="fabric"
+                                    placeholder="fabric"
+                                    className="col-span-3"
+                                    value={formik.values.fabric}
+                                    onChange={formik.handleChange} />
+                                  {formik.errors.fabric && formik.touched.fabric &&
+                                    (<p className="text-red-500">{formik.errors.fabric}</p>)}
+                                </div>
+
+                                <div className="col-span-4">
+                                  <Label>Pack Of</Label>
+                                  <Input
+                                    id="pack_of"
+                                    placeholder="Pack Of"
+                                    className="col-span-3"
+                                    value={formik.values.pack_of}
+                                    onChange={formik.handleChange} />
+                                  {formik.errors.pack_of && formik.touched.pack_of &&
+                                    (<p className="text-red-500">{formik.errors.pack_of}</p>)}
+                                </div>
+
+                                <div className="col-span-4">
+                                  <Label>Style Code</Label>
+                                  <Input
+                                    id="style_code"
+                                    placeholder="Style Code"
+                                    className="col-span-3"
+                                    value={formik.values.style_code}
+                                    onChange={formik.handleChange} />
+                                  {formik.errors.style_code && formik.touched.style_code &&
+                                    (<p className="text-red-500">{formik.errors.style_code}</p>)}
+                                </div>
+
+                                <div className="col-span-4">
+                                  <Label>Neck Type</Label>
+                                  <Input
+                                    id="neck_type"
+                                    placeholder="Neck Type"
+                                    className="col-span-3"
+                                    value={formik.values.neck_type}
+                                    onChange={formik.handleChange} />
+                                  {formik.errors.neck_type && formik.touched.neck_type &&
+                                    (<p className="text-red-500">{formik.errors.neck_type}</p>)}
+                                </div>
+
+                                <div className="col-span-4">
+                                  <Label>Ideal For</Label>
+                                  <Input
+                                    id="ideal_for"
+                                    placeholder="Ideal For"
+                                    className="col-span-3"
+                                    value={formik.values.ideal_for}
+                                    onChange={formik.handleChange} />
+                                  {formik.errors.ideal_for && formik.touched.ideal_for &&
+                                    (<p className="text-red-500">{formik.errors.ideal_for}</p>)}
+                                </div>
+
+                                <div className="col-span-4">
+                                  <Label>Pattern</Label>
+                                  <Input
+                                    id="pattern"
+                                    placeholder="pattern"
+                                    className="col-span-3"
+                                    value={formik.values.pattern}
+                                    onChange={formik.handleChange} />
+                                  {formik.errors.pattern && formik.touched.pattern &&
+                                    (<p className="text-red-500">{formik.errors.pattern}</p>)}
+                                </div>
+
+                                <div className="col-span-4">
+                                  <Label>Suitable For</Label>
+                                  <Input
+                                    id="suitable_for"
+                                    placeholder="Suitable For"
+                                    className="col-span-3"
+                                    value={formik.values.suitable_for}
+                                    onChange={formik.handleChange} />
+                                  {formik.errors.suitable_for && formik.touched.suitable_for &&
+                                    (<p className="text-red-500">{formik.errors.suitable_for}</p>)}
+                                </div>
+
+                                <div className="col-span-4">
+                                  <Label>Reversible</Label>
+                                  <Input
+                                    id="reversible"
+                                    placeholder="reversible"
+                                    className="col-span-3"
+                                    value={formik.values.reversible}
+                                    onChange={formik.handleChange} />
+                                  {formik.errors.reversible && formik.touched.reversible &&
+                                    (<p className="text-red-500">{formik.errors.reversible}</p>)}
+                                </div>
+
+                                <div className="col-span-4">
+                                  <Label>Fabric Care</Label>
+                                  <Input
+                                    id="fabric_care"
+                                    placeholder="fabric Care"
+                                    className="col-span-3"
+                                    value={formik.values.fabric_care}
+                                    onChange={formik.handleChange} />
+                                  {formik.errors.fabric_care && formik.touched.fabric_care &&
+                                    (<p className="text-red-500">{formik.errors.fabric_care}</p>)}
+                                </div>
+
+                                <div className="col-span-4">
+                                  <Label>Net Quantity</Label>
+                                  <Input
+                                    id="net_quantity"
+                                    placeholder="Net Quantity"
+                                    className="col-span-3"
+                                    value={formik.values.net_quantity}
+                                    onChange={formik.handleChange} />
+                                  {formik.errors.net_quantity && formik.touched.net_quantity &&
+                                    (<p className="text-red-500">{formik.errors.net_quantity}</p>)}
+                                </div>
+
+                                <div className="col-span-4">
+                                  <Label>Status</Label>
+                                  <Select
+                                    value={formik.values.status}
+                                    onValueChange={(value) => formik.setFieldValue("status", value)}
+                                  >
+                                    <SelectTrigger className="col-span-3">
+                                      <SelectValue placeholder="Select a status" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                      <SelectItem value="New Drops">New Drops</SelectItem>
+                                      <SelectItem value="Most Trending">Most Trending</SelectItem>
+                                      <SelectItem value="Not Display">Not Display</SelectItem>
+                                    </SelectContent>
+                                  </Select>
+                                  {formik.errors.status && formik.touched.status && (
+                                    <p className="text-red-500">{formik.errors.status}</p>
+                                  )}
+                                </div>
+
+                                <div className="col-span-4">
+                                  <Label>Sales Package</Label>
+                                  <Input
+                                    id="sales_package"
+                                    placeholder="Sale Package"
+                                    className="col-span-3"
+                                    value={formik.values.sales_package}
+                                    onChange={formik.handleChange} />
+                                  {formik.errors.sales_package && formik.touched.sales_package &&
+                                    (<p className="text-red-500">{formik.errors.sales_package}</p>)}
+                                </div>
+
+                                <div className="col-span-4">
+                                  <Label>Image Upload</Label>
+                                  <Input
+                                    type="file"
+                                    name="images"
+                                    ref={fileInputRef}
+                                    onChange={handleChangeChooseFile}
+                                    placeholder="Choose File"
+                                    multiple
+                                  />
+                                  {formik.touched.images && formik.errors.images && (
+                                    <p className="text-red-500">
+                                      {Array.isArray(formik.errors.images)
+                                        ? formik.errors.images.join(', ') // Join the error messages if it's an array
+                                        : formik.errors.images}
+                                    </p>
+                                  )}
+
+                                  {
+                                      selectedImages.length > 0 && (
+                                        <div className="mt-2">
+                                          <ul>
+                                            {selectedImages.map((file, index) => (
+                                              <>
+                                                <li key={index} className="flex items-center justify-between">
+                                                  <div className="flex justify-between w-full">
+                                                    <div className="whitespace-nowrap overflow-hidden text-ellipsis">{typeof file === 'string' ? file : file.name}</div>
+                                                    <button type="button" onClick={() => removeImage(index)}
+                                                    className="text-red-500 ml-4">✖️</button>
+                                                  </div>
+                                                </li>                                              
+                                              </>
+                                            ))}
+                                          </ul>
+                                        </div>
+                                      )
+                                    }
+                                </div>
+
+                                <div className="col-span-12">
+                                  <Label>Product Description</Label>
+                                  <Textarea
+                                    placeholder="type your message here."
+                                    name="description"
+                                    value={formik.values.description}
+                                    onChange={formik.handleChange}
+                                  />
+                                  {formik.errors.description && formik.touched.description &&
+                                    (<p className="text-red-500">{formik.errors.description}</p>)}
+                                </div>
                               </div>
                             </div>
                             <DialogFooter className="px-5 pb-5">
@@ -1546,16 +1552,86 @@ function Admin() {
                     </div>
                     {
                       loading ? (
-                        <div className="flex items-center justify-center w-full">
-                          <TableRow className="flex items-center justify-center w-full">
+                        <div className="w-full">
+                          <TableHead className="w-full">
                             <TableCell className="flex justify-center">
-                              <Skeleton className="h-12 w-12 rounded-full" />
+                              <Skeleton className="h-5 w-20" />
                             </TableCell>
-                            <TableCell className="space-y-2 flex flex-col items-center">
-                              <Skeleton className="h-4 w-[250px]" />
-                              <Skeleton className="h-4 w-[200px]" />
+                            <TableCell className="flex justify-center">
+                              <Skeleton className="h-5 w-40" />
                             </TableCell>
-                          </TableRow>
+                            <TableCell className="flex justify-center">
+                              <Skeleton className="h-5 w-20" />
+                            </TableCell>
+                            <TableCell className="flex justify-center">
+                              <Skeleton className="h-5 w-20" />
+                            </TableCell>
+                            <TableCell className="flex justify-center">
+                              <Skeleton className="h-5 w-20" />
+                            </TableCell>
+                            <TableCell className="flex justify-center">
+                              <Skeleton className="h-5 w-20" />
+                            </TableCell>
+                            <TableCell className="flex justify-center">
+                              <Skeleton className="h-5 w-20" />
+                            </TableCell>
+                            <TableCell className="flex justify-center">
+                              <Skeleton className="h-5 w-20" />
+                            </TableCell>
+                            <TableCell className="flex justify-center">
+                              <Skeleton className="h-5 w-20" />
+                            </TableCell>
+                            <TableCell className="flex justify-center">
+                              <Skeleton className="h-5 w-20" />
+                            </TableCell>
+                            <TableCell className="flex justify-center">
+                              <Skeleton className="h-5 w-20" />
+                            </TableCell>
+                            <TableCell className="flex justify-center">
+                              <Skeleton className="h-5 w-20" />
+                            </TableCell>
+                          </TableHead>
+                          <TableBody>
+                          <TableRow className="w-full">
+                          <TableCell className="flex justify-center">
+                              <Skeleton className="h-5 w-20" />
+                            </TableCell>
+                            <TableCell className="flex justify-center">
+                              <Skeleton className="h-5 w-40" />
+                            </TableCell>
+                            <TableCell className="flex justify-center">
+                              <Skeleton className="h-5 w-20" />
+                            </TableCell>
+                            <TableCell className="flex justify-center">
+                              <Skeleton className="h-5 w-20" />
+                            </TableCell>
+                            <TableCell className="flex justify-center">
+                              <Skeleton className="h-5 w-20" />
+                            </TableCell>
+                            <TableCell className="flex justify-center">
+                              <Skeleton className="h-5 w-20" />
+                            </TableCell>
+                            <TableCell className="flex justify-center">
+                              <Skeleton className="h-5 w-20" />
+                            </TableCell>
+                            <TableCell className="flex justify-center">
+                              <Skeleton className="h-5 w-20" />
+                            </TableCell>
+                            <TableCell className="flex justify-center">
+                              <Skeleton className="h-5 w-20" />
+                            </TableCell>
+                            <TableCell className="flex justify-center">
+                              <Skeleton className="h-5 w-20" />
+                            </TableCell>
+                            <TableCell className="flex justify-center">
+                              <Skeleton className="h-5 w-20" />
+                            </TableCell>
+                            <TableCell className="flex justify-center">
+                              <Skeleton className="h-5 w-20" />
+                            </TableCell>
+                          </TableRow> 
+                          </TableBody>
+                         
                         </div>
                       ) : (
                         <Paper sx={{ width: '100%', overflow: 'hidden', borderRadius: '12px' }}>
@@ -1871,7 +1947,7 @@ function Admin() {
                                 </Select>
                               </div>
 
-                              <div className="col-span-4">
+                              {/* <div className="col-span-4">
                                 <Label>Sub Category</Label>
                                 <Input
                                   id="category"
@@ -1880,7 +1956,7 @@ function Admin() {
                                   value={subCategory}
                                   onChange={(e) => setSubCategory(e.target.value)}
                                 />
-                              </div>
+                              </div> */}
                             </div>
                             <DialogFooter className="px-5 pb-5">
                               <Button type="submit" onClick={handleAddSubCategory}>Save changes</Button>

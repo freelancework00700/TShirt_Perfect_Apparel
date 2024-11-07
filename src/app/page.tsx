@@ -16,16 +16,19 @@ import axios from "axios";
 import { IProduct } from "@/interface/types";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-
+import { Skeleton } from "@/components/ui/skeleton";
 
 type SegmentKey = "newDrops" | "mostTrending";
 
 export default function Home() {
+  const [loading, setLoading] = useState(false);
   const [activeSegment, setActiveSegment] = useState<SegmentKey>("newDrops");
   const [product, setProduct] = useState<IProduct[]>([]);
   const router = useRouter();
-  const TrackPants = product.filter(item => item.Category.name === "Track-Pants");
-  const Tshirt = product.filter(item => item.Category.name === "T-Shirts");
+  const TrackPants = product.filter(
+    (item) => item.Category.name === "Track-Pants"
+  );
+  const Tshirt = product.filter((item) => item.Category.name === "T-Shirts");
 
   const segments = {
     newDrops: {
@@ -37,22 +40,26 @@ export default function Home() {
   };
 
   const getProduct = async () => {
+    setLoading(true);
     try {
-      const response = await axios.get(`/api/product`)
-      const getData = response.data?.data
-      setProduct(getData)
+      const response = await axios.get(`/api/product`);
+      console.log("response", response.data)
+      const getData = response.data?.data;
+      setProduct(getData);
     } catch (error) {
-      console.error(error)
+      console.error(error);
+    } finally {
+      setLoading(false);
     }
-  }
+  };
 
   useEffect(() => {
     getProduct();
-  }, [])
+  }, []);
 
   const handleShowCatagories = () => {
-    router.push(`/product`)
-  }
+    router.push(`/product`);
+  };
 
   return (
     <main className="max-[1024px]:mt-[77px] relative">
@@ -70,12 +77,20 @@ export default function Home() {
           >
             <SwiperSlide>
               <div>
-                <Image src={heroImage1} alt="heroImage1" className="w-full h-[calc(100vh_-_70px)] object-cover"></Image>
+                <Image
+                  src={heroImage1}
+                  alt="heroImage1"
+                  className="w-full h-[calc(100vh_-_70px)] object-cover"
+                ></Image>
               </div>
             </SwiperSlide>
             <SwiperSlide>
               <div>
-                <Image src={heroImage2} alt="heroImage2" className="w-full h-[calc(100vh_-_70px)] object-cover"></Image>
+                <Image
+                  src={heroImage2}
+                  alt="heroImage2"
+                  className="w-full h-[calc(100vh_-_70px)] object-cover"
+                ></Image>
               </div>
             </SwiperSlide>
           </Swiper>
@@ -87,10 +102,11 @@ export default function Home() {
                 <button
                   key={key}
                   onClick={() => setActiveSegment(key as SegmentKey)}
-                  className={`py-1 px-10 rounded-[20px] border border-black text-lg ${activeSegment === key
-                    ? "text-white bg-black"
-                    : " text-black bg-white"
-                    }`}
+                  className={`py-1 px-10 rounded-[20px] border border-black text-lg ${
+                    activeSegment === key
+                      ? "text-white bg-black"
+                      : " text-black bg-white"
+                  }`}
                 >
                   {segments[key as SegmentKey].title}
                 </button>
@@ -108,53 +124,81 @@ export default function Home() {
                   modules={[Navigation]}
                   navigation={true}
                 >
-                  {product.filter(item => item.status === segments.newDrops.title).map(item => (
-                    <SwiperSlide key={item.id}>
-                      <div className="shadow-md h-full w-full m-2 rounded-lg">
-                        <Link href={`/product/product-details?id=${item.id}`}>
-                          <div className="productImage flex justify-center rounded-[12px] overflow-hidden">
-                            <Image
-                              src={`/product-image/${item.ProductImages[0]?.sysFileName}`}
-                              alt={item.name}
-                              width={200}
-                              height={200}
-                              className="min-h-[245px] max-h-[245px] object-cover"
-                            />
-                          </div>
+                  {loading
+                    ? [1, 2, 3, 4, 5].map((item) => (
+                        <SwiperSlide key={item}>
+                          <Skeleton className="h-[245px] w-full" />
                           <div className="py-3 px-4">
-                            <div>
-                              <div className="font-bold line-clamp-1">{item.name}</div>
-                              <div className="text-[#999] text-[14px] line-clamp-1">{item.name}</div>
-                            </div>
-                            <div className="text-[#000] text-[16px] py-2">
-                              ₹{item.final_price}
-                              {
-                                item.discount_price > 0 && (
-                                  <>
-                                    <span className="line-through text-[12px] text-[#999] ml-1">₹{item.price}
-                                    </span>
-                                    <span className="text-[#3fac45] text-[12px]">{item.discount_price}% off</span>
-                                  </>
-                                )
-                              }
-                            </div>
-                            <div className="text-[#999] text-[14px]">
-                              Color:{" "}
-                              <span className="text-[#000]">
-                                {item.Colors?.map((item) => item.name).join(", ")}
-                              </span>
-                            </div>
-                            <div className="text-[#999] text-[14px]">
-                              Size:{" "}
-                              <span className="text-[#000]">
-                                {item.Sizes.map((item) => item.name).join(" , ")}
-                              </span>
-                            </div>
+                            <Skeleton className="h-[14px] w-[180px]" />
+                            <Skeleton className="h-[10px] w-[80px] mt-1" />
+                            <Skeleton className="h-[20px] w-[100px] my-4" />
+                            <Skeleton className="h-[14px] w-[100px]" />
+                            <Skeleton className="h-[14px] w-[80px] mt-1" />
                           </div>
-                        </Link>
-                      </div>
-                    </SwiperSlide>
-                  ))}
+                        </SwiperSlide>
+                      ))
+                    : product
+                        .filter(
+                          (item) => item.status === segments.newDrops.title
+                        )
+                        .map((item) => (
+                          <SwiperSlide key={item.id}>
+                            <div className="shadow-md h-full w-full m-2 rounded-lg">
+                              <Link
+                                href={`/product/product-details?id=${item.id}`}
+                              >
+                                <div className="productImage flex justify-center rounded-[12px] overflow-hidden">
+                                  <Image
+                                    src={`/product-image/${item.ProductImages[0]?.sysFileName}`}
+                                    alt={item.name}
+                                    width={200}
+                                    height={200}
+                                    className="min-h-[245px] max-h-[245px] object-cover"
+                                  />
+                                </div>
+                                <div className="py-3 px-4">
+                                  <div>
+                                    <div className="font-bold line-clamp-1">
+                                      {item.name}
+                                    </div>
+                                    <div className="text-[#999] text-[14px] line-clamp-1">
+                                      {item.name}
+                                    </div>
+                                  </div>
+                                  <div className="text-[#000] text-[16px] py-2">
+                                    ₹{item.final_price}
+                                    {item.discount_price > 0 && (
+                                      <>
+                                        <span className="line-through text-[12px] text-[#999] ml-1">
+                                          ₹{item.price}
+                                        </span>
+                                        <span className="text-[#3fac45] text-[12px]">
+                                          {item.discount_price}% off
+                                        </span>
+                                      </>
+                                    )}
+                                  </div>
+                                  <div className="text-[#999] text-[14px]">
+                                    Color:{" "}
+                                    <span className="text-[#000]">
+                                      {item.Colors?.map(
+                                        (item) => item.name
+                                      ).join(", ")}
+                                    </span>
+                                  </div>
+                                  <div className="text-[#999] text-[14px]">
+                                    Size:{" "}
+                                    <span className="text-[#000]">
+                                      {item.Sizes.map((item) => item.name).join(
+                                        " , "
+                                      )}
+                                    </span>
+                                  </div>
+                                </div>
+                              </Link>
+                            </div>
+                          </SwiperSlide>
+                        ))}
                 </Swiper>
               </div>
             ) : (
@@ -170,56 +214,84 @@ export default function Home() {
                     modules={[Navigation]}
                     navigation={true}
                   >
-                    {
-                      product.filter((item) => item.status === segments.mostTrending.title)
-                        .map(item => (
-                          <SwiperSlide key={item.id}>
-                            <div className="shadow-md h-full w-full m-2 rounded-lg">
-                              <Link href={`/product/product-details?id=${item.id}`} >
-                                <div className="productImage flex justify-center rounded-[12px] overflow-hidden ">
-                                  <Image
-                                    src={`/product-image/${item.ProductImages[0]?.sysFileName}`}
-                                    alt={item.name}
-                                    width={200}
-                                    height={200}
-                                    className="min-h-[245px] max-h-[245px] object-cover"
-                                  />
-                                </div>
-                                <div className="py-3 px-4">
-                                  <div>
-                                    <div className="font-bold line-clamp-1">{item.name}</div>
-                                    <div className="text-[#999] text-[14px] line-clamp-1">{item.name}</div>
-                                  </div>
-                                  <div className="text-[#000] text-[16px] py-2">
-                                    ₹{item.final_price}
-                                    {
-                                      item.discount_price > 0 && (
-                                        <>
-                                          <span className="line-through text-[12px] text-[#999] ml-1">₹{item.price}
-                                          </span>
-                                          <span className="text-[#3fac45] text-[12px]">{item.discount_price}% off</span>
-                                        </>
-                                      )
-                                    }
-                                  </div>
-                                  <div className="text-[#999] text-[14px]">
-                                    Color:{" "}
-                                    <span className="text-[#000]">
-                                      {item.Colors?.map((item) => item.name).join(", ")}
-                                    </span>
-                                  </div>
-                                  <div className="text-[#999] text-[14px]">
-                                    Size:{" "}
-                                    <span className="text-[#000]">
-                                      {item.Sizes.map((item) => item.name).join(" , ")}
-                                    </span>
-                                  </div>
-                                </div>
-                              </Link>
+                    {loading
+                      ? [1, 2, 3, 4, 5].map((item) => (
+                          <SwiperSlide key={item}>
+                            <Skeleton className="h-[245px] w-full" />
+                            <div className="py-3 px-4">
+                              <Skeleton className="h-[14px] w-[180px]" />
+                              <Skeleton className="h-[10px] w-[80px] mt-1" />
+                              <Skeleton className="h-[20px] w-[100px] my-4" />
+                              <Skeleton className="h-[14px] w-[100px]" />
+                              <Skeleton className="h-[14px] w-[80px] mt-1" />
                             </div>
                           </SwiperSlide>
                         ))
-                    }
+                      : product
+                          .filter(
+                            (item) =>
+                              item.status === segments.mostTrending.title
+                          )
+                          .map((item) => (
+                            <>
+                              <SwiperSlide key={item.id}>
+                                <div className="shadow-md h-full w-full m-2 rounded-lg">
+                                  <Link
+                                    href={`/product/product-details?id=${item.id}`}
+                                  >
+                                    <div className="productImage flex justify-center rounded-[12px] overflow-hidden ">
+                                      <Image
+                                        src={`/product-image/${item.ProductImages[0]?.sysFileName}`}
+                                        alt={item.name}
+                                        width={200}
+                                        height={200}
+                                        className="min-h-[245px] max-h-[245px] object-cover"
+                                      />
+                                    </div>
+                                    <div className="py-3 px-4">
+                                      <div>
+                                        <div className="font-bold line-clamp-1">
+                                          {item.name}
+                                        </div>
+                                        <div className="text-[#999] text-[14px] line-clamp-1">
+                                          {item.name}
+                                        </div>
+                                      </div>
+                                      <div className="text-[#000] text-[16px] py-2">
+                                        ₹{item.final_price}
+                                        {item.discount_price > 0 && (
+                                          <>
+                                            <span className="line-through text-[12px] text-[#999] ml-1">
+                                              ₹{item.price}
+                                            </span>
+                                            <span className="text-[#3fac45] text-[12px]">
+                                              {item.discount_price}% off
+                                            </span>
+                                          </>
+                                        )}
+                                      </div>
+                                      <div className="text-[#999] text-[14px]">
+                                        Color:{" "}
+                                        <span className="text-[#000]">
+                                          {item.Colors?.map(
+                                            (item) => item.name
+                                          ).join(", ")}
+                                        </span>
+                                      </div>
+                                      <div className="text-[#999] text-[14px]">
+                                        Size:{" "}
+                                        <span className="text-[#000]">
+                                          {item.Sizes.map(
+                                            (item) => item.name
+                                          ).join(" , ")}
+                                        </span>
+                                      </div>
+                                    </div>
+                                  </Link>
+                                </div>
+                              </SwiperSlide>
+                            </>
+                          ))}
                   </Swiper>
                 </div>
               </>
@@ -230,31 +302,41 @@ export default function Home() {
               Perfect Apparels Collection
             </div>
             <div className="flex justify-center flex-wrap items-center gap-5 w-full">
-              <div className="flex-1 flex justify-start items-center 
-              bg-[url('../../public/Images/how-should-a-t-shirt-fit.png')] bg-cover px-20 max-lg:px-5 py-24 max-lg:py-5 rounded-[16px]">
+              <div
+                className="flex-1 flex justify-start items-center 
+              bg-[url('../../public/Images/how-should-a-t-shirt-fit.png')] bg-cover px-20 max-lg:px-5 py-24 max-lg:py-5 rounded-[16px]"
+              >
                 <div>
-                  <h1 className="text-3xl font-bold mb-4 text-white">T-Shirt</h1>
+                  <h1 className="text-3xl font-bold mb-4 text-white">
+                    T-Shirt
+                  </h1>
                   <p className="mb-6 w-72 text-white">
                     T-shirts are a versatile and essential part of any wardrobe,
                     known for their comfort and adaptability.
                   </p>
-                  <button className="bg-black text-white px-6 py-2 rounded-full"
-                    onClick={() => handleShowCatagories()}>
+                  <button
+                    className="bg-black text-white px-6 py-2 rounded-full"
+                    onClick={() => handleShowCatagories()}
+                  >
                     Show Catagories
                   </button>
                 </div>
               </div>
-              <div className="flex-1 flex justify-start items-center 
-              bg-[url('../../public/Images/track-pants.png')] bg-cover px-20 max-lg:px-5 py-24 max-lg:py-5 rounded-[16px]">
+              <div
+                className="flex-1 flex justify-start items-center 
+              bg-[url('../../public/Images/track-pants.png')] bg-cover px-20 max-lg:px-5 py-24 max-lg:py-5 rounded-[16px]"
+              >
                 <div>
                   <h1 className="text-3xl font-bold mb-4">Track Pants</h1>
                   <p className="mb-6 w-72">
-                    Track pants are a popular type of athletic wear, often made of
-                    soft, stretchy materials like polyester, cotton blends, or
-                    fleece.
+                    Track pants are a popular type of athletic wear, often made
+                    of soft, stretchy materials like polyester, cotton blends,
+                    or fleece.
                   </p>
-                  <button className="bg-black text-white px-6 py-2 rounded-full"
-                    onClick={() => handleShowCatagories()}>
+                  <button
+                    className="bg-black text-white px-6 py-2 rounded-full"
+                    onClick={() => handleShowCatagories()}
+                  >
                     Show Catagories
                   </button>
                 </div>
@@ -276,49 +358,81 @@ export default function Home() {
                 modules={[Navigation]}
                 navigation={true}
               >
-                {Tshirt.map((item) => (
-                  <SwiperSlide key={item.id}>
-                    <div className="shadow-md h-full w-full m-2 rounded-lg">
-                      <Link href={`/product/product-details?id=${item.id}`}>
-                        <div className="productImage flex justify-center rounded-[12px] overflow-hidden">
-                          <Image src={`/product-image/${item.ProductImages[0]?.sysFileName}`} alt={item.name} width={200} height={200} className="min-h-[245px] max-h-[245px] object-cover" />
-                        </div>
+                {loading
+                  ? [1, 2, 3, 4, 5].map((item) => (
+                      <SwiperSlide key={item}>
+                        <Skeleton className="h-[245px] w-full" />
                         <div className="py-3 px-4">
-                          <div>
-                            <div className="font-bold line-clamp-1">{item.name}</div>
-                            <div className="text-[#999] text-[14px] line-clamp-1">{item.fit}</div>
-                          </div>
-                          <div className="text-[#000] text-[20px] py-2">
-                            <div className="text-[#000] text-[16px] py-2">
-                              ₹{item.final_price}
-                              {
-                                item.discount_price > 0 && (
-                                  <>
-                                    <span className="line-through text-[12px] text-[#999] ml-1">₹{item.price}
-                                    </span>
-                                    <span className="text-[#3fac45] text-[12px]">{item.discount_price}% off</span>
-                                  </>
-                                )
-                              }
-                            </div>
-                          </div>
-                          <div className="text-[#999] text-[14px]">
-                            Color:{" "}
-                            <span className="text-[#000]">
-                              {item.Colors?.map((item) => item.name).join(", ")}
-                            </span>
-                          </div>
-                          <div className="text-[#999] text-[14px]">
-                            Size:{" "}
-                            <span className="text-[#000]">
-                              {item.Sizes.map((item) => item.name).join(" , ")}
-                            </span>
-                          </div>
+                          <Skeleton className="h-[14px] w-[180px]" />
+                          <Skeleton className="h-[10px] w-[80px] mt-1" />
+                          <Skeleton className="h-[20px] w-[100px] my-4" />
+                          <Skeleton className="h-[14px] w-[100px]" />
+                          <Skeleton className="h-[14px] w-[80px] mt-1" />
                         </div>
-                      </Link>
-                    </div>
-                  </SwiperSlide>
-                ))}
+                      </SwiperSlide>
+                    ))
+                  : Tshirt.map((item) => (
+                      <>
+                        <SwiperSlide key={item.id}>
+                          <div className="shadow-md h-full w-full m-2 rounded-lg">
+                            <Link
+                              href={`/product/product-details?id=${item.id}`}
+                            >
+                              <div className="productImage flex justify-center rounded-[12px] overflow-hidden">
+                                <Image
+                                  src={`/product-image/${item.ProductImages[0]?.sysFileName}`}
+                                  alt={item.name}
+                                  width={200}
+                                  height={200}
+                                  className="min-h-[245px] max-h-[245px] object-cover"
+                                />
+                              </div>
+                              <div className="py-3 px-4">
+                                <div>
+                                  <div className="font-bold line-clamp-1">
+                                    {item.name}
+                                  </div>
+                                  <div className="text-[#999] text-[14px] line-clamp-1">
+                                    {item.fit}
+                                  </div>
+                                </div>
+                                <div className="text-[#000] text-[20px] py-2">
+                                  <div className="text-[#000] text-[16px] py-2">
+                                    ₹{item.final_price}
+                                    {item.discount_price > 0 && (
+                                      <>
+                                        <span className="line-through text-[12px] text-[#999] ml-1">
+                                          ₹{item.price}
+                                        </span>
+                                        <span className="text-[#3fac45] text-[12px]">
+                                          {item.discount_price}% off
+                                        </span>
+                                      </>
+                                    )}
+                                  </div>
+                                </div>
+                                <div className="text-[#999] text-[14px]">
+                                  Color:{" "}
+                                  <span className="text-[#000]">
+                                    {item.Colors?.map((item) => item.name).join(
+                                      ", "
+                                    )}
+                                  </span>
+                                </div>
+                                <div className="text-[#999] text-[14px]">
+                                  Size:{" "}
+                                  <span className="text-[#000]">
+                                    {item.Sizes.map((item) => item.name).join(
+                                      " , "
+                                    )}
+                                  </span>
+                                </div>
+                              </div>
+                            </Link>
+                          </div>
+                        </SwiperSlide>
+                      </>
+                    ))}
               </Swiper>
             </div>
           </div>
@@ -337,63 +451,92 @@ export default function Home() {
                 modules={[Navigation]}
                 navigation={true}
               >
-                {
-                  TrackPants.map((item, index) => {
-                    return (
-                      <>
-                        <SwiperSlide>
-                          <div className="shadow-md h-full w-full m-2 rounded-lg">
-                            <Link href={`/product/product-details?id=${item.id}`}>
-                              <div key={index} className="productImage flex justify-center rounded-[12px] overflow-hidden">
-                                <Image src={`/product-image/${item.ProductImages[0]?.sysFileName}`} alt="track1" width={200} height={200} className="min-h-[245px] max-h-[245px] object-cover"></Image>
-                              </div>
-                              <div className="py-3 px-4">
-                                <div>
-                                  <div className="font-bold line-clamp-1">{item.name}</div>
-                                  <div className="text-[#999] text-[14px] line-clamp-1">
-                                    {item.fit}
-                                  </div>
+                {loading
+                  ? [1, 2, 3, 4, 5].map((item) => (
+                      <SwiperSlide key={item}>
+                        <Skeleton className="h-[245px] w-full" />
+                        <div className="py-3 px-4">
+                          <Skeleton className="h-[14px] w-[180px]" />
+                          <Skeleton className="h-[10px] w-[80px] mt-1" />
+                          <Skeleton className="h-[20px] w-[100px] my-4" />
+                          <Skeleton className="h-[14px] w-[100px]" />
+                          <Skeleton className="h-[14px] w-[80px] mt-1" />
+                        </div>
+                      </SwiperSlide>
+                    ))
+                  : TrackPants.map((item, index) => {
+                      return (
+                        <>
+                          <SwiperSlide>
+                            <div className="shadow-md h-full w-full m-2 rounded-lg">
+                              <Link
+                                href={`/product/product-details?id=${item.id}`}
+                              >
+                                <div
+                                  key={index}
+                                  className="productImage flex justify-center rounded-[12px] overflow-hidden"
+                                >
+                                  <Image
+                                    src={`/product-image/${item.ProductImages[0]?.sysFileName}`}
+                                    alt="track1"
+                                    width={200}
+                                    height={200}
+                                    className="min-h-[245px] max-h-[245px] object-cover"
+                                  ></Image>
                                 </div>
-                                <div className="text-[#000] text-[20px] py-2">
-                                  <div className="text-[#000] text-[16px] py-2">
-                                    ₹{item.final_price}
-                                    {
-                                      item.discount_price > 0 && (
+                                <div className="py-3 px-4">
+                                  <div>
+                                    <div className="font-bold line-clamp-1">
+                                      {item.name}
+                                    </div>
+                                    <div className="text-[#999] text-[14px] line-clamp-1">
+                                      {item.fit}
+                                    </div>
+                                  </div>
+                                  <div className="text-[#000] text-[20px] py-2">
+                                    <div className="text-[#000] text-[16px] py-2">
+                                      ₹{item.final_price}
+                                      {item.discount_price > 0 && (
                                         <>
-                                          <span className="line-through text-[12px] text-[#999] ml-1">₹{item.price}
+                                          <span className="line-through text-[12px] text-[#999] ml-1">
+                                            ₹{item.price}
                                           </span>
-                                          <span className="text-[#3fac45] text-[12px]">{item.discount_price}% off</span>
+                                          <span className="text-[#3fac45] text-[12px]">
+                                            {item.discount_price}% off
+                                          </span>
                                         </>
-                                      )
-                                    }
+                                      )}
+                                    </div>
+                                  </div>
+                                  <div className="text-[#999] text-[14px]">
+                                    Color:{" "}
+                                    <span className="text-[#000]">
+                                      {item.Colors?.map(
+                                        (item) => item.name
+                                      ).join(", ")}
+                                    </span>
+                                  </div>
+                                  <div className="text-[#999] text-[14px]">
+                                    Size:{" "}
+                                    <span className="text-[#000]">
+                                      {item.Sizes?.map(
+                                        (item) => item.name
+                                      ).join(",")}
+                                    </span>
                                   </div>
                                 </div>
-                                <div className="text-[#999] text-[14px]">
-                                  Color:{" "}
-                                  <span className="text-[#000]">
-                                    {item.Colors?.map((item) => item.name).join(", ")}
-                                  </span>
-                                </div>
-                                <div className="text-[#999] text-[14px]">
-                                  Size:{" "}
-                                  <span className="text-[#000]">
-                                    {item.Sizes?.map((item) => item.name).join(",")}
-                                  </span>
-                                </div>
-                              </div>
-                            </Link>
-                          </div>
-                        </SwiperSlide>
-                      </>
-                    )
-                  })
-                }
+                              </Link>
+                            </div>
+                          </SwiperSlide>
+                        </>
+                      );
+                    })}
               </Swiper>
             </div>
           </div>
         </div>
       </div>
       <Footer />
-    </main >
+    </main>
   );
 }

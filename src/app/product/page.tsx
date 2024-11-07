@@ -190,14 +190,31 @@ function Product() {
         <div className="container mx-auto xl:max-w-8xl max-sm:px-4">
           <div className="grid grid-cols-12 gap-4 lg:py-10">
             <div className="xl:col-span-2 lg:col-span-3 col-span-12">
-              <div className="mb-2 text-[24px] font-medium">Filter
-                {
-                  isActiveFilterData &&
-                  <button onClick={handleResetFilters} className="ml-28 text-sm">Reset Filter</button>
-                }
+              <div className="flex justify-between items-center w-full">
+                <div className="text-[24px] font-medium">Filter</div>
+                <div>
+                  {
+                    isActiveFilterData &&
+                    <button onClick={handleResetFilters} className="text-sm">Reset Filter</button>
+                  }
+                </div>
               </div>
               <Accordion type="single" collapsible className="w-full">
                 <AccordionItem value="item-1">
+                  <AccordionTrigger>Price</AccordionTrigger>
+                  <AccordionContent>
+                  <div className="flex flex-col gap-3 mt-3">
+                    <Slider
+                      onValueChange={(value) => setSelectedPrice(value[0])}
+                      defaultValue={[maxPrice / 3]}
+                      max={maxPrice}
+                      step={1}
+                    />
+                      <span>Selected Price: {selectedPrice}</span>
+                    </div>
+                  </AccordionContent>
+                </AccordionItem>
+                <AccordionItem value="item-2">
                   <AccordionTrigger>Collection</AccordionTrigger>
                   <AccordionContent>
                     <div className="flex flex-col gap-3 mt-3">
@@ -223,30 +240,10 @@ function Product() {
                     </div>
                   </AccordionContent>
                 </AccordionItem>
-                <AccordionItem value="item-2">
+                <AccordionItem value="item-3">
                   <AccordionTrigger>Size</AccordionTrigger>
                   <AccordionContent>
                     <div className="flex flex-col gap-3 mt-3">
-                      {/* {availableSizes.map((item, index) => {
-                        return (
-                          <>
-                            <div key={index} className="flex items-center space-x-2">
-                              <Checkbox
-                                id={`size-${item.id}`}
-                                checked={selectedSizes.includes(item.id)}
-                                onCheckedChange={() =>
-                                  handleSizeCheckboxChange(item.id)
-                                }
-                              />
-                              <label htmlFor="terms2"
-                                className="text-sm font-medium leading-none text-[#777]"
-                              >
-                                {item.name}
-                              </label>
-                            </div>
-                          </>
-                        );
-                      })} */}
                       {allSize.map((item, index) => {
                         return (
                           <>
@@ -270,7 +267,7 @@ function Product() {
                     </div>
                   </AccordionContent>
                 </AccordionItem>
-                <AccordionItem value="item-3">
+                <AccordionItem value="item-4">
                   <AccordionTrigger>Colors</AccordionTrigger>
                   <AccordionContent>
                     <div className="flex flex-col gap-3 mt-3">
@@ -298,19 +295,7 @@ function Product() {
                     </div>
                   </AccordionContent>
                 </AccordionItem>
-
-                <Label>Price</Label>
-                <div className="flex flex-col gap-3 mt-3">
-                  <Slider
-                    onValueChange={(value) => setSelectedPrice(value[0])}
-                    defaultValue={[maxPrice / 3]}
-                    max={maxPrice}
-                    step={1}
-                  />
-                  <span>Selected Price: {selectedPrice}</span>
-                </div>
-
-                <AccordionItem value="item-4">
+                <AccordionItem value="item-5">
                   <AccordionTrigger>Fabric</AccordionTrigger>
                   <AccordionContent>
                     <div className="flex flex-col gap-3 mt-3">
@@ -339,8 +324,8 @@ function Product() {
                   className="py-1 px-5 rounded-[20px] text-base border border-black text-white bg-black flex items-center gap-2 cursor-pointer"
                 >
                   {filter === "T-Shirts"
-                    ? "T-Shirts Collection"
-                    : "Track Pant Collection"}
+                    ? "Track Pant Collection"
+                    : "T-Shirts Collection"}
                   <svg
                     className="w-6 h-6 text-gray-800 dark:text-white"
                     aria-hidden="true"

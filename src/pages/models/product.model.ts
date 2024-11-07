@@ -20,7 +20,7 @@ class Product extends Model {
                 },
                 subcategory_id: {
                     type: DataTypes.INTEGER(),
-                    allowNull: false
+                    allowNull: true
                 },
                 name: {
                     type: DataTypes.STRING,
@@ -130,7 +130,7 @@ class Product extends Model {
         Product.hasMany(ProductImages, { foreignKey: 'product_id', sourceKey: 'id', onDelete: 'CASCADE' });
         Product.belongsTo(SubCategory, { foreignKey: 'subcategory_id', targetKey: 'id' });
         Product.belongsTo(Category, { foreignKey: 'category_id', targetKey: 'id' });
-
+    
     }
 }
 
