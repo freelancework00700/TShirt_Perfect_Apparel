@@ -103,6 +103,7 @@ export interface ISize {
     isDeleted: boolean;
     name: string;
     updatedAt: string;
+    category_id: number,
     Category: {
         createdAt: string;
         id: number;
@@ -179,3 +180,6 @@ export interface ProductInquiry {
         updatedAt: string,
     }]
 }
+
+
+export type Filter = "T-Shirts" | "Track-Pants";

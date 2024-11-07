@@ -64,6 +64,7 @@ function Admin() {
   const [selectedColorId, setSelectedColorId] = useState<number | string | null>(null);
   const [allSize, setAllSize] = useState<ISize[]>([])
   const [filteredSize, setFilteredSize] = useState<ISize[]>([])
+  console.log('filteredSize :>> ', filteredSize);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [id, setId] = useState<string | null>(null);
   const [selectedImages, setSelectedImages] = useState<File[]>([]);
@@ -278,9 +279,11 @@ function Admin() {
     }
   }
 
-  const handleDeleteCategory = async (id: number) => {
+  const handleDeleteCategory = async (id: any) => {
+    console.log('id :>> ', id);
+    console.log('selectedCategoryId :>> ', selectedCategoryId);
     try {
-      const response = await axios.delete(`/api/category?id=${id}`)
+      const response = await axios.delete(`/api/category?id=${selectedCategoryId}`)
       toast.success(response.data.message, {
         position: "top-right",
         autoClose: 5000,
@@ -320,6 +323,8 @@ function Admin() {
 
   const handleAddSize = async () => {
     try {
+      console.log('selectedSizeId :>> ', selectedSizeId);
+      console.log('selectedCategory :>> ', selectedCategory);
       if (selectedSizeId) {
         const editSizeResponse = await axios.put(`/api/size`, { id: selectedSizeId, name: size, category_id: selectedCategory.id })
         toast.success(editSizeResponse.data.message, {
@@ -643,11 +648,11 @@ function Admin() {
         price = +formik.values.price
         discount_price = +value
       }
-      let final_price = +price - ((+price * +discount_price) / 100)
+      const final_price = +price - ((+price * +discount_price) / 100)
       formik.setFieldValue("final_price", final_price);
     }
-
   };
+
   const handleEditProduct = async (item: IProduct) => {
     getAllCategory();
     getAllSize();
@@ -691,8 +696,10 @@ function Admin() {
           const subCategoryResponse = await axios.get(`/api/sub-category?id=${formik.values.category_id}`)
           const data = subCategoryResponse.data.data
           setAllSubCategory(data)
-
-          const filteredData = allSize.filter((item) => item.Category.id.toString() === formik.values.category_id.toString())
+          console.log('allSize :>> ', allSize);
+          // const filteredData = allSize.filter((item) => item.Category.id.toString() === formik.values.category_id.toString());
+          const filteredData = allSize.filter((item) => item.category_id.toString() === formik.values.category_id.toString());
+          console.log('filteredData :>> ', filteredData);
           setFilteredSize(filteredData)
         }
         // else {
@@ -1475,10 +1482,14 @@ function Admin() {
                                   placeholder="Choose File"
                                   multiple
                                 />
-                                {
-                                  formik.errors.images && formik.touched.images &&
-                                  (<p className="text-red-500">{formik.errors.images}</p>)
-                                }
+                                {formik.touched.images && formik.errors.images && (
+                                  <p className="text-red-500">
+                                    {Array.isArray(formik.errors.images)
+                                      ? formik.errors.images.join(', ') // Join the error messages if it's an array
+                                      : formik.errors.images}
+                                  </p>
+                                )}
+
                                 {
                                   selectedImages.length > 0 && (
                                     <div className="mt-2">
@@ -1488,10 +1499,8 @@ function Admin() {
                                             <li key={index} className="flex items-center justify-between">
                                               {typeof file === 'string' ? file : file.name}
                                             </li>
-                                            <button type="button"
-                                              onClick={() => removeImage(index)}
-                                              className="text-red-500 ml-4"
-                                            >✖️</button>
+                                            <button type="button" onClick={() => removeImage(index)}
+                                              className="text-red-500 ml-4">✖️</button>
                                           </>
                                         ))}
                                       </ul>
@@ -1511,7 +1520,6 @@ function Admin() {
                                 {formik.errors.description && formik.touched.description &&
                                   (<p className="text-red-500">{formik.errors.description}</p>)}
                               </div>
-
                             </div>
                             <DialogFooter className="px-5 pb-5">
                               <Button type="submit">
@@ -1676,7 +1684,7 @@ function Admin() {
                       <div className="text-2xl font-bold">Category</div>
                       <Dialog open={openModel} onOpenChange={(state) => setOpenModel(state)}>
                         <DialogTrigger asChild>
-                          <Button className="rounded-full pr-5">
+                          <Button className="rounded-full pr-5" onClick={() => setCategory("")}>
                             <svg
                               className="w-6 h-6 text-gray-800 dark:text-white mr-2"
                               aria-hidden="true"
@@ -1697,28 +1705,28 @@ function Admin() {
                         </DialogTrigger>
                         <DialogContent className="sm:max-w-[425px] p-5">
                           <DialogHeader>
-                            <DialogTitle className="px-5 pt-5">New Product</DialogTitle>
+                            <DialogTitle className="px-5 pt-5">New Category</DialogTitle>
                             <DialogDescription className="px-5 pt-1">
                               Upload your New Category Here
                             </DialogDescription>
                           </DialogHeader>
-                          <form onSubmit={formik.handleSubmit}>
-                            <div className="grid grid-cols-12 gap-4 gap-y-2 pb-4 px-5 pt-2">
-                              <div className="col-span-4">
-                                <Label>Category</Label>
-                                <Input
-                                  id="category"
-                                  placeholder="Category"
-                                  className=""
-                                  value={category}
-                                  onChange={(e) => setCategory(e.target.value)}
-                                />
-                              </div>
+                          {/* <form onSubmit={formik.handleSubmit}> */}
+                          <div className="grid grid-cols-12 gap-4 gap-y-2 pb-4 px-5 pt-2">
+                            <div className="col-span-4">
+                              <Label>Category</Label>
+                              <Input
+                                id="category"
+                                placeholder="Category"
+                                className=""
+                                value={category}
+                                onChange={(e) => setCategory(e.target.value)}
+                              />
                             </div>
-                            <DialogFooter className="px-5 pb-5">
-                              <Button type="submit" onClick={handleAddCategory}>Save changes</Button>
-                            </DialogFooter>
-                          </form>
+                          </div>
+                          <DialogFooter className="px-5 pb-5">
+                            <Button type="submit" onClick={handleAddCategory}>Save changes</Button>
+                          </DialogFooter>
+                          {/* </form> */}
                         </DialogContent>
                       </Dialog>
                     </div>
@@ -1770,12 +1778,12 @@ function Admin() {
                                             </AlertDialogTitle>
                                             <AlertDialogDescription>
                                               Are you sure you want to delete this category
-                                              <span className="font-extrabold">{item.name}</span>? This action cannot be undone.
+                                              ? This action cannot be undone.
                                             </AlertDialogDescription>
                                           </AlertDialogHeader>
                                           <AlertDialogFooter>
                                             <AlertDialogCancel onClick={() => setIsCategoryDialogOpen(false)}>Cancel</AlertDialogCancel>
-                                            <AlertDialogAction onClick={() => handleDeleteCategory(item.id)}>Continue</AlertDialogAction>
+                                            <AlertDialogAction onClick={() => handleDeleteCategory(item)}>Continue</AlertDialogAction>
                                           </AlertDialogFooter>
                                         </AlertDialogContent>
                                       </AlertDialog>
@@ -1900,7 +1908,10 @@ function Admin() {
                       <div className="text-2xl font-bold">Size</div>
                       <Dialog open={openModel} onOpenChange={(state) => setOpenModel(state)}>
                         <DialogTrigger asChild>
-                          <Button className="rounded-full pr-5">
+                          <Button className="rounded-full pr-5" onClick={() => {
+                            setSize('');
+                            setSelectedCategory(null);
+                          }}>
                             <svg
                               className="w-6 h-6 text-gray-800 dark:text-white mr-2"
                               aria-hidden="true"
@@ -2025,7 +2036,7 @@ function Admin() {
                                               <AlertDialogTitle>Are you sure you want to delete this size?
                                               </AlertDialogTitle>
                                               <AlertDialogDescription>
-                                                Are you sure you want to delete this size{item.name}? This action cannot be undone.
+                                                Are you sure you want to delete this size? This action cannot be undone.
                                               </AlertDialogDescription>
                                             </AlertDialogHeader>
                                             <AlertDialogFooter>
@@ -2090,7 +2101,7 @@ function Admin() {
                       <div className="text-2xl font-bold">Color</div>
                       <Dialog open={openModel} onOpenChange={(state) => setOpenModel(state)}>
                         <DialogTrigger asChild>
-                          <Button className="rounded-full pr-5">
+                          <Button className="rounded-full pr-5" onClick={() => setColors("")}>
                             <svg
                               className="w-6 h-6 text-gray-800 dark:text-white mr-2"
                               aria-hidden="true"
@@ -2196,7 +2207,6 @@ function Admin() {
                                             </AlertDialogFooter>
                                           </AlertDialogContent>
                                         </AlertDialog>
-
                                       </div>
                                     </TableCell>
                                   </TableRow>
@@ -2257,7 +2267,7 @@ function Admin() {
                               ))
                             ) : (
                               productInquiry.map((item, index) => {
-                                const filteredData = item.Sizes.filter((val) => item.size_ids.includes(val.id))
+                                const filteredDataofSize = item.Sizes.filter((val) => item.size_ids.includes(val.id))
                                 const filteredColorData = item.Colors.filter(val => item.color_ids.includes(val.id))
                                 return (
                                   <TableRow key={index}>
@@ -2271,7 +2281,7 @@ function Admin() {
                                     <TableCell>{item.Product.price}</TableCell>
                                     <TableCell>{filteredColorData.map((item) => item.name).join(', ')}
                                     </TableCell>
-                                    <TableCell>{filteredData.map((item) => item.name).join(', ')}
+                                    <TableCell>{filteredDataofSize.map((item) => item.name).join(', ')}
                                     </TableCell>
                                     <TableCell>
                                       <AlertDialog open={openProductInquiry}>
@@ -2404,8 +2414,9 @@ function Admin() {
               </div>
             </div>
           </>
-        )}
-      </main>
+        )
+        }
+      </main >
     </>
   );
 }

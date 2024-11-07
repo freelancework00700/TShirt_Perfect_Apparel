@@ -13,27 +13,27 @@ import {
 } from "@/components/ui/accordion";
 import Link from "next/link";
 import axios from "axios";
-import { ICategories, IColor, IProduct, ISize } from "@/interface/types";
+import { Filter, ICategories, IColor, IProduct, ISize } from "@/interface/types";
 
 function Product() {
-  const [toggleData, setToggleData] = useState(true);
   const [allData, setAllData] = useState<IProduct[]>([]);
-  // console.log('allData', allData);
+  console.log('allData', allData);
   const [categories, setCategories] = useState<ICategories[]>([]);
-  console.log('categories', categories);
+  // console.log('categories', categories);
   const [allColor, setAllColor] = useState<IColor[]>([]);
   const [allSize, setAllSize] = useState<ISize[]>([]);
   const [selectedCategories, setSelectedCategories] = useState<number[]>([]);
-  console.log('selectedCategories :>> ', selectedCategories);
+  // console.log('selectedCategories :>> ', selectedCategories);
   const [selectedSizes, setSelectedSizes] = useState<number[]>([]);
   const [availableSizes, setAvailableSizes] = useState<ISize[]>([]);
   const [availableColors, setAvailableColors] = useState<IColor[] | undefined>([]);
   const [selectedColors, setSelectedColors] = useState<number[]>([]);
   const [filteredProducts, setFilteredProducts] = useState<IProduct[]>([]);
+  const [filter, setFilter] = useState<Filter>("T-Shirts");
 
-  const filteredData = toggleData
-    ? allData.filter((item) => item.category_id === 2)
-    : allData.filter((item) => item.category_id === 1);
+  const filteredData =
+    allData.filter((item) => item.Category.name === filter)
+  // : allData.filter((item) => item.category_id === 1);
 
 
   const getProduct = async () => {
@@ -64,11 +64,19 @@ function Product() {
 
   useEffect(() => {
     const filteredData = allData.filter((val) => selectedCategories.includes(val.category_id));
+    // console.log('filteredData :>> ', filteredData) ;
 
     const sizeFilter = filteredData.filter((val) =>
-      val.size_ids.some((size) => selectedSizes.includes(size))
-    );
+      val.size_ids.some((size) => selectedSizes.includes(size)));
     console.log('sizeFilter:::::', sizeFilter);
+
+    // const dataByPrice = sizeFilter.filter((val) => parseFloat(val.price) <= priceRange)
+    // console.log('dataByPrice :>> ', dataByPrice);
+
+    // const dataByPrice = sizeFilter.filter(
+    //   (val) => parseFloat(val.price) >= priceRange[0] && parseFloat(val.price) <= priceRange[1]
+    // );
+    // console.log('dataByPrice :>> ', dataByPrice);
 
   }, [allData, selectedCategories, allSize, selectedSizes])
 
@@ -250,13 +258,13 @@ function Product() {
             <div className="xl:col-span-10 lg:col-span-9 col-span-12">
               <div className="flex justify-between items-center lg:sticky lg:top-0 bg-white max-lg:flex-wrap max-md:mb-2">
                 <div className="mb-4 text-[24px] font-medium">
-                  {toggleData ? "T-Shirts Collection" : "Track Pant Collection"}
+                  {filter ? "T-Shirts Collection" : "Track Pant Collection"}
                 </div>
                 <div
-                  onClick={() => setToggleData(!toggleData)}
+                  onClick={() => setFilter(filter === "T-Shirts" ? "Track-Pants" : "T-Shirts")}
                   className="py-1 px-5 rounded-[20px] text-base border border-black text-white bg-black flex items-center gap-2 cursor-pointer"
                 >
-                  {!toggleData
+                  {filter === "T-Shirts"
                     ? "T-Shirts Collection"
                     : "Track Pant Collection"}
                   <svg
@@ -309,12 +317,12 @@ function Product() {
                                 </div>
                               </div>
                               <div className="text-[#000] text-[16px] py-1">
-                                <div className="text-[#000] text-[16px] py-2">
+                                <div className="text-[#000] text-[16px] py-2 5px">
                                   ₹{item.final_price}
                                   {
                                     item.discount_price > 0 && (
                                       <>
-                                        <span className="line-through text-[12px] text-[#999]">₹{item.price}
+                                        <span className="line-through text-[12px] text-[#999] ml-1">₹{item.price}
                                         </span>
                                         <span className="text-[#3fac45] text-[12px]">{item.discount_price}% off</span>
                                       </>
@@ -325,17 +333,13 @@ function Product() {
                               <div className="text-[#999] text-[14px]">
                                 Color:{" "}
                                 <span className="text-[#000]">
-                                  {item.Colors?.map((item) => item.name).join(
-                                    ","
-                                  )}
+                                  {item.Colors?.map((item) => item.name).join(" , ")}
                                 </span>
                               </div>
                               <div className="text-[#999] text-[14px]">
                                 Size:{" "}
                                 <span className="text-[#000]">
-                                  {item.Sizes.map((item) => item.name).join(
-                                    " , "
-                                  )}
+                                  {item.Sizes.map((item) => item.name).join(" , ")}
                                 </span>
                               </div>
                             </div>
@@ -351,7 +355,7 @@ function Product() {
                       <Link
                         key={index}
                         className={
-                          toggleData
+                          filter
                             ? "lg:col-span-3 md:col-span-6 col-span-12"
                             : "col-span-3"
                         }
@@ -380,7 +384,7 @@ function Product() {
                                 {
                                   item.discount_price > 0 && (
                                     <>
-                                      <span className="line-through text-[12px] text-[#999]">₹{item.price}
+                                      <span className="line-through text-[12px] text-[#999] ml-1">₹{item.price}
                                       </span>
                                       <span className="text-[#3fac45] text-[12px]">{item.discount_price}% off</span>
                                     </>
@@ -391,17 +395,13 @@ function Product() {
                             <div className="text-[#999] text-[14px]">
                               Color:{" "}
                               <span className="text-[#000]">
-                                {item.Colors.map((item) => item.name).join(
-                                  ", "
-                                )}
+                                {item.Colors.map((item) => item.name).join(", ")}
                               </span>
                             </div>
                             <div className="text-[#999] text-[14px]">
                               Size:{" "}
                               <span className="text-[#000]">
-                                {item.Sizes.map((item) => item.name).join(
-                                  " , "
-                                )}
+                                {item.Sizes.map((item) => item.name).join(" , ")}
                               </span>
                             </div>
                           </div>

@@ -15,7 +15,7 @@ import "swiper/css/navigation";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { EffectFade, Navigation, Pagination } from "swiper/modules";
 import axios from "axios";
-import { IProduct } from "@/interface/types";
+import { Filter, IProduct } from "@/interface/types";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
@@ -30,8 +30,11 @@ export default function Home() {
   // console.log('category :>> ', category);
   const router = useRouter();
 
-  const TrackPants = product.filter(item => item.category_id === 1);
-  const Tshirt = product.filter(item => item.category_id === 2);
+
+  const TrackPants = product.filter(item => item.Category.name === "Track-Pants");
+  console.log('TrackPants :>> ', TrackPants);
+  const Tshirt = product.filter(item => item.Category.name === "T-Shirts");
+
 
   const segments = {
     newDrops: {
@@ -138,7 +141,7 @@ export default function Home() {
                               {
                                 item.discount_price > 0 && (
                                   <>
-                                    <span className="line-through text-[12px] text-[#999]">₹{item.price}
+                                    <span className="line-through text-[12px] text-[#999] ml-1">₹{item.price}
                                     </span>
                                     <span className="text-[#3fac45] text-[12px]">{item.discount_price}% off</span>
                                   </>
@@ -203,7 +206,7 @@ export default function Home() {
                                       {
                                         item.discount_price > 0 && (
                                           <>
-                                            <span className="line-through text-[12px] text-[#999]">₹{item.price}
+                                            <span className="line-through text-[12px] text-[#999] ml-1">₹{item.price}
                                             </span>
                                             <span className="text-[#3fac45] text-[12px]">{item.discount_price}% off</span>
                                           </>
@@ -303,7 +306,7 @@ export default function Home() {
                               {
                                 item.discount_price > 0 && (
                                   <>
-                                    <span className="line-through text-[12px] text-[#999]">₹{item.price}
+                                    <span className="line-through text-[12px] text-[#999] ml-1">₹{item.price}
                                     </span>
                                     <span className="text-[#3fac45] text-[12px]">{item.discount_price}% off</span>
                                   </>
@@ -369,7 +372,7 @@ export default function Home() {
                                     {
                                       item.discount_price > 0 && (
                                         <>
-                                          <span className="line-through text-[12px] text-[#999]">₹{item.price}
+                                          <span className="line-through text-[12px] text-[#999] ml-1">₹{item.price}
                                           </span>
                                           <span className="text-[#3fac45] text-[12px]">{item.discount_price}% off</span>
                                         </>

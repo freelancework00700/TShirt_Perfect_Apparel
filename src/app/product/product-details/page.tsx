@@ -434,7 +434,7 @@ const ProductDetail = () => {
                               {
                                 item.discount_price > 0 && (
                                   <>
-                                    <span className="line-through text-[12px] text-[#999]">₹{item.price}
+                                    <span className="line-through text-[12px] text-[#999] ml-1">₹{item.price}
                                     </span>
                                     <span className="text-[#3fac45] text-[12px]">{item.discount_price}% off</span>
                                   </>
