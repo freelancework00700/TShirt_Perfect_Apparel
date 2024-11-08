@@ -24,7 +24,7 @@ import TableRow from '@mui/material/TableRow';
 import { useFormik } from "formik";
 import * as yup from 'yup';
 import axios from "axios";
-import { ICategories, IColor, Inquiry, IProduct, ISize, ISubCategories, ProductInquiry } from "@/interface/types";
+import { Filter, ICategories, IColor, Inquiry, IProduct, ISize, ISubCategories, ProductInquiry } from "@/interface/types";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
 import Image from "next/image";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
@@ -35,6 +35,7 @@ import { useRouter } from "next/navigation";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Textarea } from "@/components/ui/textarea";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Switch } from "@/components/ui/switch";
 
 
 
@@ -64,7 +65,6 @@ function Admin() {
   const [selectedColorId, setSelectedColorId] = useState<number | string | null>(null);
   const [allSize, setAllSize] = useState<ISize[]>([])
   const [filteredSize, setFilteredSize] = useState<ISize[]>([])
-  console.log('filteredSize :>> ', filteredSize);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [id, setId] = useState<string | null>(null);
   const [selectedImages, setSelectedImages] = useState<File[]>([]);
@@ -83,7 +83,8 @@ function Admin() {
   const [openProductInquiry, setOpenProductInquiry] = useState(false);
   const [selectedProductInquiry, setSelectedProductInquiry] = useState<number | null>(null);
   const router = useRouter();
-
+  const [isTrackPants, setIsTrackPants] = useState(false);
+  const [filteredProducts, setFilteredProducts] = useState<IProduct[]>([]);
 
 
   const loginCredentials = [{ email: 'abc@gmail.com', password: 'Abc@123' },
@@ -123,7 +124,7 @@ function Admin() {
   const getAllProduct = async () => {
     setLoading(true);
     try {
-      const response = await axios.get('/api/product')
+      const response = await axios.get(`/api/product`)
       setAllProduct(response.data.data)
     } catch (error) {
       console.log('error :>> ', error);
@@ -131,6 +132,13 @@ function Admin() {
       setLoading(false);
     }
   }
+
+  useEffect(() => {
+    // Filter products based on switch selection
+    const category = isTrackPants ? 'Track-Pants' : 'T-Shirts';
+    const filtered = allProduct.filter((product) => product.Category.name === category);
+    setFilteredProducts(filtered);
+  }, [isTrackPants, allProduct]);
 
   const getAllCategory = async () => {
     setLoading(true);
@@ -144,15 +152,6 @@ function Admin() {
     }
   }
 
-  // const getAllSubCategory = async () => {
-  //   try {
-  //     const response = await axios.get(`/api/sub-category?id=${selectedCategoryId}`)
-  //     console.log('response: ', response);
-  //     setAllSubCategory(response.data.data)
-  //   } catch (error) {
-  //     console.error(error)
-  //   }
-  // }
 
   const getAllSize = async () => {
     setLoading(true)
@@ -224,15 +223,13 @@ function Admin() {
     } else {
       getAllInquiry();
     }
-  }, [page])
+  }, [page, isTrackPants])
 
   const handleEditCategory = async (item: ICategories) => {
     console.log('item :>> ', item);
     setOpenModel(true)
     setCategory(item.name)
     setSelectedCategoryId(item.id)
-    // const editResponse = await axios.put(`/api/category`, { id: item.id, name: item.name })
-    // console.log('editResponse :>> ', editResponse);
   }
 
   const openDeleteCategoryDialog = (id: number) => {
@@ -279,9 +276,7 @@ function Admin() {
     }
   }
 
-  const handleDeleteCategory = async (id: any) => {
-    console.log('id :>> ', id);
-    console.log('selectedCategoryId :>> ', selectedCategoryId);
+  const handleDeleteCategory = async () => {
     try {
       const response = await axios.delete(`/api/category?id=${selectedCategoryId}`)
       toast.success(response.data.message, {
@@ -301,14 +296,14 @@ function Admin() {
     }
   }
 
-  const handleAddSubCategory = async () => {
-    try {
-      await axios.post('/api/sub-category', { name: subCategory, category_id: selectedCategoryId })
-      setOpenModel(false)
-    } catch (error) {
-      console.error(error)
-    }
-  }
+  // const handleAddSubCategory = async () => {
+  //   try {
+  //     await axios.post('/api/sub-category', { name: subCategory, category_id: selectedCategoryId })
+  //     setOpenModel(false)
+  //   } catch (error) {
+  //     console.error(error)
+  //   }
+  // }
 
   const handleEditSize = async (item: ICategories) => {
     setOpenModel(true)
@@ -323,8 +318,6 @@ function Admin() {
 
   const handleAddSize = async () => {
     try {
-      console.log('selectedSizeId :>> ', selectedSizeId);
-      console.log('selectedCategory :>> ', selectedCategory);
       if (selectedSizeId) {
         const editSizeResponse = await axios.put(`/api/size`, { id: selectedSizeId, name: size, category_id: selectedCategory.id })
         toast.success(editSizeResponse.data.message, {
@@ -361,7 +354,6 @@ function Admin() {
   }
 
   const handleDeleteSize = async () => {
-    console.log('selectedSizeId', selectedSizeId);
     try {
       const response = await axios.delete(`/api/size?id=${selectedSizeId}`)
       toast.success(response.data.message, {
@@ -421,7 +413,6 @@ function Admin() {
     try {
       if (selectedColorId) {
         const editResponse = await axios.put(`/api/color`, { id: selectedColorId, name: colors })
-        console.log('editResponse :>> ', editResponse);
         setOpenModel(false)
         toast.success(editResponse.data.message, {
           position: "top-right",
@@ -561,6 +552,7 @@ function Admin() {
       final_price: yup.string().required("Enter the final price"),
     }),
     onSubmit: async (values) => {
+      console.log('values :>> ', values);
       const formData = new FormData();
       formData.append("category_id", values.category_id)
       // formData.append("subcategory_id", values.subcategory_id)
@@ -838,8 +830,8 @@ function Admin() {
   }
 
 
-  const totalPages = Math.ceil(allProduct.length / recordsPerPage);
-  const currentProducts = allProduct.slice(
+  const totalPages = Math.ceil(filteredProducts.length / recordsPerPage);
+  const currentProducts = filteredProducts.slice(
     (currentPage - 1) * recordsPerPage,
     currentPage * recordsPerPage
   );
@@ -969,27 +961,27 @@ function Admin() {
                 </div>
                 <div className="p-3 flex flex-col justify-between gap-3 h-full">
                   <div className="max-h-[calc(100vh_-_180px)]">
-                  <div onClick={() => setPage(1)} className={`${page === 1 && "bg-[#222]"} hover:bg-[#141414] p-2 px-5 rounded-md cursor-pointer`}>
-                    Product
-                  </div>
-                  <div onClick={() => setPage(2)} className={`${page === 2 && "bg-[#222]"} hover:bg-[#141414] p-2 px-5 rounded-md cursor-pointer`}>
-                    Categories
-                  </div>
-                  {/* <div onClick={() => setPage(3)} className={`${page === 3 && "bg-[#222]"} hover:bg-[#141414] p-2 px-5 rounded-md cursor-pointer`}>
+                    <div onClick={() => setPage(1)} className={`${page === 1 && "bg-[#222]"} hover:bg-[#141414] p-2 px-5 rounded-md cursor-pointer`}>
+                      Product
+                    </div>
+                    <div onClick={() => setPage(2)} className={`${page === 2 && "bg-[#222]"} hover:bg-[#141414] p-2 px-5 rounded-md cursor-pointer`}>
+                      Categories
+                    </div>
+                    {/* <div onClick={() => setPage(3)} className={`${page === 3 && "bg-[#222]"} hover:bg-[#141414] p-2 px-5 rounded-md cursor-pointer`}>
                     Sub Categories
                   </div> */}
-                  <div onClick={() => setPage(4)} className={`${page === 4 && "bg-[#222]"} hover:bg-[#141414] p-2 px-5 rounded-md cursor-pointer`}>
-                    Size
-                  </div>
-                  <div onClick={() => setPage(5)} className={`${page === 5 && "bg-[#222]"} hover:bg-[#141414] p-2 px-5 rounded-md cursor-pointer`}>
-                    Color
-                  </div>
-                  <div onClick={() => setPage(6)} className={`${page === 6 && "bg-[#222]"} hover:bg-[#141414] p-2 px-5 rounded-md cursor-pointer`}>
-                    Product Inquiry
-                  </div>
-                  <div onClick={() => setPage(7)} className={`${page === 7 && "bg-[#222]"} hover:bg-[#141414] p-2 px-5 rounded-md cursor-pointer`}>
-                    Get in Touch
-                  </div>
+                    <div onClick={() => setPage(4)} className={`${page === 4 && "bg-[#222]"} hover:bg-[#141414] p-2 px-5 rounded-md cursor-pointer`}>
+                      Size
+                    </div>
+                    <div onClick={() => setPage(5)} className={`${page === 5 && "bg-[#222]"} hover:bg-[#141414] p-2 px-5 rounded-md cursor-pointer`}>
+                      Color
+                    </div>
+                    <div onClick={() => setPage(6)} className={`${page === 6 && "bg-[#222]"} hover:bg-[#141414] p-2 px-5 rounded-md cursor-pointer`}>
+                      Product Inquiry
+                    </div>
+                    <div onClick={() => setPage(7)} className={`${page === 7 && "bg-[#222]"} hover:bg-[#141414] p-2 px-5 rounded-md cursor-pointer`}>
+                      Get in Touch
+                    </div>
                   </div>
                   <div>
                     <div onClick={handleLogout} className="p-2 px-5 rounded-md cursor-pointer text-lg font-semibold">
@@ -1085,6 +1077,13 @@ function Admin() {
                   <>
                     <div className="flex justify-between items-center pb-5">
                       <div className="text-2xl font-bold">Product</div>
+                      <div className="flex items-center space-x-2">
+                        <Label>T-Shirts</Label>
+                        <Switch checked={isTrackPants}
+                          onCheckedChange={(checked) => setIsTrackPants(checked)}
+                        />
+                        <Label>Track Pants</Label>
+                      </div>
                       <Dialog open={openModel} onOpenChange={(state) => setOpenModel(state)}>
                         <DialogTrigger asChild>
                           <Button className="rounded-full pr-5" onClick={async () => {
@@ -1312,18 +1311,20 @@ function Admin() {
                                   {formik.errors.type && formik.touched.type &&
                                     (<p className="text-red-500">{formik.errors.type}</p>)}
                                 </div>
-
-                                <div className="col-span-4">
-                                  <Label>Sleeve</Label>
-                                  <Input
-                                    id="sleeve"
-                                    placeholder="sleeve"
-                                    className="col-span-3"
-                                    value={formik.values.sleeve}
-                                    onChange={formik.handleChange} />
-                                  {formik.errors.sleeve && formik.touched.sleeve &&
-                                    (<p className="text-red-500">{formik.errors.sleeve}</p>)}
-                                </div>
+                                {
+                                  formik.values.category_id.toString() !== allCategory.find(val => val.name === "Track-Pants")?.id.toString() && (
+                                    <div className="col-span-4">
+                                      <Label>Sleeve</Label>
+                                      <Input
+                                        id="sleeve"
+                                        placeholder="sleeve"
+                                        className="col-span-3"
+                                        value={formik.values.sleeve}
+                                        onChange={formik.handleChange} />
+                                      {formik.errors.sleeve && formik.touched.sleeve &&
+                                        (<p className="text-red-500">{formik.errors.sleeve}</p>)}
+                                    </div>
+                                  )}
 
                                 <div className="col-span-4">
                                   <Label>Fit</Label>
@@ -1373,17 +1374,21 @@ function Admin() {
                                     (<p className="text-red-500">{formik.errors.style_code}</p>)}
                                 </div>
 
-                                <div className="col-span-4">
-                                  <Label>Neck Type</Label>
-                                  <Input
-                                    id="neck_type"
-                                    placeholder="Neck Type"
-                                    className="col-span-3"
-                                    value={formik.values.neck_type}
-                                    onChange={formik.handleChange} />
-                                  {formik.errors.neck_type && formik.touched.neck_type &&
-                                    (<p className="text-red-500">{formik.errors.neck_type}</p>)}
-                                </div>
+                                {
+                                  formik.values.category_id.toString() !== allCategory.find(val => val.name === "Track-Pants")?.id.toString() && (
+                                    <div className="col-span-4">
+                                      <Label>Neck Type</Label>
+                                      <Input
+                                        id="neck_type"
+                                        placeholder="Neck Type"
+                                        className="col-span-3"
+                                        value={formik.values.neck_type}
+                                        onChange={formik.handleChange} />
+                                      {formik.errors.neck_type && formik.touched.neck_type &&
+                                        (<p className="text-red-500">{formik.errors.neck_type}</p>)}
+                                    </div>
+                                  )
+                                }
 
                                 <div className="col-span-4">
                                   <Label>Ideal For</Label>
@@ -1421,17 +1426,21 @@ function Admin() {
                                     (<p className="text-red-500">{formik.errors.suitable_for}</p>)}
                                 </div>
 
-                                <div className="col-span-4">
-                                  <Label>Reversible</Label>
-                                  <Input
-                                    id="reversible"
-                                    placeholder="reversible"
-                                    className="col-span-3"
-                                    value={formik.values.reversible}
-                                    onChange={formik.handleChange} />
-                                  {formik.errors.reversible && formik.touched.reversible &&
-                                    (<p className="text-red-500">{formik.errors.reversible}</p>)}
-                                </div>
+                                {
+                                  formik.values.category_id.toString() !== allCategory.find(val => val.name === "Track-Pants")?.id.toString() && (
+                                    <div className="col-span-4">
+                                      <Label>Reversible</Label>
+                                      <Input
+                                        id="reversible"
+                                        placeholder="reversible"
+                                        className="col-span-3"
+                                        value={formik.values.reversible}
+                                        onChange={formik.handleChange} />
+                                      {formik.errors.reversible && formik.touched.reversible &&
+                                        (<p className="text-red-500">{formik.errors.reversible}</p>)}
+                                    </div>
+                                  )
+                                }
 
                                 <div className="col-span-4">
                                   <Label>Fabric Care</Label>
@@ -1508,24 +1517,24 @@ function Admin() {
                                   )}
 
                                   {
-                                      selectedImages.length > 0 && (
-                                        <div className="mt-2">
-                                          <ul>
-                                            {selectedImages.map((file, index) => (
-                                              <>
-                                                <li key={index} className="flex items-center justify-between">
-                                                  <div className="flex justify-between w-full">
-                                                    <div className="whitespace-nowrap overflow-hidden text-ellipsis">{typeof file === 'string' ? file : file.name}</div>
-                                                    <button type="button" onClick={() => removeImage(index)}
+                                    selectedImages.length > 0 && (
+                                      <div className="mt-2">
+                                        <ul>
+                                          {selectedImages.map((file, index) => (
+                                            <>
+                                              <li key={index} className="flex items-center justify-between">
+                                                <div className="flex justify-between w-full">
+                                                  <div className="whitespace-nowrap overflow-hidden text-ellipsis">{typeof file === 'string' ? file : file.name}</div>
+                                                  <button type="button" onClick={() => removeImage(index)}
                                                     className="text-red-500 ml-4">✖️</button>
-                                                  </div>
-                                                </li>                                              
-                                              </>
-                                            ))}
-                                          </ul>
-                                        </div>
-                                      )
-                                    }
+                                                </div>
+                                              </li>
+                                            </>
+                                          ))}
+                                        </ul>
+                                      </div>
+                                    )
+                                  }
                                 </div>
 
                                 <div className="col-span-12">
@@ -1592,46 +1601,46 @@ function Admin() {
                             </TableCell>
                           </TableHead>
                           <TableBody>
-                          <TableRow className="w-full">
-                          <TableCell className="flex justify-center">
-                              <Skeleton className="h-5 w-20" />
-                            </TableCell>
-                            <TableCell className="flex justify-center">
-                              <Skeleton className="h-5 w-40" />
-                            </TableCell>
-                            <TableCell className="flex justify-center">
-                              <Skeleton className="h-5 w-20" />
-                            </TableCell>
-                            <TableCell className="flex justify-center">
-                              <Skeleton className="h-5 w-20" />
-                            </TableCell>
-                            <TableCell className="flex justify-center">
-                              <Skeleton className="h-5 w-20" />
-                            </TableCell>
-                            <TableCell className="flex justify-center">
-                              <Skeleton className="h-5 w-20" />
-                            </TableCell>
-                            <TableCell className="flex justify-center">
-                              <Skeleton className="h-5 w-20" />
-                            </TableCell>
-                            <TableCell className="flex justify-center">
-                              <Skeleton className="h-5 w-20" />
-                            </TableCell>
-                            <TableCell className="flex justify-center">
-                              <Skeleton className="h-5 w-20" />
-                            </TableCell>
-                            <TableCell className="flex justify-center">
-                              <Skeleton className="h-5 w-20" />
-                            </TableCell>
-                            <TableCell className="flex justify-center">
-                              <Skeleton className="h-5 w-20" />
-                            </TableCell>
-                            <TableCell className="flex justify-center">
-                              <Skeleton className="h-5 w-20" />
-                            </TableCell>
-                          </TableRow> 
+                            <TableRow className="w-full">
+                              <TableCell className="flex justify-center">
+                                <Skeleton className="h-5 w-20" />
+                              </TableCell>
+                              <TableCell className="flex justify-center">
+                                <Skeleton className="h-5 w-40" />
+                              </TableCell>
+                              <TableCell className="flex justify-center">
+                                <Skeleton className="h-5 w-20" />
+                              </TableCell>
+                              <TableCell className="flex justify-center">
+                                <Skeleton className="h-5 w-20" />
+                              </TableCell>
+                              <TableCell className="flex justify-center">
+                                <Skeleton className="h-5 w-20" />
+                              </TableCell>
+                              <TableCell className="flex justify-center">
+                                <Skeleton className="h-5 w-20" />
+                              </TableCell>
+                              <TableCell className="flex justify-center">
+                                <Skeleton className="h-5 w-20" />
+                              </TableCell>
+                              <TableCell className="flex justify-center">
+                                <Skeleton className="h-5 w-20" />
+                              </TableCell>
+                              <TableCell className="flex justify-center">
+                                <Skeleton className="h-5 w-20" />
+                              </TableCell>
+                              <TableCell className="flex justify-center">
+                                <Skeleton className="h-5 w-20" />
+                              </TableCell>
+                              <TableCell className="flex justify-center">
+                                <Skeleton className="h-5 w-20" />
+                              </TableCell>
+                              <TableCell className="flex justify-center">
+                                <Skeleton className="h-5 w-20" />
+                              </TableCell>
+                            </TableRow>
                           </TableBody>
-                         
+
                         </div>
                       ) : (
                         <Paper sx={{ width: '100%', overflow: 'hidden', borderRadius: '12px' }}>
