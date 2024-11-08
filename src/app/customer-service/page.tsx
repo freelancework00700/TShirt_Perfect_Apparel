@@ -1,11 +1,15 @@
 "use client"
 
-import React from "react";
+import React, { useState } from "react";
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { useRouter } from "next/navigation";
+import { useFormik } from "formik";
+import * as yup from 'yup';
+import axios from "axios";
+
 
 function CustomerService() {
   const router = useRouter();
@@ -13,6 +17,26 @@ function CustomerService() {
   const handleRetrunBack = () => {
     router.push('/product')
   }
+
+  const formik = useFormik({
+    initialValues: {
+      message: "",
+    },
+    validationSchema: yup.object({
+      message: yup.string().min(10).max(200).required("Enter the message"),
+    }),
+    onSubmit: async (values) => {
+      console.log('values :>> ', values);
+      try {
+        const response = await axios.post('/api/bulk-order-discuss', values)
+        console.log('response :>> ', response);
+      } catch (error) {
+        console.error(error)
+      }
+    }
+  })
+
+
 
   return (
     <main className="max-[1024px]:mt-[77px] relative">
@@ -52,10 +76,18 @@ function CustomerService() {
                   Direct contact and follow-up with customers are crucial steps in
                   managing bulk orders effectively.
                 </div>
-                <Textarea placeholder="Type your message here." />
-                <div className="flex justify-center mt-6">
-                  <Button className="px-10 rounded-full">Send message</Button>
-                </div>
+                <form onSubmit={formik.handleSubmit}>
+                  <Textarea placeholder="Type your message here."
+                    name="message"
+                    value={formik.values.message}
+                    onChange={formik.handleChange}
+                  />
+                  {formik.errors.message && formik.touched.message &&
+                    (<p className="text-red-500">{formik.errors.message}</p>)}
+                  <div className="flex justify-center mt-6">
+                    <Button type="submit" className="px-10 rounded-full">Send message</Button>
+                  </div>
+                </form>
               </div>
             </div>
             <div className="lg:col-span-6 col-span-12 lg:pt-10">

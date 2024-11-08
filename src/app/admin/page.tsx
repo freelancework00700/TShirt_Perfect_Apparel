@@ -36,6 +36,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Textarea } from "@/components/ui/textarea";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Switch } from "@/components/ui/switch";
+import { format } from "date-fns";
 
 
 
@@ -348,8 +349,33 @@ function Admin() {
         getAllSize();
       }
       setOpenModel(false)
-    } catch (error) {
-      console.error(error)
+    } catch (error: any) {
+      if (error.response && error.response.status === 400) {
+        toast.error(error.response.data.message || "Something went wrong", {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+          transition: Bounce,
+        });
+      } else {
+        // Handle other errors (optional)
+        toast.error("An unexpected error occurred", {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+          transition: Bounce,
+        });
+      }
     }
   }
 
@@ -443,19 +469,33 @@ function Admin() {
         });
         getAllColor();
       }
-    } catch (error) {
-      console.error(error)
-      // toast.success(error, {
-      //   position: "top-right",
-      //   autoClose: 5000,
-      //   hideProgressBar: false,
-      //   closeOnClick: true,
-      //   pauseOnHover: true,
-      //   draggable: true,
-      //   progress: undefined,
-      //   theme: "light",
-      //   transition: Bounce,
-      // });  
+    } catch (error: any) {
+      if (error.response && error.response.status === 400) {
+        toast.error(error.response.data.message || "Something went wrong", {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+          transition: Bounce,
+        });
+      } else {
+        // Handle other errors (optional)
+        toast.error("An unexpected error occurred", {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+          transition: Bounce,
+        });
+      }
     }
   }
 
@@ -1577,7 +1617,7 @@ function Admin() {
                                     (<p className="text-red-500">{formik.errors.description}</p>)}
                                 </div>
 
-                                <div className="col-span-12">
+                                <div className="col-span-12 flex items-center">
                                   <Switch checked={formik.values.inStock}
                                     onCheckedChange={(checked) => formik.setFieldValue("inStock", checked)} />
                                   <Label className="ml-2">InStock</Label>
@@ -2366,6 +2406,7 @@ function Admin() {
                           <TableHead>
                             <TableRow>
                               <TableCell>ID</TableCell>
+                              <TableCell>Date</TableCell>
                               <TableCell>Name</TableCell>
                               <TableCell>Email</TableCell>
                               <TableCell>Mobile Number</TableCell>
@@ -2403,9 +2444,12 @@ function Admin() {
                               productInquiry.map((item, index) => {
                                 const filteredDataofSize = item.Sizes.filter((val) => item.size_ids.includes(val.id))
                                 const filteredColorData = item.Colors.filter(val => item.color_ids.includes(val.id))
+                                const formattedDate = format(new Date(item.createdAt), "MM/d/yyyy");
+                                console.log('formattedDate :>> ', formattedDate);
                                 return (
                                   <TableRow key={index}>
                                     <TableCell>{item.id}</TableCell>
+                                    <TableCell>{formattedDate}</TableCell>
                                     <TableCell>{item.name}</TableCell>
                                     <TableCell>{item.email}</TableCell>
                                     <TableCell>{item.mobile_no}</TableCell>
@@ -2471,6 +2515,7 @@ function Admin() {
                           <TableHead>
                             <TableRow>
                               <TableCell>ID</TableCell>
+                              <TableCell>Date</TableCell>
                               <TableCell>Email</TableCell>
                               <TableCell>Mobile Number</TableCell>
                               <TableCell>Message</TableCell>
@@ -2492,14 +2537,18 @@ function Admin() {
                                 </TableRow>
                               ))
                             ) : (
-                              currentInquiry.map((item, index) => (
-                                <TableRow key={index}>
-                                  <TableCell>{item.id}</TableCell>
-                                  <TableCell>{item.email}</TableCell>
-                                  <TableCell>{item.phone}</TableCell>
-                                  <TableCell>{item.message}</TableCell>
-                                </TableRow>
-                              ))
+                              currentInquiry.map((item, index) => {
+                                const date = format(new Date(item.createdAt), "MM/d/yyyy");
+                                return (
+                                  <TableRow key={index}>
+                                    <TableCell>{item.id}</TableCell>
+                                    <TableCell>{date}</TableCell>
+                                    <TableCell>{item.email}</TableCell>
+                                    <TableCell>{item.phone}</TableCell>
+                                    <TableCell>{item.message}</TableCell>
+                                  </TableRow>
+                                )
+                              })
                             )}
                           </TableBody>
                         </Table>
