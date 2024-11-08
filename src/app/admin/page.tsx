@@ -529,11 +529,9 @@ function Admin() {
       name: yup.string().min(1).max(100).required("Enter product name"),
       price: yup.string().min(1).max(30).required("Enter price"),
       type: yup.string().min(1).max(30).required("Enter type"),
-      sleeve: yup.string().when("isHideFields", {
+      sleeve: yup.string().when("isHidenFields", {
         is: (value: boolean) => value === false,
-        then: (schema) =>
-          schema
-            .required("Enter sleeve"),
+        then: (schema) => schema.required("Enter sleeve"),
         otherwise: (schema) => schema.notRequired(),
       }),
       fit: yup.string().min(1).max(30).required("Enter fit"),
@@ -541,9 +539,9 @@ function Admin() {
       pack_of: yup.string().min(1).max(30).required("Enter pack of"),
       style_code: yup.string().min(1).max(30).required("Enter style code"),
       // neck_type: yup.string().min(1).max(30).required("Enter neck type"),
-      neck_type: yup.string().when("isHideFields", {
+      neck_type: yup.string().when("isHidenFields", {
         is: (value: boolean) => value === false,
-        then: (schema) => schema.required("Enter neck type"),
+        then: (schema) => schema.required("Enter neck_type"),
         otherwise: (schema) => schema.notRequired(),
       }),
       ideal_for: yup.string().min(1).max(30).required("Enter ideal for"),
@@ -642,6 +640,8 @@ function Admin() {
       setOpenModel(false)
     },
   });
+  console.log('formik.errors :>> ', formik.errors);
+  console.log('formik.values :>> ', formik.values);
 
   const changeFinalPrice = async (value: number, type: string) => {
     let price = 0;
@@ -660,6 +660,7 @@ function Admin() {
   };
 
   const handleEditProduct = async (item: IProduct) => {
+    console.log('item :>> ', item);
     getAllCategory();
     getAllSize();
     getAllColor();
@@ -1338,6 +1339,7 @@ function Admin() {
                                   {formik.errors.type && formik.touched.type &&
                                     (<p className="text-red-500">{formik.errors.type}</p>)}
                                 </div>
+
                                 {
                                   formik.values.category_id.toString() !== allCategory.find(val => val.name === "Track-Pants")?.id.toString() && (
                                     <div className="col-span-4">

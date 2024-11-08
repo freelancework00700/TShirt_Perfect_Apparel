@@ -430,8 +430,7 @@ const ProductDetail = () => {
                       <p className="text-red-500">{formik.errors.mobile_no}</p>
                     )}
 
-                    <button
-                      type="submit"
+                    <button type="submit"
                       className="w-full py-2 bg-[#000000] text-white font-semibold rounded-md hover:bg-[#272626] transition ease-in-out duration-200"
                     >
                       Submit
