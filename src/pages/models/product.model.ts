@@ -111,6 +111,10 @@ class Product extends Model {
                     type: DataTypes.DECIMAL(10, 2),
                     allowNull: true
                 },
+                inStock: {
+                    type: DataTypes.BOOLEAN,
+                    allowNull: true
+                },
                 isDeleted: {
                     type: DataTypes.BOOLEAN,
                     allowNull: false,
@@ -130,7 +134,7 @@ class Product extends Model {
         Product.hasMany(ProductImages, { foreignKey: 'product_id', sourceKey: 'id', onDelete: 'CASCADE' });
         Product.belongsTo(SubCategory, { foreignKey: 'subcategory_id', targetKey: 'id' });
         Product.belongsTo(Category, { foreignKey: 'category_id', targetKey: 'id' });
-    
+
     }
 }
 

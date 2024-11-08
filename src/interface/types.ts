@@ -27,6 +27,7 @@ export interface IProduct {
     type: string,
     updatedAt: string,
     description: string,
+    inStock: boolean,
     Category: {
         id: number,
         name: string,

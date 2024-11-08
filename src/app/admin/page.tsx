@@ -24,7 +24,7 @@ import TableRow from '@mui/material/TableRow';
 import { useFormik } from "formik";
 import * as yup from 'yup';
 import axios from "axios";
-import { Filter, ICategories, IColor, Inquiry, IProduct, ISize, ISubCategories, ProductInquiry } from "@/interface/types";
+import { ICategories, IColor, Inquiry, IProduct, ISize, ProductInquiry } from "@/interface/types";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
 import Image from "next/image";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
@@ -55,7 +55,7 @@ function Admin() {
   const [colors, setColors] = useState("")
   const [allCategory, setAllCategory] = useState<ICategories[]>([]);
   const [allColors, setAllColors] = useState<ICategories[]>([]);
-  const [allSubCategory, setAllSubCategory] = useState<ISubCategories[]>([]);
+  // const [allSubCategory, setAllSubCategory] = useState<ISubCategories[]>([]);
   const [openModel, setOpenModel] = useState(false);
   const [size, setSize] = useState('')
   const [selectedProductId, setSelectedProductId] = useState<number | null>(null);
@@ -518,6 +518,8 @@ function Admin() {
       description: "",
       discount_price: "",
       final_price: "",
+      inStock: true,
+      isHideFields: false
     },
     validationSchema: yup.object({
       category_id: yup.string().required("Select a category"),
@@ -527,32 +529,43 @@ function Admin() {
       name: yup.string().min(1).max(100).required("Enter product name"),
       price: yup.string().min(1).max(30).required("Enter price"),
       type: yup.string().min(1).max(30).required("Enter type"),
-      sleeve: yup.string().min(1).max(30).required("Enter sleeve"),
+      sleeve: yup.string().when("isHideFields", {
+        is: (value: boolean) => value === false,
+        then: (schema) =>
+          schema
+            .required("Enter sleeve"),
+        otherwise: (schema) => schema.notRequired(),
+      }),
       fit: yup.string().min(1).max(30).required("Enter fit"),
       fabric: yup.string().min(1).max(30).required("Enter fabric"),
       pack_of: yup.string().min(1).max(30).required("Enter pack of"),
       style_code: yup.string().min(1).max(30).required("Enter style code"),
-      neck_type: yup.string().min(1).max(30).required("Enter neck type"),
+      // neck_type: yup.string().min(1).max(30).required("Enter neck type"),
+      neck_type: yup.string().when("isHideFields", {
+        is: (value: boolean) => value === false,
+        then: (schema) => schema.required("Enter neck type"),
+        otherwise: (schema) => schema.notRequired(),
+      }),
       ideal_for: yup.string().min(1).max(30).required("Enter ideal for"),
       pattern: yup.string().min(1).max(30).required("Enter pattern"),
       suitable_for: yup.string().min(1).max(30).required("Enter suitable for"),
-      reversible: yup.string().min(1).max(30).required("Enter reversible"),
+      // reversible: yup.string().min(1).max(30).required("Enter reversible"),
+      reversible: yup.string().when("isHidenFields", {
+        is: (value: boolean) => value === false,
+        then: (schema) => schema.required("Enter reversible"),
+        otherwise: (schema) => schema.notRequired(),
+      }),
       fabric_care: yup.string().min(1).max(30).required("Enter fabric care"),
       net_quantity: yup.string().min(1).max(30).required("Enter net quantity"),
       status: yup.string().min(1).max(30).required("Enter status"),
       sales_package: yup.string().min(1).max(30).required("Enter status"),
       images: yup.array().min(1, "At least one file is required").required("Required"),
       description: yup.string().min(10).max(500).required("Enter the description"),
-      // discount_price: yup.number().typeError("Only digits are allowed!")
-      //   .required("discount price is required").test("isDigits", "discount price is required",
-      //     (value: any) => {
-      //       return value && /^\d{1,5}$/.test(value.toString())
-      //     }),
       discount_price: yup.number().required("Enter the discount price"),
       final_price: yup.string().required("Enter the final price"),
+      inStock: yup.boolean().required(),
     }),
     onSubmit: async (values) => {
-      console.log('values :>> ', values);
       const formData = new FormData();
       formData.append("category_id", values.category_id)
       // formData.append("subcategory_id", values.subcategory_id)
@@ -577,6 +590,7 @@ function Admin() {
       formData.append("net_quantity", values.net_quantity)
       formData.append("status", values.status)
       formData.append("sales_package", values.sales_package)
+      formData.append("inStock", values.inStock)
       values.images.forEach((images) => {
         formData.append("images", images)
       })
@@ -678,6 +692,7 @@ function Admin() {
     formik.setFieldValue("images", imageFilenames);
     setSelectedImages(imageFilenames)
     formik.setFieldValue("description", item.description)
+    formik.setFieldValue("inStock", item.inStock)
   }
 
   useEffect(() => {
@@ -685,13 +700,12 @@ function Admin() {
     const getSubCategoryData = async () => {
       try {
         if (formik.values.category_id.toString()) {
-          const subCategoryResponse = await axios.get(`/api/sub-category?id=${formik.values.category_id}`)
-          const data = subCategoryResponse.data.data
-          setAllSubCategory(data)
-          console.log('allSize :>> ', allSize);
+          // const subCategoryResponse = await axios.get(`/api/sub-category?id=${formik.values.category_id}`)
+          // const data = subCategoryResponse.data.data
+          // setAllSubCategory(data)
+          // console.log('allSize :>> ', allSize);
           // const filteredData = allSize.filter((item) => item.Category.id.toString() === formik.values.category_id.toString());
           const filteredData = allSize.filter((item) => item.category_id.toString() === formik.values.category_id.toString());
-          console.log('filteredData :>> ', filteredData);
           setFilteredSize(filteredData)
         }
         // else {
@@ -752,6 +766,7 @@ function Admin() {
       formData.append("images", image.fileSize);
     });
     formData.append("description", item.description);
+    formData.append("inStock", item.inStock);
 
     try {
       const response = await axios.put(`/api/product?id=${item.id}`, formData)
@@ -901,7 +916,7 @@ function Admin() {
     setCurrentPageOfInquiry(page)
   }
 
-
+  const trackPantsCategoryId = allCategory.find((cat) => cat.name === "Track-Pants")?.id.toString();
 
 
   return (
@@ -1091,8 +1106,8 @@ function Admin() {
                             setSelectedImages([])
                             formik.resetForm()
                             await getAllCategory();
-                            await getAllSize();
                             await getAllColor();
+                            await getAllSize();
                           }}>
                             <svg
                               className="w-6 h-6 text-gray-800 dark:text-white mr-2"
@@ -1125,7 +1140,19 @@ function Admin() {
                                 <div className="col-span-4">
                                   <Label>Category</Label>
                                   <Select value={formik.values.category_id.toString()}
-                                    onValueChange={(value) => formik.setFieldValue("category_id", value)}>
+                                    onValueChange={(value) => {
+                                      formik.setFieldValue("category_id", value);
+                                      if (value === trackPantsCategoryId) {
+                                        formik.setFieldValue("sleeve", '');
+                                        formik.setFieldValue("neck_type", '');
+                                        formik.setFieldValue("reversible", '');
+                                      }
+                                      const findName = allCategory.find((item) => item.id.toString() === value)?.name || "";
+                                      if (findName === "Track-Pants") {
+                                        formik.setFieldValue('isHideFields', true)
+                                      }
+                                    }}
+                                  >
                                     <SelectTrigger className="w-[180px]">
                                       <SelectValue placeholder="Select a category" />
                                     </SelectTrigger>
@@ -1538,6 +1565,12 @@ function Admin() {
                                 </div>
 
                                 <div className="col-span-12">
+                                  <Label>InStock</Label>
+                                  <Switch checked={formik.values.inStock}
+                                    onCheckedChange={(checked) => formik.setFieldValue("inStock", checked)} />
+                                </div>
+
+                                <div className="col-span-12">
                                   <Label>Product Description</Label>
                                   <Textarea
                                     placeholder="type your message here."
@@ -1902,7 +1935,7 @@ function Admin() {
                   </>
                 }
 
-                {
+                {/* {
                   page === 3 &&
                   <>
                     <div className="flex justify-between items-center pb-5">
@@ -1956,7 +1989,7 @@ function Admin() {
                                 </Select>
                               </div>
 
-                              {/* <div className="col-span-4">
+                              <div className="col-span-4">
                                 <Label>Sub Category</Label>
                                 <Input
                                   id="category"
@@ -1965,7 +1998,7 @@ function Admin() {
                                   value={subCategory}
                                   onChange={(e) => setSubCategory(e.target.value)}
                                 />
-                              </div> */}
+                              </div>
                             </div>
                             <DialogFooter className="px-5 pb-5">
                               <Button type="submit" onClick={handleAddSubCategory}>Save changes</Button>
@@ -1986,21 +2019,20 @@ function Admin() {
                             </TableRow>
                           </TableHead>
                           <TableBody>
-                            {/* {allSubCategory.map((item, index) => (
-                                  <TableRow key={index}>
-                                    <TableCell>{item.category_id}</TableCell>
-                                    <TableCell>{item.id}</TableCell>
-                                    <TableCell>{item.name}</TableCell>
-                                    <TableCell></TableCell>
-                                  </TableRow>
-                                ))} */}
+                            {allSubCategory.map((item, index) => (
+                              <TableRow key={index}>
+                                <TableCell>{item.category_id}</TableCell>
+                                <TableCell>{item.id}</TableCell>
+                                <TableCell>{item.name}</TableCell>
+                                <TableCell></TableCell>
+                              </TableRow>
+                            ))}
                           </TableBody>
                         </Table>
                       </TableContainer>
                     </Paper>
-
                   </>
-                }
+                } */}
 
                 {
                   page === 4 &&
@@ -2517,7 +2549,7 @@ function Admin() {
           </>
         )
         }
-      </main >
+      </main>
     </>
   );
 }

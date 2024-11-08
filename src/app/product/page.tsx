@@ -188,9 +188,10 @@ function Product() {
   // }, [selectedCategories, selectedSizes, selectedColors, selectedPrice, selectedFabrics, allData]);
 
   useEffect(() => {
+    const stockCheck = allFilterData.filter((val) => val.inStock === true)
     const products = selectedCategories.length === 0
       ? [] // If no categories are selected, display no products
-      : allFilterData.filter((product) => {
+      : stockCheck.filter((product) => {
         // Check if product matches selected categories, or no category is selected
         const matchesCategory = selectedCategories.includes(product.category_id);
 
