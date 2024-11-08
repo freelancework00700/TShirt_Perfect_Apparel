@@ -18,7 +18,7 @@ function CustomerService() {
     <main className="max-[1024px]:mt-[77px] relative">
       <Header />
       <div className="min-h-[calc(100vh_-_385px)]">
-        <div className="container mx-auto xl:max-w-8xl max-sm:px-4">
+        <div className="container mx-auto xl:max-w-8xl max-sm:px-4 lg:mb-20 mb-5">
           <div className="py-10 pb-0">
             <div className="my-4 text-[30px] font-medium text-center">
               Welcome to Customer Service
@@ -31,7 +31,7 @@ function CustomerService() {
             <div className="lg:col-span-6 col-span-12 lg:pt-10">
               <div className="shadow-md p-10 m-1 rounded-[10px]">
                 <svg
-                  className="w-10 h-10 mb-6 mx-auto text-gray-800 dark:text-white"
+                  className="w-10 h-10 mb-6 mx-auto text-[#7ab01e] dark:text-white"
                   aria-hidden="true"
                   xmlns="http://www.w3.org/2000/svg"
                   width="24"
@@ -54,14 +54,14 @@ function CustomerService() {
                 </div>
                 <Textarea placeholder="Type your message here." />
                 <div className="flex justify-center mt-6">
-                  <Button className="px-10">Send message</Button>
+                  <Button className="px-10 rounded-full">Send message</Button>
                 </div>
               </div>
             </div>
             <div className="lg:col-span-6 col-span-12 lg:pt-10">
               <div className="shadow-md p-10 m-1 rounded-[10px] h-full">
                 <svg
-                  className="w-10 h-10 mb-6 mx-auto text-gray-800 dark:text-white"
+                  className="w-10 h-10 mb-6 mx-auto text-[#7ab01e] dark:text-white"
                   aria-hidden="true"
                   xmlns="http://www.w3.org/2000/svg"
                   width="24"
@@ -87,14 +87,14 @@ function CustomerService() {
                   purchase, we are here to help.
                 </div>
                 <div className="flex justify-center mt-6">
-                  <Button onClick={handleRetrunBack} className="px-10">Return My Product</Button>
+                  <Button onClick={handleRetrunBack} className="px-10 rounded-full">Go to Product</Button>
                 </div>
               </div>
             </div>
             <div className="lg:col-span-6 col-span-12 lg:pt-10">
               <div className="shadow-md p-10 m-1 rounded-[10px] h-full">
                 <svg
-                  className="w-10 h-10 mb-6 mx-auto text-gray-800 dark:text-white"
+                  className="w-10 h-10 mb-6 mx-auto text-[#7ab01e] dark:text-white"
                   aria-hidden="true"
                   xmlns="http://www.w3.org/2000/svg"
                   width="24"

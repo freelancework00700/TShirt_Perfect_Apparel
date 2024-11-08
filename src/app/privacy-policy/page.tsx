@@ -6,7 +6,7 @@ function PrivacyPolicy() {
   return (
     <main className="max-[1024px]:mt-[77px] relative">
       <Header />
-      <div className="container mx-auto xl:max-w-8xl">
+      <div className="container mx-auto xl:max-w-7xl lg:mb-20 mb-5">
         <section>
           <h2 className="my-8 text-[30px] font-medium">PRIVACY POLICY</h2>
         </section>
@@ -257,7 +257,7 @@ function PrivacyPolicy() {
             purposes. 
             
             
-            <div className="text-lg text-semibold py-8">Use of Your Information—Grounds for Using Your Personal Data </div>  
+            <div className="text-lg text-semibold py-8">Use of Your Information - Grounds for Using Your Personal Data </div>  
             The information that we collect and store relating to you is
             primarily used to enable us to provide our services to you. In
             addition, Perfect Apparels is relying on the following lawful
