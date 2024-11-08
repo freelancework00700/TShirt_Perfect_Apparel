@@ -640,8 +640,6 @@ function Admin() {
       setOpenModel(false)
     },
   });
-  console.log('formik.errors :>> ', formik.errors);
-  console.log('formik.values :>> ', formik.values);
 
   const changeFinalPrice = async (value: number, type: string) => {
     let price = 0;
@@ -1152,6 +1150,7 @@ function Admin() {
                                       if (findName === "Track-Pants") {
                                         formik.setFieldValue('isHideFields', true)
                                       }
+                                      formik.setFieldValue("size_ids", '')
                                     }}
                                   >
                                     <SelectTrigger className="w-[180px]">
@@ -1567,12 +1566,6 @@ function Admin() {
                                 </div>
 
                                 <div className="col-span-12">
-                                  <Label>InStock</Label>
-                                  <Switch checked={formik.values.inStock}
-                                    onCheckedChange={(checked) => formik.setFieldValue("inStock", checked)} />
-                                </div>
-
-                                <div className="col-span-12">
                                   <Label>Product Description</Label>
                                   <Textarea
                                     placeholder="type your message here."
@@ -1582,6 +1575,12 @@ function Admin() {
                                   />
                                   {formik.errors.description && formik.touched.description &&
                                     (<p className="text-red-500">{formik.errors.description}</p>)}
+                                </div>
+
+                                <div className="col-span-12">
+                                  <Switch checked={formik.values.inStock}
+                                    onCheckedChange={(checked) => formik.setFieldValue("inStock", checked)} />
+                                  <Label className="ml-2">InStock</Label>
                                 </div>
                               </div>
                             </div>
