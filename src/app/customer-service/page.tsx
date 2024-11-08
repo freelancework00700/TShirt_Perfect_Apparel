@@ -19,7 +19,7 @@ function CustomerService() {
       <Header />
       <div className="min-h-[calc(100vh_-_385px)]">
         <div className="container mx-auto xl:max-w-8xl max-sm:px-4">
-          <div className="py-10">
+          <div className="py-10 pb-0">
             <div className="my-4 text-[30px] font-medium text-center">
               Welcome to Customer Service
             </div>
@@ -27,7 +27,7 @@ function CustomerService() {
               How can we help you today?
             </div>
           </div>
-          <div className="grid grid-cols-12 gap-4 py-10 lg:px-20">
+          <div className="grid grid-cols-12 gap-4 py-10 pt-0 lg:px-20">
             <div className="lg:col-span-6 col-span-12 lg:pt-10">
               <div className="shadow-md p-10 m-1 rounded-[10px]">
                 <svg

@@ -17,11 +17,13 @@ const Header = () => {
       <div
         className="max-[1024px]:fixed max-[1024px]:top-0 max-[1024px]:z-50 max-[1024px]:w-full overflow-hidden bg-white"
       >
-        <div className="container mx-auto xl:max-w-8xl">
+        <div className="container mx-auto xl:max-w-7xl">
           <div className="flex items-center justify-between max-lg:p-3">
             <div className="flex items-center">
               <div className="mr-3">
-                <Image src={mainLogo} alt="PerfectApparels" className="h-8 w-full object-contain"></Image>
+                <Link href="/">
+                  <Image src={mainLogo} alt="PerfectApparels" className="h-8 w-full object-contain"></Image>
+                </Link>
               </div>
               <div className="hidden lg:flex">
                 <nav>

@@ -6,6 +6,11 @@ import Footer from "../components/Footer";
 import Header from "../components/Header";
 import heroImage1 from "../../public/Images/5_WebBanner_1920x1080_4eacfb85-fcb6-4205-9741-ed79d7545780_1400x.webp";
 import heroImage2 from "../../public/Images/3_WebBanner_1920x1080_76a24f61-cdd7-482b-ab80-52a350547e6b_1400x.webp";
+import brandPartnerImage1 from "../../public/Images/PerfectApparels.png";
+import brandPartnerImage2 from "../../public/Images/Maa_Bhavani_Apparels.png";
+import brandPartnerImage3 from "../../public/Images/MBA.png";
+import leaf1 from "../../public/Images/leaf2.png";
+import leaf2 from "../../public/Images/leaf3.png";
 import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/effect-fade";
@@ -43,7 +48,7 @@ export default function Home() {
     setLoading(true);
     try {
       const response = await axios.get(`/api/product`);
-      console.log("response", response.data)
+      console.log("response", response.data);
       const getData = response.data?.data;
       setProduct(getData);
     } catch (error) {
@@ -64,8 +69,14 @@ export default function Home() {
   return (
     <main className="max-[1024px]:mt-[77px] relative">
       <Header />
-      <div className="min-h-[calc(100vh_-_385px)]">
-        <div className="overflow-hidden">
+      <div className="min-h-[calc(100vh_-_385px)] relative">
+        <div className="absolute top-[calc(100vh_+_150px)] -left-[175px] z-0 max-md:hidden">
+          <Image src={leaf1} alt="leaf1" className="h-[450px] w-[450px] object-contain -rotate-[140deg]"></Image>
+        </div>
+        <div className="absolute top-[200vh] -right-[70px] z-0 max-md:hidden">
+          <Image src={leaf2} alt="leaf1" className="h-[300px] w-[300px] object-contain rotate-[180deg]"></Image>
+        </div>
+        <div className="overflow-hidden relative z-10">
           <Swiper
             slidesPerView={1}
             spaceBetween={0}
@@ -95,9 +106,9 @@ export default function Home() {
             </SwiperSlide>
           </Swiper>
         </div>
-        <div className="container mx-auto xl:max-w-7xl max-sm:px-4">
+        <div className="container mx-auto xl:max-w-7xl max-sm:px-4 relative z-10">        
           <div className="py-10">
-            <div className="flex justify-center items-center gap-2 py-7">
+            <div className="flex justify-center items-center gap-2 py-7 ">
               {Object.keys(segments).map((key: string) => (
                 <button
                   key={key}
@@ -126,7 +137,7 @@ export default function Home() {
                 >
                   {loading
                     ? [1, 2, 3, 4, 5].map((item) => (
-                        <SwiperSlide key={item}>
+                        <SwiperSlide key={item} className="bg-white">
                           <Skeleton className="h-[245px] w-full" />
                           <div className="py-3 px-4">
                             <Skeleton className="h-[14px] w-[180px]" />
@@ -143,7 +154,7 @@ export default function Home() {
                         )
                         .map((item) => (
                           <SwiperSlide key={item.id}>
-                            <div className="shadow-md h-full w-full m-2 rounded-lg">
+                            <div className="shadow-md h-full w-full m-2 rounded-lg bg-white">
                               <Link
                                 href={`/product/product-details?id=${item.id}`}
                               >
@@ -216,7 +227,7 @@ export default function Home() {
                   >
                     {loading
                       ? [1, 2, 3, 4, 5].map((item) => (
-                          <SwiperSlide key={item}>
+                          <SwiperSlide key={item} className="bg-white">
                             <Skeleton className="h-[245px] w-full" />
                             <div className="py-3 px-4">
                               <Skeleton className="h-[14px] w-[180px]" />
@@ -235,7 +246,7 @@ export default function Home() {
                           .map((item) => (
                             <>
                               <SwiperSlide key={item.id}>
-                                <div className="shadow-md h-full w-full m-2 rounded-lg">
+                                <div className="shadow-md h-full w-full m-2 rounded-lg bg-white">
                                   <Link
                                     href={`/product/product-details?id=${item.id}`}
                                   >
@@ -298,7 +309,7 @@ export default function Home() {
             )}
           </div>
           <div className="py-10">
-            <div className="mb-8 text-[30px] font-medium text-center">
+            <div className="mb-8 text-[30px] font-medium text-center bg-gray-100 py-2 rounded-lg">
               Perfect Apparels Collection
             </div>
             <div className="flex justify-center flex-wrap items-center gap-5 w-full">
@@ -344,7 +355,7 @@ export default function Home() {
             </div>
           </div>
           <div className="py-10">
-            <div className="mb-8 text-[30px] font-medium text-center">
+            <div className="mb-8 text-[30px] font-medium text-center bg-gray-100 py-2 rounded-lg">
               Trending T-Shirt Collection
             </div>
             <div className="trending-swiper">
@@ -360,7 +371,7 @@ export default function Home() {
               >
                 {loading
                   ? [1, 2, 3, 4, 5].map((item) => (
-                      <SwiperSlide key={item}>
+                      <SwiperSlide key={item} className="bg-white">
                         <Skeleton className="h-[245px] w-full" />
                         <div className="py-3 px-4">
                           <Skeleton className="h-[14px] w-[180px]" />
@@ -374,7 +385,7 @@ export default function Home() {
                   : Tshirt.map((item) => (
                       <>
                         <SwiperSlide key={item.id}>
-                          <div className="shadow-md h-full w-full m-2 rounded-lg">
+                          <div className="shadow-md h-full w-full m-2 rounded-lg bg-white">
                             <Link
                               href={`/product/product-details?id=${item.id}`}
                             >
@@ -437,7 +448,7 @@ export default function Home() {
             </div>
           </div>
           <div className="py-10">
-            <div className="mb-8 text-[30px] font-medium text-center">
+            <div className="mb-8 text-[30px] font-medium text-center bg-gray-100 py-2 rounded-lg">
               Trending Track Pants Collection
             </div>
             <div className="trending-swiper">
@@ -453,7 +464,7 @@ export default function Home() {
               >
                 {loading
                   ? [1, 2, 3, 4, 5].map((item) => (
-                      <SwiperSlide key={item}>
+                      <SwiperSlide key={item} className="bg-white">
                         <Skeleton className="h-[245px] w-full" />
                         <div className="py-3 px-4">
                           <Skeleton className="h-[14px] w-[180px]" />
@@ -468,7 +479,7 @@ export default function Home() {
                       return (
                         <>
                           <SwiperSlide>
-                            <div className="shadow-md h-full w-full m-2 rounded-lg">
+                            <div className="shadow-md h-full w-full m-2 rounded-lg bg-white">
                               <Link
                                 href={`/product/product-details?id=${item.id}`}
                               >
@@ -536,6 +547,120 @@ export default function Home() {
           </div>
         </div>
       </div>
+      <div className="w-full bg-gray-100 py-10 pb-5 max-md:py-5 ">        
+        <div className="container mx-auto xl:max-w-8xl max-sm:px-4">
+          <div className="mb-8 text-[30px] font-medium text-center">
+            Our Brand Partners
+          </div>
+          <div className="flex items-center justify-center flex-wrap gap-8 max-sm:gap-6 py-5">
+            <div className="bg-white rounded-lg px-10 h-[110px] flex justify-center items-center">
+              <Image
+                src={brandPartnerImage1}
+                alt="brandPartnerImage1"
+                className="h-10 w-full object-contain"
+              ></Image>
+            </div>
+            <div className="bg-white rounded-lg px-10 h-[110px] flex justify-center items-center">
+              <Image
+                src={brandPartnerImage2}
+                alt="brandPartnerImage2"
+                className="h-24 w-full object-contain"
+              ></Image>
+            </div>
+            <div className="bg-white rounded-lg px-10 h-[110px] flex justify-center items-center">
+              <Image
+                src={brandPartnerImage3}
+                alt="brandPartnerImage3"
+                className="h-16 w-full object-contain"
+              ></Image>
+            </div>
+          </div>
+        </div>
+      </div>
+      {/* <div className="w-full py-20 max-md:py-5">
+        <div className="container mx-auto xl:max-w-7xl max-sm:px-4">
+          <div className="mb-10 text-[30px] font-medium text-center">
+            Our Best Selling Product
+          </div>
+          <div className="trending-swiper">
+            <Swiper
+              breakpoints={{
+                320: { slidesPerView: 1, spaceBetween: 5 },
+                480: { slidesPerView: 1, spaceBetween: 5 },
+                768: { slidesPerView: 2.3, spaceBetween: 10 },
+                1024: { slidesPerView: 4.3, spaceBetween: 12 },
+              }}
+              modules={[Navigation]}
+              navigation={true}
+            >
+              {loading
+                ? [1, 2, 3, 4, 5].map((item) => (
+                    <SwiperSlide key={item}>
+                      <Skeleton className="h-[245px] w-full" />
+                      <div className="py-3 px-4">
+                        <Skeleton className="h-[14px] w-[180px]" />
+                        <Skeleton className="h-[10px] w-[80px] mt-1" />
+                        <Skeleton className="h-[20px] w-[100px] my-4" />
+                        <Skeleton className="h-[14px] w-[100px]" />
+                        <Skeleton className="h-[14px] w-[80px] mt-1" />
+                      </div>
+                    </SwiperSlide>
+                  ))
+                : product
+                    .filter((item) => item.status === segments.newDrops.title)
+                    .map((item) => (
+                      <SwiperSlide key={item.id}>
+                        <div className="shadow-md h-full w-full m-2 rounded-lg">
+                          <Link href={`/product/product-details?id=${item.id}`}>
+                            <div className="productImage flex justify-center rounded-[12px] overflow-hidden relative">
+                              <Image
+                                src={`/product-image/${item.ProductImages[0]?.sysFileName}`}
+                                alt={item.name}
+                                width={200}
+                                height={200}
+                                className="min-h-[245px] max-h-[245px] object-cover"
+                              />
+                              <div className="absolute top-2 right-2 bg-[#ed3138] text-white px-2 py-0.5 rounded-md text-sm">
+                                30%
+                              </div>
+                            </div>
+                            <div className="py-3 px-4">
+                              <div>
+                                <div className="font-bold line-clamp-1">
+                                  {item.name}
+                                </div>
+                                <div className="text-[#999] text-[14px] line-clamp-1">
+                                  {item.name}
+                                </div>
+                              </div>
+                              <div className="text-[#000] text-[16px] py-2">
+                                ₹{item.final_price}
+                              </div>
+                              <div className="text-[#999] text-[14px]">
+                                Color:{" "}
+                                <span className="text-[#000]">
+                                  {item.Colors?.map((item) => item.name).join(
+                                    ", "
+                                  )}
+                                </span>
+                              </div>
+                              <div className="text-[#999] text-[14px]">
+                                Size:{" "}
+                                <span className="text-[#000]">
+                                  {item.Sizes.map((item) => item.name).join(
+                                    " , "
+                                  )}
+                                </span>
+                              </div>
+                            </div>
+                          </Link>
+                        </div>
+                      </SwiperSlide>
+                    ))}
+            </Swiper>
+          </div>
+        </div>
+      </div> */}
       <Footer />
     </main>
   );

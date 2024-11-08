@@ -11,6 +11,8 @@ import * as yup from "yup";
 import { Bounce, toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Skeleton } from "./ui/skeleton";
+import Image from "next/image";
+import mainLogo from "../../public/images/PerfectApparels.png";
 
 const Footer = () => {
   const router = usePathname();
@@ -72,7 +74,7 @@ const Footer = () => {
       <ToastContainer />
       <footer className="bg-[#fff]">
         <div className="w-full bg-gray-100 py-10 max-md:py-5">
-          <div className="container mx-auto xl:max-w-8xl max-sm:px-4">
+          <div className="container mx-auto xl:max-w-7xl max-sm:px-4">
             <div className="grid grid-cols-12">
               <div className="col-span-12 text-[30px] font-medium text-center mb-4 ">
                 Get In Touch
@@ -144,10 +146,12 @@ const Footer = () => {
             </div>
           </div>
         </div>
-        <div className="container mx-auto xl:max-w-8xl max-sm:px-4">
+        <div className="container mx-auto xl:max-w-7xl max-sm:px-4">
           <div className="flex justify-between items-center flex-wrap max-md:justify-center">
             <div className="font-bold xl:me-[2rem] text-[24px] ">
-              Perfect Apparels
+            <Link href="/">
+                  <Image src={mainLogo} alt="PerfectApparels" className="h-8 w-full object-contain"></Image>
+                </Link>
             </div>
             <ul className="flex items-center flex-wrap xl:gap-10 md:gap-5 gap-3 xl:ml-5">
               <li className=" py-[23px] cursor-pointer">
