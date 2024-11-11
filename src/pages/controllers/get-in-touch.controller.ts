@@ -50,4 +50,19 @@ export class GetInTouchController extends HttpStatus {
             return this.sendInternalServerResponse(res, "Error fetching get in touch.");
         }
     };
+
+    /** DELETE API: Delete get in touch */
+    public deleteGetInTouch = async (res: NextApiResponse, id: any) => {
+        try {
+            const getInTouch: any = await GetInTouch.findOne({ where: { id } });
+            if (!getInTouch) return this.sendBadRequestResponse(res, "Get in touch not found.");
+
+            await GetInTouch.destroy({ where: { id } });
+
+            return this.sendOkResponse(res, "Size delete successfully.", getInTouch);
+        } catch (error) {
+            console.log('error: ', error);
+            return this.sendInternalServerResponse(res, "Error fetching get in touch.");
+        }
+    };
 }

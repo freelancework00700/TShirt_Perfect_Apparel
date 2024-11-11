@@ -8,18 +8,20 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     try {
 
-       // Call the database initialization function
-       await initializeDatabase();
+        // Call the database initialization function
+        await initializeDatabase();
 
         if (req.method === 'GET') {
-            await getInTouchController.getAllGetInTouch(res, req.query);   
+            await getInTouchController.getAllGetInTouch(res, req.query);
         } else if (req.method === 'POST') {
             await getInTouchController.createGetInTouch(res, req.body);
+        } else if (req.method === 'DELETE') {
+            await getInTouchController.deleteGetInTouch(res, req.query.id);
         } else {
             res.setHeader('Allow', ['GET', 'POST', 'PUT', 'DELETE']);
             return res.status(405).end(`Method ${req.method} Not Allowed`);
         }
-    } catch(error) {
+    } catch (error) {
         res.status(500).json({ error: 'Internal Server Error' });
     }
 };

@@ -185,8 +185,8 @@ const Footer = () => {
                 <Link
                   href="/privacy-policy"
                   className={`text-base uppercase font-medium leading-[16px]  hover:text-[#7ab01e] ${router === "/privacy-policy"
-                      ? "text-[#7ab01e]"
-                      : "text-[#000]"
+                    ? "text-[#7ab01e]"
+                    : "text-[#000]"
                     }`}
                 >
                   Privacy Policy

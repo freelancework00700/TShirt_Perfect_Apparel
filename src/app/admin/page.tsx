@@ -74,6 +74,7 @@ function Admin() {
   const [currentPageOfInquiry, setCurrentPageOfInquiry] = useState(1);
   const [currentPageOfSize, setCurrentPageOfSize] = useState(1);
   const [currentPageOfColor, setCurrentPageOfColor] = useState(1);
+  const [currentPageOfProductInquiry, setCurrentPageOfProductInquiry] = useState(1);
   const recordsPerPage = 10;
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isDeleteSizeDialogOpen, setIsDeleteDialogOpen] = useState(false);
@@ -83,7 +84,9 @@ function Admin() {
   const [allInquiry, setAllInquiry] = useState<Inquiry[]>([]);
   const [productInquiry, setProductInquiry] = useState<ProductInquiry[]>([])
   const [openProductInquiry, setOpenProductInquiry] = useState(false);
+  const [openGetInTouchInquiry, setGetInTouchInquiry] = useState(false);
   const [selectedProductInquiry, setSelectedProductInquiry] = useState<number | null>(null);
+  const [selectedGetInTouchInquiry, setSelectedGetInTouchInquiry] = useState<number | null>(null);
   const router = useRouter();
   const [isTrackPants, setIsTrackPants] = useState(false);
   const [filteredProducts, setFilteredProducts] = useState<IProduct[]>([]);
@@ -192,7 +195,6 @@ function Admin() {
     setLoading(true);
     try {
       const response = await axios.get('/api/product-inquiry')
-      console.log('response :>> ', response);
       setProductInquiry(response.data.data)
     } catch (error) {
       console.error(error)
@@ -899,6 +901,30 @@ function Admin() {
     }
   }
 
+  const handleOpenInquiryDialog = (id: number) => {
+    setGetInTouchInquiry(true)
+    setSelectedGetInTouchInquiry(id)
+  }
+
+  const handleDeleteGetInTouchInquiry = async () => {
+    if (selectedGetInTouchInquiry) {
+      try {
+        const response = await axios.delete(`/api/get-in-touch?id=${selectedGetInTouchInquiry}`)
+        toast.success(response.data.message, {
+          position: "top-right",
+          autoClose: 5000,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          theme: "light",
+        });
+        getAllInquiry();
+      } catch (error) {
+        console.error(error)
+      }
+    }
+  }
+
 
   const totalPages = Math.ceil(filteredProducts.length / recordsPerPage);
   const currentProducts = filteredProducts.slice(
@@ -968,6 +994,26 @@ function Admin() {
     setCurrentPageOfColor(page)
   }
 
+  //product-inquiry pagination
+
+  const totalPageOfProductInquiry = Math.ceil(productInquiry.length / recordsPerPage)
+  const currentProductInquiry = productInquiry.slice((currentPageOfProductInquiry - 1) * recordsPerPage, currentPageOfInquiry * recordsPerPage)
+
+  const nextPageOfProductInquiry = () => {
+    if (currentPageOfProductInquiry < totalPageOfProductInquiry) {
+      setCurrentPageOfProductInquiry(currentPageOfProductInquiry + 1)
+    }
+  }
+
+  const previousPageOfProductInquiry = () => {
+    if (totalPageOfProductInquiry > 1) {
+      setCurrentPageOfProductInquiry(currentPageOfProductInquiry - 1)
+    }
+  }
+
+  const gotoPageProductInquiry = (page: number) => {
+    setCurrentPageOfProductInquiry(page)
+  }
 
   //inquiry pagination 
   const totalPagesOfInquiry = Math.ceil(allInquiry.length / recordsPerPage)
@@ -2488,11 +2534,10 @@ function Admin() {
                                 </TableRow>
                               ))
                             ) : (
-                              productInquiry.map((item, index) => {
+                              currentProductInquiry.map((item, index) => {
                                 const filteredDataofSize = item.Sizes.filter((val) => item.size_ids.includes(val.id))
                                 const filteredColorData = item.Colors.filter(val => item.color_ids.includes(val.id))
-                                const formattedDate = format(new Date(item.createdAt), "MM/d/yyyy");
-                                console.log('formattedDate :>> ', formattedDate);
+                                const formattedDate = format(new Date(item.createdAt), "d/MM/yyyy");
                                 return (
                                   <TableRow key={index}>
                                     <TableCell>{item.id}</TableCell>
@@ -2545,6 +2590,43 @@ function Admin() {
                           </TableBody>
                         </Table>
                       </TableContainer>
+                      <div className="flex justify-center my-4 space-x-2">
+                        <button
+                          onClick={previousPageOfProductInquiry}
+                          disabled={currentPageOfProductInquiry === 1}
+                          className={`px-4 py-2 text-base font-medium border rounded-md ${currentPageOfProductInquiry === 1
+                            ? 'cursor-not-allowed opacity-50'
+                            : 'hover:bg-gray-200'
+                            }`}
+                        >
+                          Previous
+                        </button>
+
+                        {/* Render page numbers */}
+                        {Array.from({ length: totalPageOfProductInquiry }, (_, index) => (
+                          <button
+                            key={index}
+                            onClick={() => gotoPageProductInquiry(index + 1)}
+                            className={`px-4 py-2 text-base font-medium border rounded-md ${currentPageOfProductInquiry === index + 1
+                              ? 'font-bold bg-gray-300'
+                              : 'hover:bg-gray-200'
+                              }`}
+                          >
+                            {index + 1}
+                          </button>
+                        ))}
+
+                        <button
+                          onClick={nextPageOfProductInquiry}
+                          disabled={currentPageOfProductInquiry === totalPageOfProductInquiry}
+                          className={`px-4 py-2 text-base font-medium border rounded-md ${currentPageOfProductInquiry === totalPageOfProductInquiry
+                            ? 'cursor-not-allowed opacity-50'
+                            : 'hover:bg-gray-200'
+                            }`}
+                        >
+                          Next
+                        </button>
+                      </div>
                     </Paper>
                   </>
                 }
@@ -2566,6 +2648,7 @@ function Admin() {
                               <TableCell>Email</TableCell>
                               <TableCell>Mobile Number</TableCell>
                               <TableCell>Message</TableCell>
+                              <TableCell>Action</TableCell>
                             </TableRow>
                           </TableHead>
                           <TableBody>
@@ -2585,7 +2668,7 @@ function Admin() {
                               ))
                             ) : (
                               currentInquiry.map((item, index) => {
-                                const date = format(new Date(item.createdAt), "MM/d/yyyy");
+                                const date = format(new Date(item.createdAt), "d/MM/yyyy");
                                 return (
                                   <TableRow key={index}>
                                     <TableCell>{item.id}</TableCell>
@@ -2593,6 +2676,32 @@ function Admin() {
                                     <TableCell>{item.email}</TableCell>
                                     <TableCell>{item.phone}</TableCell>
                                     <TableCell>{item.message}</TableCell>
+                                    <TableCell>
+                                      <AlertDialog>
+                                        <AlertDialogTrigger>
+                                          <svg className="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24"
+                                            onClick={() => handleOpenInquiryDialog(item.id)}
+                                          >
+                                            <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 7h14m-9 3v8m4-8v8M10 3h4a1 1 0 0 1 1 1v3H9V4a1 1 0 0 1 1-1ZM6 7h12v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7Z" />
+                                          </svg>
+                                        </AlertDialogTrigger>
+                                        <AlertDialogContent>
+                                          <AlertDialogHeader>
+                                            <AlertDialogTitle>Are you sure you want to delete this Inquiry?</AlertDialogTitle>
+                                            <AlertDialogDescription>
+                                              Are you sure you want to delete the inquiry? This action cannot be undone.
+                                            </AlertDialogDescription>
+                                          </AlertDialogHeader>
+                                          <AlertDialogFooter>
+                                            <AlertDialogCancel onClick={() => {
+                                              setGetInTouchInquiry(false)
+                                              setSelectedGetInTouchInquiry(null)
+                                            }}>Cancel</AlertDialogCancel>
+                                            <AlertDialogAction onClick={() => handleDeleteGetInTouchInquiry()}>Confirm</AlertDialogAction>
+                                          </AlertDialogFooter>
+                                        </AlertDialogContent>
+                                      </AlertDialog>
+                                    </TableCell>
                                   </TableRow>
                                 )
                               })
