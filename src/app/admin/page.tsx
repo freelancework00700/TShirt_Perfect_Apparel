@@ -682,22 +682,15 @@ function Admin() {
     },
   });
 
-  const changeFinalPrice = async (value: number, type: string) => {
-    let price = 0;
-    let discount_price = 0
-    if (formik.values.price && formik.values.discount_price) {
-      if (type == "price") {
-        price = +value
-        discount_price = +formik.values.discount_price
-      } else if (type = "discount_price") {
-        price = +formik.values.price
-        discount_price = +value
-      }
-      const final_price = +price - ((+price * +discount_price) / 100)
-      formik.setFieldValue("final_price", final_price);
+  const changeFinalPrice = (discountValue: number) => {
+    const price = Number(formik.values.price);
+    const discount = Number(discountValue);
+
+    if (price && discount >= 0) {
+      const final_price = discount === 0 ? price : price - (price * discount) / 100;
+      formik.setFieldValue("final_price", final_price.toFixed(0));
     }
   };
-
   const handleEditProduct = async (item: IProduct) => {
     console.log('item :>> ', item);
     getAllCategory();
@@ -1325,50 +1318,52 @@ function Admin() {
                                   <Label>Price</Label>
                                   <Input
                                     id="price"
-                                    placeholder="price"
+                                    placeholder="Enter price"
                                     className="col-span-3"
+                                    type="number"
                                     value={formik.values.price}
                                     onChange={(e) => {
-                                      formik.handleChange(e); // Update Formik state
-                                      changeFinalPrice(e.target.value, "price"); // Call custom function
+                                      formik.handleChange(e);
                                     }}
-                                    onInput={() => console.log("input change", formik.values.price)} />
-                                  {formik.errors.price && formik.touched.price &&
-                                    (<p className="text-red-500">{formik.errors.price}</p>)}
+                                  />
+                                  {formik.errors.price && formik.touched.price && (
+                                    <p className="text-red-500">{formik.errors.price}</p>
+                                  )}
                                 </div>
 
                                 <div className="col-span-4">
-                                  <Label>Discount Price</Label>
+                                  <Label>Discount Percentage</Label>
                                   <Input
                                     id="discount_price"
-                                    placeholder="Discount Price"
+                                    placeholder="Enter discount %"
                                     className="col-span-3"
                                     type="number"
                                     min={0}
                                     max={100}
                                     value={formik.values.discount_price}
                                     onChange={(e) => {
-                                      const value = Math.min(Math.max(e.target.value, 0), 100);
-                                      formik.handleChange(e);
-                                      changeFinalPrice(value, "discount_price");
+                                      const value = Math.min(Math.max(Number(e.target.value), 0), 100);
+                                      formik.setFieldValue("discount_price", value);
+                                      changeFinalPrice(value);
                                     }}
                                   />
-                                  {formik.errors.discount_price && formik.touched.discount_price &&
-                                    (<p className="text-red-500">{formik.errors.discount_price}</p>)}
+                                  {formik.errors.discount_price && formik.touched.discount_price && (
+                                    <p className="text-red-500">{formik.errors.discount_price}</p>
+                                  )}
                                 </div>
 
                                 <div className="col-span-4">
                                   <Label>Final Price</Label>
                                   <Input
                                     id="final_price"
-                                    placeholder="final price"
+                                    placeholder="Calculated final price"
                                     className="col-span-3"
                                     value={formik.values.final_price}
-                                    onChange={formik.handleChange}
                                     readOnly
                                   />
-                                  {formik.errors.final_price && formik.touched.final_price &&
-                                    (<p className="text-red-500">{formik.errors.final_price}</p>)}
+                                  {formik.errors.final_price && formik.touched.final_price && (
+                                    <p className="text-red-500">{formik.errors.final_price}</p>
+                                  )}
                                 </div>
 
                                 <div className="col-span-4">
