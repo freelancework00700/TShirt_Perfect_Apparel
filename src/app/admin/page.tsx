@@ -191,6 +191,7 @@ function Admin() {
     setLoading(true);
     try {
       const response = await axios.get('/api/product-inquiry')
+      console.log('response :>> ', response);
       setProductInquiry(response.data.data)
     } catch (error) {
       console.error(error)
@@ -839,7 +840,6 @@ function Admin() {
   }
 
   const handleColorCheckBoxChange = async (id: string) => {
-    console.log('iddddd :>> ', id);
     const selectedIds = new Set(formik.values.color_ids?.split(',').filter(Boolean));
     if (selectedIds.has(id)) {
       selectedIds.delete(id);
@@ -1144,9 +1144,13 @@ function Admin() {
                             setId(null)
                             setSelectedImages([])
                             formik.resetForm()
-                            await getAllCategory();
-                            await getAllColor();
-                            await getAllSize();
+                            try {
+                              await getAllCategory();
+                              await getAllColor();
+                              await getAllSize();
+                            } catch (error) {
+                              console.error(error)
+                            }
                           }}>
                             <svg
                               className="w-6 h-6 text-gray-800 dark:text-white mr-2"
@@ -2456,7 +2460,7 @@ function Admin() {
                                     <TableCell>{item.inquiry_message}</TableCell>
                                     <TableCell>{item.Product.name}</TableCell>
                                     <TableCell>{item.quantity}</TableCell>
-                                    <TableCell>{item.Product.price}</TableCell>
+                                    <TableCell>{item.Product.final_price}</TableCell>
                                     <TableCell>{filteredColorData.map((item) => item.name).join(', ')}
                                     </TableCell>
                                     <TableCell>{filteredDataofSize.map((item) => item.name).join(', ')}

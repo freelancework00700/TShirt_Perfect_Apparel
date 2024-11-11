@@ -142,6 +142,7 @@ export interface ProductInquiry {
         subcategory_id: number,
         name: string,
         price: string,
+        final_price: string,
         color_ids: number[],
         type: string,
         sleeve: string,

@@ -16,4 +16,17 @@ export class MailHelper {
     sendEmail(mailOptions);
   };
 
+  // Bulk order discuss mail
+  public bulkOrderDiscuss = async (params: any) => {
+    const mailOptions: mailOptions = {
+      to: process.env.ADMIN_EMAIL,
+      subject: "Bulk order Discuss",
+      html: `<div>
+      <p>Message: ${params.message}<p>
+      </div>`,
+    };
+
+    sendEmail(mailOptions);
+  };
+
 }

@@ -9,6 +9,7 @@ import { useRouter } from "next/navigation";
 import { useFormik } from "formik";
 import * as yup from 'yup';
 import axios from "axios";
+import { Bounce, toast, ToastContainer } from "react-toastify";
 
 
 function CustomerService() {
@@ -25,13 +26,23 @@ function CustomerService() {
     validationSchema: yup.object({
       message: yup.string().min(10).max(200).required("Enter the message"),
     }),
-    onSubmit: async (values) => {
+    onSubmit: async (values, { setSubmitting, resetForm }) => {
       console.log('values :>> ', values);
       try {
         const response = await axios.post('/api/bulk-order-discuss', values)
         console.log('response :>> ', response);
+        toast.success(response.data.message, {
+          position: "top-right",
+          // autoClose: 5000,
+          closeOnClick: true,
+          draggable: true,
+          // transition: Bounce,
+        });
       } catch (error) {
         console.error(error)
+      } finally {
+        setSubmitting(false)
+        resetForm()
       }
     }
   })
@@ -85,7 +96,10 @@ function CustomerService() {
                   {formik.errors.message && formik.touched.message &&
                     (<p className="text-red-500">{formik.errors.message}</p>)}
                   <div className="flex justify-center mt-6">
-                    <Button type="submit" className="px-10 rounded-full">Send message</Button>
+                    <Button type="submit" disabled={formik.isSubmitting}
+                      className="px-10 rounded-full">
+                      {formik.isSubmitting ? "Submitting..." : "Send message"}
+                    </Button>
                   </div>
                 </form>
               </div>

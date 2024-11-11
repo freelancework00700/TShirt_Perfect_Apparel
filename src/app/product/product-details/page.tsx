@@ -92,7 +92,7 @@ const ProductDetail = () => {
       size_ids: yup.string().min(1, 'Select at least one size'),
       color_ids: yup.string().min(1, 'Select at least one color'),
     }),
-    onSubmit: async (values, { resetForm }) => {
+    onSubmit: async (values, { resetForm, setSubmitting }) => {
       try {
         const response = await axios.post('/api/product-inquiry', values)
         toast.success(response.data.message, {
@@ -106,10 +106,12 @@ const ProductDetail = () => {
           theme: "light",
           transition: Bounce,
         });
-        resetForm()
         setIsModalOpen(false)
       } catch (error) {
         console.error(error)
+      } finally {
+        setSubmitting(false)
+        resetForm()
       }
     }
   })
@@ -143,7 +145,6 @@ const ProductDetail = () => {
 
   return (
     <main className="max-[1024px]:mt-[77px] relative">
-      <ToastContainer />
       <Header />
       <div className="min-h-[calc(100vh_-_385px)]">
         <div className="container mx-auto xl:max-w-8xl max-sm:px-4 py-5">
@@ -430,10 +431,10 @@ const ProductDetail = () => {
                       <p className="text-red-500">{formik.errors.mobile_no}</p>
                     )}
 
-                    <button type="submit"
+                    <button type="submit" disabled={formik.isSubmitting}
                       className="w-full py-2 bg-[#000000] text-white font-semibold rounded-md hover:bg-[#272626] transition ease-in-out duration-200"
                     >
-                      Submit
+                      {formik.isSubmitting ? "Submiting..." : "Submit"}
                     </button>
                   </form>
                 </div>

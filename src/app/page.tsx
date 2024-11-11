@@ -22,6 +22,7 @@ import { IProduct } from "@/interface/types";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Skeleton } from "@/components/ui/skeleton";
+import { ToastContainer } from "react-toastify";
 
 type SegmentKey = "newDrops" | "mostTrending";
 
@@ -66,6 +67,7 @@ export default function Home() {
 
   return (
     <main className="max-[1024px]:mt-[77px] relative">
+      <ToastContainer />
       <Header />
       <div className="min-h-[calc(100vh_-_385px)] relative">
         <div className="absolute top-[calc(100vh_+_150px)] -left-[175px] z-0 max-md:hidden">
