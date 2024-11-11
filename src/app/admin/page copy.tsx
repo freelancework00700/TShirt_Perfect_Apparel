@@ -153,7 +153,6 @@ function Admin() {
     }
   }
 
-
   const getAllSize = async () => {
     setLoading(true)
     try {
@@ -712,6 +711,7 @@ function Admin() {
       formik.setFieldValue("final_price", final_price.toFixed(0));
     }
   };
+
   const handleEditProduct = async (item: IProduct) => {
     console.log('item :>> ', item);
     getAllCategory();
@@ -897,7 +897,6 @@ function Admin() {
     }
   }
 
-
   const totalPages = Math.ceil(filteredProducts.length / recordsPerPage);
   const currentProducts = filteredProducts.slice(
     (currentPage - 1) * recordsPerPage,
@@ -1069,66 +1068,63 @@ function Admin() {
                     {
                       viewProductData?.map((item) => (
                         <>
-                        <div className="grid grid-cols-12 gap-2 gap-y-2">
-                          <div className="mb-2 col-span-6">
-                            <span className="font-bold text-gray-500">Category:</span> {item.Category?.name}
-                          </div>                        
-                          <div className="mb-2 col-span-6">
-                            <span className="font-bold text-gray-500">Name: </span>{item.name}
+                          <div key={item.id} className="mb-2">
+                            <span className="font-bold">Category:</span> {item.Category?.name}
                           </div>
-                          <div className="mb-2 col-span-6">
-                            <span className="font-bold text-gray-500">Price: </span>{item.price}
+                          <div className="mb-2">
+                            <span className="font-bold">Name:</span>{item.name}
                           </div>
-                          <div className="mb-2 col-span-6">
-                            <span className="font-bold text-gray-500">Colors: </span>{item.Colors.map(color => color.name).join(',')}
+                          <div className="mb-2">
+                            <span className="font-bold">Price:</span>{item.price}
                           </div>
-                          <div className="mb-2 col-span-6">
-                            <span className="font-bold text-gray-500">Size: </span>{item.Sizes.map(size => size.name).join(',')}
+                          <div className="mb-2">
+                            <span className="font-bold">Colors:</span>{item.Colors.map(color => color.name).join(',')}
                           </div>
-                          <div className="mb-2 col-span-6">
-                            <span className="font-bold text-gray-500">Type: </span>{item.sleeve}
+                          <div className="mb-2">
+                            <span className="font-bold">Size:</span>{item.Sizes.map(size => size.name).join(',')}
                           </div>
-                          <div className="mb-2 col-span-6">
-                            <span className="font-bold text-gray-500">Fabric: </span>{item.sleeve}
+                          <div className="mb-2">
+                            <span className="font-bold">Type:</span>{item.sleeve}
                           </div>
-                          <div className="mb-2 col-span-6">
-                            <span className="font-bold text-gray-500">Sales Package:</span>{item.sales_package}
+                          <div className="mb-2">
+                            <span className="font-bold">Fabric:</span>{item.sleeve}
                           </div>
-                          <div className="mb-2 col-span-6">
-                            <span className="font-bold text-gray-500">Style Code: </span>{item.style_code}
+                          <div className="mb-2">
+                            <span className="font-bold">Sales Package:</span>{item.sales_package}
                           </div>
-                          <div className="mb-2 col-span-6">
-                            <span className="font-bold text-gray-500">Neck Type: </span>{item.neck_type}
+                          <div className="mb-2">
+                            <span className="font-bold">Style Code:</span>{item.style_code}
                           </div>
-                          <div className="mb-2 col-span-6">
-                            <span className="font-bold text-gray-500">Pattern: </span>{item.pattern}
+                          <div className="mb-2">
+                            <span className="font-bold">Neck Type:</span>{item.neck_type}
                           </div>
-                          <div className="mb-2 col-span-6">
-                            <span className="font-bold text-gray-500">Fabric Care: </span>{item.fabric_care}
+                          <div className="mb-2">
+                            <span className="font-bold">Pattern:</span>{item.pattern}
                           </div>
-                          <div className="mb-2 col-span-6">
-                            <span className="font-bold text-gray-500">Net Quantity: </span>{item.net_quantity}
+                          <div className="mb-2">
+                            <span className="font-bold">Fabric Care:</span>{item.fabric_care}
                           </div>
-                          <div className="mb-2 col-span-6">
-                            <span className="font-bold text-gray-500">Status: </span>{item.status}
+                          <div className="mb-2">
+                            <span className="font-bold">Net Quantity:</span>{item.net_quantity}
                           </div>
-                          <div className="mb-2 col-span-6">
-                            <span className="font-bold text-gray-500">Description: </span>{item.description}
+                          <div className="mb-2">
+                            <span className="font-bold">Status:</span>{item.status}
                           </div>
-                          <div className="mb-2 col-span-12">
-                            <span className="font-bold text-gray-500">Images:</span>
-                            <div className="grid grid-cols-12 gap-2 gap-y-2">
-                            {item.ProductImages.map((image, index) => (
-                                <div key={index} className="col-span-2 shadow rounded-md my-5 overflow-hidden">
+                          <div className="mb-2">
+                            <span className="font-bold">Description:</span>{item.description}
+                          </div>
+                          <div className="mb-2">
+                            <span className="font-bold">Images:</span>
+                            {
+                              item.ProductImages.map((image, index) => (
+                                <div key={index}>
                                   <Image src={`/product-image/${image.sysFileName}`}
-                                    width={200} height={200} alt="Product image" className="w-full h-full object-cover max-h-[90px]"
+                                    width={200} height={200} alt="Product image"
                                   />
                                 </div>
                               ))
                             }
-                            </div>                            
                           </div>
-                        </div>
                         </>
                       ))
                     }
@@ -1214,7 +1210,7 @@ function Admin() {
                                       formik.setFieldValue("size_ids", '')
                                     }}
                                   >
-                                    <SelectTrigger className="w-full">
+                                    <SelectTrigger className="w-[180px]">
                                       <SelectValue placeholder="Select a category" />
                                     </SelectTrigger>
                                     <SelectContent>
@@ -1256,7 +1252,7 @@ function Admin() {
 
                                 <div className="col-span-4">
                                   <Label>Color</Label>
-                                  <div className="w-full">
+                                  <div className="w-[180px]">
                                     <div className="border rounded p-2">
                                       <Popover>
                                         <PopoverTrigger>
@@ -1292,7 +1288,7 @@ function Admin() {
 
                                 <div className="col-span-4">
                                   <Label>Size</Label>
-                                  <div className="w-full">
+                                  <div className="w-[180px]">
                                     <div className="border rounded p-2">
                                       <Popover>
                                         <PopoverTrigger>
@@ -1656,7 +1652,91 @@ function Admin() {
                         </DialogContent>
                       </Dialog>
                     </div>
-                    <Paper sx={{ width: '100%', overflow: 'hidden', borderRadius: '12px' }}>
+                    {
+                      loading ? (
+                        <div className="w-full">
+                          <TableHead className="w-full">
+                            <TableCell className="flex justify-center">
+                              <Skeleton className="h-5 w-20" />
+                            </TableCell>
+                            <TableCell className="flex justify-center">
+                              <Skeleton className="h-5 w-40" />
+                            </TableCell>
+                            <TableCell className="flex justify-center">
+                              <Skeleton className="h-5 w-20" />
+                            </TableCell>
+                            <TableCell className="flex justify-center">
+                              <Skeleton className="h-5 w-20" />
+                            </TableCell>
+                            <TableCell className="flex justify-center">
+                              <Skeleton className="h-5 w-20" />
+                            </TableCell>
+                            <TableCell className="flex justify-center">
+                              <Skeleton className="h-5 w-20" />
+                            </TableCell>
+                            <TableCell className="flex justify-center">
+                              <Skeleton className="h-5 w-20" />
+                            </TableCell>
+                            <TableCell className="flex justify-center">
+                              <Skeleton className="h-5 w-20" />
+                            </TableCell>
+                            <TableCell className="flex justify-center">
+                              <Skeleton className="h-5 w-20" />
+                            </TableCell>
+                            <TableCell className="flex justify-center">
+                              <Skeleton className="h-5 w-20" />
+                            </TableCell>
+                            <TableCell className="flex justify-center">
+                              <Skeleton className="h-5 w-20" />
+                            </TableCell>
+                            <TableCell className="flex justify-center">
+                              <Skeleton className="h-5 w-20" />
+                            </TableCell>
+                          </TableHead>
+                          <TableBody>
+                            <TableRow className="w-full">
+                              <TableCell className="flex justify-center">
+                                <Skeleton className="h-5 w-20" />
+                              </TableCell>
+                              <TableCell className="flex justify-center">
+                                <Skeleton className="h-5 w-40" />
+                              </TableCell>
+                              <TableCell className="flex justify-center">
+                                <Skeleton className="h-5 w-20" />
+                              </TableCell>
+                              <TableCell className="flex justify-center">
+                                <Skeleton className="h-5 w-20" />
+                              </TableCell>
+                              <TableCell className="flex justify-center">
+                                <Skeleton className="h-5 w-20" />
+                              </TableCell>
+                              <TableCell className="flex justify-center">
+                                <Skeleton className="h-5 w-20" />
+                              </TableCell>
+                              <TableCell className="flex justify-center">
+                                <Skeleton className="h-5 w-20" />
+                              </TableCell>
+                              <TableCell className="flex justify-center">
+                                <Skeleton className="h-5 w-20" />
+                              </TableCell>
+                              <TableCell className="flex justify-center">
+                                <Skeleton className="h-5 w-20" />
+                              </TableCell>
+                              <TableCell className="flex justify-center">
+                                <Skeleton className="h-5 w-20" />
+                              </TableCell>
+                              <TableCell className="flex justify-center">
+                                <Skeleton className="h-5 w-20" />
+                              </TableCell>
+                              <TableCell className="flex justify-center">
+                                <Skeleton className="h-5 w-20" />
+                              </TableCell>
+                            </TableRow>
+                          </TableBody>
+
+                        </div>
+                      ) : (
+                        <Paper sx={{ width: '100%', overflow: 'hidden', borderRadius: '12px' }}>
                           <TableContainer className="table-scrollable h-[calc(100vh_-_180px)] overflow-auto">
                             <Table stickyHeader aria-label="sticky table">
                               <TableHead>
@@ -1677,51 +1757,7 @@ function Admin() {
                                 </TableRow>
                               </TableHead>
                               <TableBody>
-                                {loading 
-                                ? [1, 2, 3, 4, 5, 6, 7, 8].map((item) => (
-                                  <TableRow key={item}>
-                                    <TableCell>
-                                      <Skeleton className="h-[14px] w-full" />
-                                    </TableCell>
-                                    <TableCell>
-                                      <Skeleton className="h-[14px] w-full" />
-                                    </TableCell>
-                                    <TableCell>
-                                      <Skeleton className="h-[14px] w-full" />
-                                    </TableCell>
-                                    <TableCell>
-                                      <Skeleton className="h-[14px] w-full" />
-                                    </TableCell>
-                                    <TableCell>
-                                      <Skeleton className="h-[14px] w-full" />
-                                    </TableCell>
-                                    <TableCell>
-                                      <Skeleton className="h-[14px] w-full" />
-                                    </TableCell>
-                                    <TableCell>
-                                      <Skeleton className="h-[14px] w-full" />
-                                    </TableCell>
-                                    <TableCell>
-                                      <Skeleton className="h-[14px] w-full" />
-                                    </TableCell>
-                                    <TableCell>
-                                      <Skeleton className="h-[14px] w-full" />
-                                    </TableCell>
-                                    <TableCell>
-                                      <Skeleton className="h-[14px] w-full" />
-                                    </TableCell>
-                                    <TableCell>
-                                      <Skeleton className="h-[14px] w-full" />
-                                    </TableCell>
-                                    <TableCell>
-                                      <Skeleton className="h-[14px] w-full" />
-                                    </TableCell>
-                                    <TableCell>
-                                      <Skeleton className="h-[14px] w-full" />
-                                    </TableCell>
-                                  </TableRow>
-                                ))
-                                 : 
+                                {
                                   currentProducts.map((item, index) => (
                                     <TableRow key={index}>
                                       <TableCell>{item.Category?.name}</TableCell>
@@ -1829,7 +1865,9 @@ function Admin() {
                               Next
                             </button>
                           </div>
-                    </Paper>                    
+                        </Paper>
+                      )
+                    }
                   </>
                 }
 
@@ -1869,6 +1907,7 @@ function Admin() {
                               Upload your New Category Here
                             </DialogDescription>
                           </DialogHeader>
+                          {/* <form onSubmit={formik.handleSubmit}> */}
                           <div className="grid grid-cols-12 gap-4 gap-y-2 pb-4 px-5 pt-2">
                             <div className="col-span-4">
                               <Label>Category</Label>
@@ -1884,6 +1923,7 @@ function Admin() {
                           <DialogFooter className="px-5 pb-5">
                             <Button type="submit" onClick={handleAddCategory}>Save changes</Button>
                           </DialogFooter>
+                          {/* </form> */}
                         </DialogContent>
                       </Dialog>
                     </div>
@@ -1949,6 +1989,8 @@ function Admin() {
                                 </TableRow>
                               ))
                             )}
+
+
                           </TableBody>
                         </Table>
                       </TableContainer>
@@ -2356,7 +2398,7 @@ function Admin() {
                                             <AlertDialogHeader>
                                               <AlertDialogTitle>Are you sure you want to delete this color?</AlertDialogTitle>
                                               <AlertDialogDescription>
-                                                Are you sure you want to delete the color <span className="font-extrabold">{item.name}</span>? This action cannot be undone.
+                                                Are you sure you want to delete the color? This action cannot be undone.
                                               </AlertDialogDescription>
                                             </AlertDialogHeader>
                                             <AlertDialogFooter>

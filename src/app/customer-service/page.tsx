@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useState } from "react";
+import React from "react";
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
 import { Button } from "@/components/ui/button";
@@ -9,7 +9,7 @@ import { useRouter } from "next/navigation";
 import { useFormik } from "formik";
 import * as yup from 'yup';
 import axios from "axios";
-import { Bounce, toast, ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
 
 
 function CustomerService() {
@@ -30,13 +30,10 @@ function CustomerService() {
       console.log('values :>> ', values);
       try {
         const response = await axios.post('/api/bulk-order-discuss', values)
-        console.log('response :>> ', response);
         toast.success(response.data.message, {
           position: "top-right",
-          // autoClose: 5000,
           closeOnClick: true,
           draggable: true,
-          // transition: Bounce,
         });
       } catch (error) {
         console.error(error)

@@ -19,7 +19,7 @@ import axios from "axios";
 import { IProduct } from "@/interface/types";
 import { useFormik } from "formik";
 import * as yup from "yup";
-import { Bounce, toast, ToastContainer } from "react-toastify";
+import { Bounce, toast } from "react-toastify";
 import { Label } from "@/components/ui/label";
 
 const ProductDetail = () => {
@@ -379,7 +379,7 @@ const ProductDetail = () => {
                       onChange={formik.handleChange}
                       className="w-full px-4 py-2 mb-4 border rounded-md"
                       placeholder="Inquiry Message"
-                      rows="3"
+                      rows={3}
                       required
                     ></textarea>
                     {formik.errors.inquiry_message &&
@@ -517,7 +517,6 @@ const ProductDetail = () => {
                       <div className="grid grid-cols-12 w-full">
                         <div className="col-span-4">
                           <div className="text-base font-semibold">Type</div>
-                          <div className="text-base font-semibold">Sleeve</div>
                           <div className="text-base font-semibold">Fit</div>
                           <div className="text-base font-semibold">Fabric</div>
                           <div className="text-base font-semibold">
@@ -528,9 +527,6 @@ const ProductDetail = () => {
                             Style Code
                           </div>
                           <div className="text-base font-semibold">
-                            Neck Type
-                          </div>
-                          <div className="text-base font-semibold">
                             Ideal For
                           </div>
                           <div className="text-base font-semibold">Pattern</div>
@@ -538,21 +534,22 @@ const ProductDetail = () => {
                             Suitable For
                           </div>
                           <div className="text-base font-semibold">
-                            Reversible
-                          </div>
-                          <div className="text-base font-semibold">
                             Fabric Care
                           </div>
                           <div className="text-base font-semibold">
                             Net Quantity
                           </div>
+                          <div className="text-base font-semibold">
+                            Neck Type
+                          </div>
+                          <div className="text-base font-semibold">
+                            Reversible
+                          </div>
+                          <div className="text-base font-semibold">Sleeve</div>
                         </div>
                         <div className="col-span-8">
                           <div className="text-base font-normal">
                             {item.type}
-                          </div>
-                          <div className="text-base font-normal">
-                            {item.sleeve}
                           </div>
                           <div className="text-base font-normal">
                             {item.fit}
@@ -570,9 +567,6 @@ const ProductDetail = () => {
                             {item.style_code}
                           </div>
                           <div className="text-base font-normal">
-                            {item.neck_type}
-                          </div>
-                          <div className="text-base font-normal">
                             {item.ideal_for}
                           </div>
                           <div className="text-base font-normal">
@@ -582,13 +576,19 @@ const ProductDetail = () => {
                             {item.suitable_for}
                           </div>
                           <div className="text-base font-normal">
-                            {item.reversible}
-                          </div>
-                          <div className="text-base font-normal">
                             {item.fabric_care}
                           </div>
                           <div className="text-base font-normal">
                             {item.net_quantity}
+                          </div>
+                          <div className="text-base font-normal">
+                            {item.neck_type}
+                          </div>
+                          <div className="text-base font-normal">
+                            {item.reversible}
+                          </div>
+                          <div className="text-base font-normal">
+                            {item.sleeve}
                           </div>
                         </div>
                         <div className="col-span-12 text-base mt-6">
