@@ -149,17 +149,16 @@ const Footer = () => {
         <div className="container mx-auto xl:max-w-7xl max-[1024px]:px-4">
           <div className="flex justify-between items-center flex-wrap max-md:justify-center">
             <div className="font-bold xl:me-[2rem] text-[24px] max-sm:pt-5">
-            <Link href="/">
-                  <Image src={mainLogo} alt="PerfectApparels" className="h-8 w-full object-contain"></Image>
-                </Link>
+              <Link href="/">
+                <Image src={mainLogo} alt="PerfectApparels" className="h-8 w-full object-contain"></Image>
+              </Link>
             </div>
             <ul className="flex items-center flex-wrap xl:gap-10 md:gap-5 gap-3 xl:ml-5">
               <li className=" py-[23px] cursor-pointer">
                 <Link
                   href="/"
-                  className={`text-base uppercase font-medium leading-[16px]  hover:text-[#7ab01e] ${
-                    router === "/" ? "text-[#7ab01e]" : "text-[#000]"
-                  }`}
+                  className={`text-base uppercase font-medium leading-[16px]  hover:text-[#7ab01e] ${router === "/" ? "text-[#7ab01e]" : "text-[#000]"
+                    }`}
                 >
                   Home
                 </Link>
@@ -167,9 +166,8 @@ const Footer = () => {
               <li className=" py-[23px] cursor-pointer">
                 <Link
                   href="/product"
-                  className={`text-base uppercase font-medium leading-[16px]  hover:text-[#7ab01e] ${
-                    router === "/product" ? "text-[#7ab01e]" : "text-[#000]"
-                  }`}
+                  className={`text-base uppercase font-medium leading-[16px]  hover:text-[#7ab01e] ${router === "/product" ? "text-[#7ab01e]" : "text-[#000]"
+                    }`}
                 >
                   Product
                 </Link>
@@ -177,9 +175,8 @@ const Footer = () => {
               <li className=" py-[23px] cursor-pointer">
                 <Link
                   href="/customer-service"
-                  className={`text-base uppercase font-medium leading-[16px]  hover:text-[#7ab01e] ${
-                    router === "/service" ? "text-[#7ab01e]" : "text-[#000]"
-                  }`}
+                  className={`text-base uppercase font-medium leading-[16px]  hover:text-[#7ab01e] ${router === "/service" ? "text-[#7ab01e]" : "text-[#000]"
+                    }`}
                 >
                   Customer Service
                 </Link>
@@ -187,11 +184,10 @@ const Footer = () => {
               <li className=" py-[23px] cursor-pointer">
                 <Link
                   href="/privacy-policy"
-                  className={`text-base uppercase font-medium leading-[16px]  hover:text-[#7ab01e] ${
-                    router === "/privacy-policy"
+                  className={`text-base uppercase font-medium leading-[16px]  hover:text-[#7ab01e] ${router === "/privacy-policy"
                       ? "text-[#7ab01e]"
                       : "text-[#000]"
-                  }`}
+                    }`}
                 >
                   Privacy Policy
                 </Link>

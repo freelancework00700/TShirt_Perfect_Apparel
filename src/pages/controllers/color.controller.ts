@@ -38,7 +38,7 @@ export class ColorController extends HttpStatus {
     public createColor = async (res: NextApiResponse, params: any) => {
         try {
 
-            const existingColor = await Color.findOne({ where: { name: params.name } });
+            const existingColor = await Color.findOne({ where: { name: params.name, isDeleted: false } });
             if (existingColor) {
                 return this.sendBadRequestResponse(res, "Color already exists.", existingColor);
             }
@@ -59,10 +59,10 @@ export class ColorController extends HttpStatus {
     public updateColor = async (res: NextApiResponse, params: any) => {
         try {
 
-            const color: any = await Color.findOne({ where: { id: params.id } });
+            const color: any = await Color.findOne({ where: { id: params.id, isDeleted: false } });
             if (!color) return this.sendBadRequestResponse(res, "Color not found.");
 
-            const existingColor = await Color.findOne({ where: { name: params.name, id: { [Op.ne]: params.id } } });
+            const existingColor = await Color.findOne({ where: { name: params.name, id: { [Op.ne]: params.id }, isDeleted: false } });
             if (existingColor) {
                 return this.sendBadRequestResponse(res, "Color already exists.", existingColor);
             }

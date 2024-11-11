@@ -47,7 +47,7 @@ export class SubCategoryController extends HttpStatus {
     /** POST API: Create a new sub-category */
     public createSubCategory = async (res: NextApiResponse, params: any) => {
         try {
-            const existingSubCategory = await SubCategory.findOne({ where: { name: params.name } });
+            const existingSubCategory = await SubCategory.findOne({ where: { name: params.name, isDeleted: false } });
             if (existingSubCategory) {
                 return this.sendBadRequestResponse(res, "Sub Category already exists.", existingSubCategory);
             }
@@ -67,10 +67,10 @@ export class SubCategoryController extends HttpStatus {
     /** PUT API: Update a sub-category */
     public updateSubCategory = async (res: NextApiResponse, params: any) => {
         try {
-            const subCategory: any = await SubCategory.findOne({ where: { id: params.id } });
+            const subCategory: any = await SubCategory.findOne({ where: { id: params.id,isDeleted: false } });
             if (!subCategory) return this.sendBadRequestResponse(res, "Sub Category not found.");
 
-            const existingCategory = await SubCategory.findOne({ where: { name: params.name, id: { [Op.ne]: params.id } } });
+            const existingCategory = await SubCategory.findOne({ where: { name: params.name, id: { [Op.ne]: params.id }, isDeleted: false } });
             if (existingCategory) {
                 return this.sendBadRequestResponse(res, "Sub Category already exists.", existingCategory);
             }

@@ -73,6 +73,7 @@ function Admin() {
   const [currentPage, setCurrentPage] = useState(1);
   const [currentPageOfInquiry, setCurrentPageOfInquiry] = useState(1);
   const [currentPageOfSize, setCurrentPageOfSize] = useState(1);
+  const [currentPageOfColor, setCurrentPageOfColor] = useState(1);
   const recordsPerPage = 10;
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isDeleteSizeDialogOpen, setIsDeleteDialogOpen] = useState(false);
@@ -944,6 +945,27 @@ function Admin() {
 
   const gotoPageOfSize = (page: number) => {
     setCurrentPageOfSize(page);
+  }
+
+  // color pagination
+  const totalPagesOfColor = Math.ceil(allColors.length / recordsPerPage)
+  const currentColor = allColors.slice((currentPageOfColor - 1) * recordsPerPage,
+    currentPageOfColor * recordsPerPage)
+
+  const nextPageOfColor = () => {
+    if (currentPageOfColor < totalPagesOfColor) {
+      setCurrentPageOfColor(currentPageOfColor + 1)
+    }
+  }
+
+  const previousPageOfColor = () => {
+    if (totalPagesOfColor > 1) {
+      setCurrentPageOfColor(currentPageOfColor - 1)
+    }
+  }
+
+  const gotoPageOfColor = (page: number) => {
+    setCurrentPageOfColor(page)
   }
 
 
@@ -2333,7 +2355,7 @@ function Admin() {
                                 </TableRow>
                               ))
                             ) : (
-                              allColors.map((item, index) => {
+                              currentColor.map((item, index) => {
                                 return (
                                   <TableRow key={index}>
                                     <TableCell>{item.id}</TableCell>
@@ -2360,7 +2382,7 @@ function Admin() {
                                             <AlertDialogHeader>
                                               <AlertDialogTitle>Are you sure you want to delete this color?</AlertDialogTitle>
                                               <AlertDialogDescription>
-                                                Are you sure you want to delete the color <span className="font-extrabold">{item.name}</span>? This action cannot be undone.
+                                                Are you sure you want to delete the color? This action cannot be undone.
                                               </AlertDialogDescription>
                                             </AlertDialogHeader>
                                             <AlertDialogFooter>
@@ -2378,6 +2400,43 @@ function Admin() {
                           </TableBody>
                         </Table>
                       </TableContainer>
+                      <div className="flex justify-center my-4 space-x-2">
+                        <button
+                          onClick={previousPageOfColor}
+                          disabled={currentPageOfColor === 1}
+                          className={`px-4 py-2 text-base font-medium border rounded-md ${currentPageOfColor === 1
+                            ? 'cursor-not-allowed opacity-50'
+                            : 'hover:bg-gray-200'
+                            }`}
+                        >
+                          Previous
+                        </button>
+
+                        {/* Render page numbers */}
+                        {Array.from({ length: totalPagesOfColor }, (_, index) => (
+                          <button
+                            key={index}
+                            onClick={() => gotoPageOfColor(index + 1)}
+                            className={`px-4 py-2 text-base font-medium border rounded-md ${currentPageOfColor === index + 1
+                              ? 'font-bold bg-gray-300'
+                              : 'hover:bg-gray-200'
+                              }`}
+                          >
+                            {index + 1}
+                          </button>
+                        ))}
+
+                        <button
+                          onClick={nextPageOfColor}
+                          disabled={currentPageOfColor === totalPagesOfColor}
+                          className={`px-4 py-2 text-base font-medium border rounded-md ${currentPageOfColor === totalPagesOfColor
+                            ? 'cursor-not-allowed opacity-50'
+                            : 'hover:bg-gray-200'
+                            }`}
+                        >
+                          Next
+                        </button>
+                      </div>
                     </Paper>
                   </>
                 }

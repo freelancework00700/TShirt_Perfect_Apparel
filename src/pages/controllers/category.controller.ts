@@ -38,7 +38,7 @@ export class CategoryController extends HttpStatus {
     public createCategory = async (res: NextApiResponse, params: any) => {
         try {
 
-            const existingCategory = await Category.findOne({ where: { name: params.name } });
+            const existingCategory = await Category.findOne({ where: { name: params.name, isDeleted: false } });
             if (existingCategory) {
                 return this.sendBadRequestResponse(res, "Category already exists.", existingCategory);
             }
@@ -59,10 +59,10 @@ export class CategoryController extends HttpStatus {
     public updateCategory = async (res: NextApiResponse, params: any) => {
         try {
 
-            const category: any = await Category.findOne({ where: { id: params.id } });
+            const category: any = await Category.findOne({ where: { id: params.id, isDeleted: false } });
             if (!category) return this.sendBadRequestResponse(res, "Category not found.");
 
-            const existingCategory = await Category.findOne({ where: { name: params.name, id: { [Op.ne]: params.id } } });
+            const existingCategory = await Category.findOne({ where: { name: params.name, id: { [Op.ne]: params.id }, isDeleted: false } });
             if (existingCategory) {
                 return this.sendBadRequestResponse(res, "Category already exists.", existingCategory);
             }

@@ -46,7 +46,7 @@ export class SizeController extends HttpStatus {
     public createSize = async (res: NextApiResponse, params: any) => {
         try {
 
-            const existingSize = await Size.findOne({ where: { name: params.name, category_id: params.category_id } });
+            const existingSize = await Size.findOne({ where: { name: params.name, category_id: params.category_id, isDeleted: false } });
             if (existingSize) {
                 return this.sendBadRequestResponse(res, "Size already exists.", existingSize);
             }
@@ -67,10 +67,10 @@ export class SizeController extends HttpStatus {
     public updateSize = async (res: NextApiResponse, params: any) => {
         try {
 
-            const size: any = await Size.findOne({ where: { id: params.id } });
+            const size: any = await Size.findOne({ where: { id: params.id, isDeleted: false } });
             if (!size) return this.sendBadRequestResponse(res, "Size not found.");
 
-            const existingSize = await Size.findOne({ where: { name: params.name, id: { [Op.ne]: params.id } } });
+            const existingSize = await Size.findOne({ where: { name: params.name, id: { [Op.ne]: params.id }, isDeleted: false } });
             if (existingSize) {
                 return this.sendBadRequestResponse(res, "Size already exists.", existingSize);
             }
