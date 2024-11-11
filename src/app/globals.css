@@ -104,3 +104,6 @@ body {
 .table-scrollable .MuiTableRow-head th:nth-child(10){
   min-width: 150px;
 }
+.swiper-pagination-bullet-active{
+  background: #000000 !important;
+}

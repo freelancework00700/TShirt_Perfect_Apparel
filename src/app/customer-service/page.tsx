@@ -50,11 +50,11 @@ function CustomerService() {
 
 
   return (
-    <main className="max-[1024px]:mt-[77px] relative">
+    <main className="max-[1024px]:mt-[58px] relative">
       <Header />
       <div className="min-h-[calc(100vh_-_385px)]">
-        <div className="container mx-auto xl:max-w-8xl max-sm:px-4 lg:mb-20 mb-5">
-          <div className="py-10 pb-0">
+        <div className="container mx-auto xl:max-w-8xl max-[1024px]:px-4 lg:mb-20 mb-5">
+          <div className="py-10 max-sm:pt-5 pb-0">
             <div className="my-4 text-[30px] font-medium text-center">
               Welcome to Customer Service
             </div>

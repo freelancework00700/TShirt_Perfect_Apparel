@@ -66,14 +66,14 @@ export default function Home() {
   };
 
   return (
-    <main className="max-[1024px]:mt-[77px] relative">
+    <main className="max-[1024px]:mt-[58px] relative">
       <ToastContainer />
       <Header />
       <div className="min-h-[calc(100vh_-_385px)] relative">
-        <div className="absolute top-[calc(100vh_+_150px)] -left-[175px] z-0 max-md:hidden">
+        <div className="absolute top-[calc(100vh_+_150px)] -left-[175px] z-0 max-lg:hidden block">
           <Image src={leaf1} alt="leaf1" className="h-[450px] w-[450px] object-contain -rotate-[140deg]"></Image>
         </div>
-        <div className="absolute top-[200vh] -right-[70px] z-0 max-md:hidden">
+        <div className="absolute top-[200vh] -right-[70px] z-0 max-lg:hidden block">
           <Image src={leaf2} alt="leaf1" className="h-[300px] w-[300px] object-contain rotate-[180deg]"></Image>
         </div>
         <div className="overflow-hidden relative z-10">
@@ -91,7 +91,7 @@ export default function Home() {
                 <Image
                   src={heroImage1}
                   alt="heroImage1"
-                  className="w-full h-[calc(100vh_-_70px)] object-cover"
+                  className="w-full xl:h-[calc(100vh_-_70px)] h-auto object-cover"
                 ></Image>
               </div>
             </SwiperSlide>
@@ -100,15 +100,15 @@ export default function Home() {
                 <Image
                   src={heroImage2}
                   alt="heroImage2"
-                  className="w-full h-[calc(100vh_-_70px)] object-cover"
+                  className="w-full xl:h-[calc(100vh_-_70px)] h-auto object-cover"
                 ></Image>
               </div>
             </SwiperSlide>
           </Swiper>
         </div>
-        <div className="container mx-auto xl:max-w-7xl max-sm:px-4 relative z-10">
-          <div className="py-10">
-            <div className="flex justify-center items-center gap-2 py-7 ">
+        <div className="container mx-auto xl:max-w-7xl max-[1024px]:px-4 relative z-10">
+          <div className="py-10 max-sm:py-5">
+            <div className="flex justify-center items-center gap-2 py-7">
               {Object.keys(segments).map((key: string) => (
                 <button
                   key={key}
@@ -304,7 +304,7 @@ export default function Home() {
               </>
             )}
           </div>
-          <div className="py-10">
+          <div className="py-10 max-sm:py-5">
             <div className="mb-8 text-[30px] font-medium text-center bg-gray-100 py-2 rounded-lg">
               Perfect Apparels Collection
             </div>
@@ -350,7 +350,7 @@ export default function Home() {
               </div>
             </div>
           </div>
-          <div className="py-10">
+          <div className="py-10 max-sm:py-5">
             <div className="mb-8 text-[30px] font-medium text-center bg-gray-100 py-2 rounded-lg">
               Trending T-Shirt Collection
             </div>
@@ -404,8 +404,7 @@ export default function Home() {
                                     {item.fit}
                                   </div>
                                 </div>
-                                <div className="text-[#000] text-[20px] py-2">
-                                  <div className="text-[#000] text-[16px] py-2">
+                                <div className="text-[#000] text-[16px] py-2">
                                     ₹{item.final_price}
                                     {item.discount_price > 0 && (
                                       <>
@@ -418,7 +417,6 @@ export default function Home() {
                                       </>
                                     )}
                                   </div>
-                                </div>
                                 <div className="text-[#999] text-[14px]">
                                   Color:{" "}
                                   <span className="text-[#000]">
@@ -444,7 +442,7 @@ export default function Home() {
               </Swiper>
             </div>
           </div>
-          <div className="py-10">
+          <div className="py-10 max-sm:py-5">
             <div className="mb-8 text-[30px] font-medium text-center bg-gray-100 py-2 rounded-lg">
               Trending Track Pants Collection
             </div>
@@ -502,8 +500,7 @@ export default function Home() {
                                       {item.fit}
                                     </div>
                                   </div>
-                                  <div className="text-[#000] text-[20px] py-2">
-                                    <div className="text-[#000] text-[16px] py-2">
+                                  <div className="text-[#000] text-[16px] py-2">
                                       ₹{item.final_price}
                                       {item.discount_price > 0 && (
                                         <>
@@ -516,7 +513,6 @@ export default function Home() {
                                         </>
                                       )}
                                     </div>
-                                  </div>
                                   <div className="text-[#999] text-[14px]">
                                     Color:{" "}
                                     <span className="text-[#000]">
@@ -547,25 +543,25 @@ export default function Home() {
       </div>
       <div className="w-full bg-gray-100 py-10 pb-5 max-md:py-5 ">
         <div className="container mx-auto xl:max-w-8xl max-sm:px-4">
-          <div className="mb-8 text-[30px] font-medium text-center">
+          <div className="mb-4 text-[30px] font-medium text-center">
             Our Brand Partners
           </div>
-          <div className="flex items-center justify-center flex-wrap gap-8 max-sm:gap-6 py-5">
-            <div className="bg-white rounded-lg px-10 h-[110px] flex justify-center items-center">
+          <div className="flex items-center justify-center flex-wrap gap-8 max-sm:gap-3 py-5">
+            <div className="bg-white rounded-lg px-10 h-[110px] flex justify-center items-center max-sm:w-full">
               <Image
                 src={brandPartnerImage1}
                 alt="brandPartnerImage1"
                 className="h-10 w-full object-contain"
               ></Image>
             </div>
-            <div className="bg-white rounded-lg px-10 h-[110px] flex justify-center items-center">
+            <div className="bg-white rounded-lg px-10 h-[110px] flex justify-center items-center max-sm:w-full">
               <Image
                 src={brandPartnerImage2}
                 alt="brandPartnerImage2"
                 className="h-24 w-full object-contain"
               ></Image>
             </div>
-            <div className="bg-white rounded-lg px-10 h-[110px] flex justify-center items-center">
+            <div className="bg-white rounded-lg px-10 h-[110px] flex justify-center items-center max-sm:w-full">
               <Image
                 src={brandPartnerImage3}
                 alt="brandPartnerImage3"
@@ -575,90 +571,6 @@ export default function Home() {
           </div>
         </div>
       </div>
-      {/* <div className="w-full py-20 max-md:py-5">
-        <div className="container mx-auto xl:max-w-7xl max-sm:px-4">
-          <div className="mb-10 text-[30px] font-medium text-center">
-            Our Best Selling Product
-          </div>
-          <div className="trending-swiper">
-            <Swiper
-              breakpoints={{
-                320: { slidesPerView: 1, spaceBetween: 5 },
-                480: { slidesPerView: 1, spaceBetween: 5 },
-                768: { slidesPerView: 2.3, spaceBetween: 10 },
-                1024: { slidesPerView: 4.3, spaceBetween: 12 },
-              }}
-              modules={[Navigation]}
-              navigation={true}
-            >
-              {loading
-                ? [1, 2, 3, 4, 5].map((item) => (
-                    <SwiperSlide key={item}>
-                      <Skeleton className="h-[245px] w-full" />
-                      <div className="py-3 px-4">
-                        <Skeleton className="h-[14px] w-[180px]" />
-                        <Skeleton className="h-[10px] w-[80px] mt-1" />
-                        <Skeleton className="h-[20px] w-[100px] my-4" />
-                        <Skeleton className="h-[14px] w-[100px]" />
-                        <Skeleton className="h-[14px] w-[80px] mt-1" />
-                      </div>
-                    </SwiperSlide>
-                  ))
-                : product
-                    .filter((item) => item.status === segments.newDrops.title)
-                    .map((item) => (
-                      <SwiperSlide key={item.id}>
-                        <div className="shadow-md h-full w-full m-2 rounded-lg">
-                          <Link href={`/product/product-details?id=${item.id}`}>
-                            <div className="productImage flex justify-center rounded-[12px] overflow-hidden relative">
-                              <Image
-                                src={`/product-image/${item.ProductImages[0]?.sysFileName}`}
-                                alt={item.name}
-                                width={200}
-                                height={200}
-                                className="min-h-[245px] max-h-[245px] object-cover"
-                              />
-                              <div className="absolute top-2 right-2 bg-[#ed3138] text-white px-2 py-0.5 rounded-md text-sm">
-                                30%
-                              </div>
-                            </div>
-                            <div className="py-3 px-4">
-                              <div>
-                                <div className="font-bold line-clamp-1">
-                                  {item.name}
-                                </div>
-                                <div className="text-[#999] text-[14px] line-clamp-1">
-                                  {item.name}
-                                </div>
-                              </div>
-                              <div className="text-[#000] text-[16px] py-2">
-                                ₹{item.final_price}
-                              </div>
-                              <div className="text-[#999] text-[14px]">
-                                Color:{" "}
-                                <span className="text-[#000]">
-                                  {item.Colors?.map((item) => item.name).join(
-                                    ", "
-                                  )}
-                                </span>
-                              </div>
-                              <div className="text-[#999] text-[14px]">
-                                Size:{" "}
-                                <span className="text-[#000]">
-                                  {item.Sizes.map((item) => item.name).join(
-                                    " , "
-                                  )}
-                                </span>
-                              </div>
-                            </div>
-                          </Link>
-                        </div>
-                      </SwiperSlide>
-                    ))}
-            </Swiper>
-          </div>
-        </div>
-      </div> */}
       <Footer />
     </main>
   );

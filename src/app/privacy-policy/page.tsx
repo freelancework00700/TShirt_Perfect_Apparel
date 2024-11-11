@@ -4,9 +4,9 @@ import React from "react";
 
 function PrivacyPolicy() {
   return (
-    <main className="max-[1024px]:mt-[77px] relative">
+    <main className="max-[1024px]:mt-[58px] relative">
       <Header />
-      <div className="container mx-auto xl:max-w-7xl lg:mb-20 mb-5">
+      <div className="container mx-auto xl:max-w-7xl lg:mb-20 mb-5 max-lg:px-5 max-lg:pt-1 max-[1024px]:px-4">
         <section>
           <h2 className="my-8 text-[30px] font-medium">PRIVACY POLICY</h2>
         </section>

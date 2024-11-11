@@ -15,27 +15,22 @@ import Link from "next/link";
 import axios from "axios";
 import { ICategories, IColor, IProduct, ISize } from "@/interface/types";
 import { Slider } from "@/components/ui/slider";
+import { Skeleton } from "@/components/ui/skeleton";
 
 
 function Product() {
+  const [loading, setLoading] = useState(false);
   const [allData, setAllData] = useState<IProduct[]>([]);
-  // console.log('allData', allData);
   const [categories, setCategories] = useState<ICategories[]>([]);
-  // console.log('categories', categories);
   const [allColor, setAllColor] = useState<IColor[]>([]);
   const [allSize, setAllSize] = useState<ISize[]>([]);
   const [selectedCategories, setSelectedCategories] = useState<number[]>([]);
-  // console.log('selectedCategories :>> ', selectedCategories);
   const [selectedSizes, setSelectedSizes] = useState<number[]>([]);
   const [availableSizes, setAvailableSizes] = useState<ISize[]>([]);
   const [availableColors, setAvailableColors] = useState<IColor[] | undefined>([]);
   const [selectedColors, setSelectedColors] = useState<number[]>([]);
   const [filteredProducts, setFilteredProducts] = useState<IProduct[]>([]);
   const [allFilterData, setAllFilterData] = useState<IProduct[]>([]);
-  // const filteredData = allData.filter((item) => item.Category.name === filter)
-
-
-
   const prices = allData.map((product) => parseFloat(product.price));
   const maxPrice = Math.max(...prices, 3000);
   const [selectedPrice, setSelectedPrice] = useState<[number, number]>([100, maxPrice / 2]);
@@ -46,14 +41,13 @@ function Product() {
   const [selectedFabrics, setSelectedFabrics] = useState<string[]>([]);
 
   const handleFabricChange = (fabric: string) => {
-    // console.log('fabric :>> ', fabric);
     setSelectedFabrics((prev) => (
-      // console.log('prev :>> ', prev),
       prev.includes(fabric) ? prev.filter((f) => f !== fabric) : [...prev, fabric])
     );
   };
 
   const getProduct = async () => {
+    setLoading(true);
     try {
       const response = await axios.get("/api/product");
       const getData = response.data?.data;
@@ -75,34 +69,14 @@ function Product() {
       setAllSize(sizeData);
     } catch (error) {
       console.error(error);
+    } finally {
+      setLoading(false);
     }
   };
 
   useEffect(() => {
     getProduct();
   }, []);
-
-  // useEffect(() => {
-  //   const filteredData = allData.filter((val) => selectedCategories.includes(val.category_id));
-  //   // console.log('filteredData :>> ', filteredData) ;
-
-  //   const sizeFilter = filteredData.filter((val) =>
-  //     val.size_ids.some((size) => selectedSizes.includes(size)));
-  //   console.log('sizeFilter:::::', sizeFilter);
-
-  //   const filteredPrice = sizeFilter.filter(
-  //     (product) => parseFloat(product.price) <= selectedPrice
-  //   );
-  //   console.log('filteredPrice :>> ', filteredPrice);
-  //   // const dataByPrice = sizeFilter.filter((val) => parseFloat(val.price) <= priceRange)
-  //   // console.log('dataByPrice :>> ', dataByPrice);
-
-  //   // const dataByPrice = sizeFilter.filter(
-  //   //   (val) => parseFloat(val.price) >= priceRange[0] && parseFloat(val.price) <= priceRange[1]
-  //   // );
-  //   // console.log('dataByPrice :>> ', dataByPrice);
-
-  // }, [allData, selectedCategories, allSize, selectedSizes])
 
   useEffect(() => {
     const allCategoryIds = categories.map((category) => category.id);
@@ -174,19 +148,6 @@ function Product() {
     setAvailableColors(displayColor);
   }, [selectedCategories, selectedSizes, allData]);
 
-  // useEffect(() => {
-  //   const products = allData.filter(
-  //     (product) =>
-  //       selectedCategories.includes(product.category_id) &&
-  //       product.size_ids?.some((sizeId) => selectedSizes.includes(sizeId)) &&
-  //       product.color_ids?.some((colorId: any) => selectedColors.includes(colorId)) &&
-  //       (selectedFabrics.length === 0 || selectedFabrics.includes(product.fabric?.toLowerCase().trim())) &&
-  //       parseFloat(product.final_price) <= selectedPrice
-  //   );
-  //   console.log('products :>> ', products);
-  //   setFilteredProducts(products);
-  // }, [selectedCategories, selectedSizes, selectedColors, selectedPrice, selectedFabrics, allData]);
-
   useEffect(() => {
     const stockCheck = allFilterData.filter((val) => val.inStock === true)
     const products = selectedCategories.length === 0
@@ -232,9 +193,9 @@ function Product() {
     <main className="max-[1024px]:mt-[77px] max-[767px]:mt-[50px] relative">
       <Header />
       <div className="min-h-[calc(100vh_-_385px)]">
-        <div className="container mx-auto xl:max-w-8xl max-sm:px-4">
+        <div className="container mx-auto xl:max-w-7xl max-[1024px]:px-4">
           <div className="grid grid-cols-12 gap-4 lg:py-10">
-            <div className="xl:col-span-2 lg:col-span-3 col-span-12">
+            <div className="xl:col-span-2 lg:col-span-3 col-span-12 max-md:py-5">
               <div className="flex justify-between items-center w-full">
                 <div className="text-[24px] font-medium">Filter</div>
                 <div>
@@ -365,117 +326,75 @@ function Product() {
                   Product ({filteredProducts.length})
                 </div>
               </div>
-              <div className="grid grid-cols-12 gap-4 gap-y-10">
-                {filteredProducts.length > 0 ? (
-                  // Display filteredProducts when data is available
-                  filteredProducts.map((item, index) => (
-                    <Link
-                      key={index}
-                      className="lg:col-span-3 md:col-span-6 col-span-12"
-                      href={`/product/product-details?id=${item.id}`}
-                    >
-                      <div className="shadow-md h-full w-full rounded-lg">
-                        <div className="productImage rounded-[12px] overflow-hidden max-h-[400px] flex justify-center">
-                          <Image
-                            src={`/product-image/${item.ProductImages[0]?.sysFileName}`}
-                            width={200}
-                            height={200}
-                            alt={item.name}
-                            className="min-h-[245px] max-h-[245px] object-cover"
-                          />
-                        </div>
+              <div className="grid grid-cols-12 gap-4 gap-y-5 max-md:pb-10">
+                {loading
+                    ? [1, 2, 3, 4, 5, 6, 7, 8].map((item) => (
+                      <div key={item} className="lg:col-span-3 md:col-span-6 col-span-12">
+                        <Skeleton className="h-[245px] w-full" />
                         <div className="py-3 px-4">
-                          <div>
-                            <div className="font-bold text-base">{item.name}</div>
-                            <div className="text-[#999] text-[14px]">{item.fit}</div>
-                          </div>
-                          <div className="text-[#000] text-[16px] py-1">
-                            <div className="text-[#000] text-[16px] py-2 5px">
-                              ₹{item.final_price}
-                              {item.discount_price > 0 && (
-                                <>
-                                  <span className="line-through text-[12px] text-[#999] ml-1">
-                                    ₹{item.price}
-                                  </span>
-                                  <span className="text-[#3fac45] text-[12px]">
-                                    {item.discount_price}% off
-                                  </span>
-                                </>
-                              )}
-                            </div>
-                          </div>
-                          <div className="text-[#999] text-[14px]">
-                            Color:{" "}
-                            <span className="text-[#000]">
-                              {item.Colors?.map((color) => color.name).join(", ")}
-                            </span>
-                          </div>
-                          <div className="text-[#999] text-[14px]">
-                            Size:{" "}
-                            <span className="text-[#000]">
-                              {item.Sizes.map((size) => size.name).join(", ")}
-                            </span>
-                          </div>
+                          <Skeleton className="h-[14px] w-[180px]" />
+                          <Skeleton className="h-[10px] w-[80px] mt-1" />
+                          <Skeleton className="h-[20px] w-[100px] my-4" />
+                          <Skeleton className="h-[14px] w-[100px]" />
+                          <Skeleton className="h-[14px] w-[80px] mt-1" />
                         </div>
                       </div>
-                    </Link>
+                    ))
+                    :  filteredProducts.length > 0 ? (
+                  // Display filteredProducts when data is available
+                  filteredProducts.map((item, index) => (
+                    <>
+                      <Link
+                        key={index}
+                        className="lg:col-span-3 md:col-span-6 col-span-12"
+                        href={`/product/product-details?id=${item.id}`}
+                      >
+                        <div className="shadow-md h-full w-full rounded-lg">
+                          <div className="productImage rounded-[12px] overflow-hidden max-h-[400px] flex justify-center">
+                            <Image
+                              src={`/product-image/${item.ProductImages[0]?.sysFileName}`}
+                              width={200}
+                              height={200}
+                              alt={item.name}
+                              className="min-h-[245px] max-h-[245px] object-cover"
+                            />
+                          </div>
+                          <div className="py-3 px-4">
+                            <div>
+                              <div className="font-bold text-base">{item.name}</div>
+                              <div className="text-[#999] text-[14px]">{item.fit}</div>
+                            </div>
+                            <div className="text-[#000] text-[16px] py-2 5px">
+                                ₹{item.final_price}
+                                {item.discount_price > 0 && (
+                                  <>
+                                    <span className="line-through text-[12px] text-[#999] ml-1">
+                                      ₹{item.price}
+                                    </span>
+                                    <span className="text-[#3fac45] text-[12px]">
+                                      {item.discount_price}% off
+                                    </span>
+                                  </>
+                                )}
+                              </div>
+                            <div className="text-[#999] text-[14px]">
+                              Color:{" "}
+                              <span className="text-[#000]">
+                                {item.Colors?.map((color) => color.name).join(", ")}
+                              </span>
+                            </div>
+                            <div className="text-[#999] text-[14px]">
+                              Size:{" "}
+                              <span className="text-[#000]">
+                                {item.Sizes.map((size) => size.name).join(", ")}
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                      </Link>
+                    </>
                   ))
                 )
-                  // : filteredData.length > 0 ? (
-                  //   // If filteredProducts is not available, fallback to filteredData
-                  //   filteredData.map((item, index) => (
-                  //     <Link
-                  //       key={index}
-                  //       className={filter ? "lg:col-span-3 md:col-span-6 col-span-12" : "col-span-3"}
-                  //       href={`/product/product-details?id=${item.id}`}
-                  //     >
-                  //       <div className="shadow-md h-full w-full rounded-lg">
-                  //         <div className="productImage rounded-[12px] overflow-hidden max-h-[400px] flex justify-center">
-                  //           <Image
-                  //             src={`/product-image/${item.ProductImages[0]?.sysFileName}`}
-                  //             width={200}
-                  //             height={200}
-                  //             alt={item.name}
-                  //             className="min-h-[245px] max-h-[245px] object-cover"
-                  //           />
-                  //         </div>
-                  //         <div className="py-3 px-4">
-                  //           <div>
-                  //             <div className="font-bold">{item.name}</div>
-                  //             <div className="text-[#999] text-[14px]">{item.fit}</div>
-                  //           </div>
-                  //           <div className="text-[#000] text-[16px] py-1">
-                  //             <div className="text-[#000] text-[16px] py-2">
-                  //               ₹{item.final_price}
-                  //               {item.discount_price > 0 && (
-                  //                 <>
-                  //                   <span className="line-through text-[12px] text-[#999] ml-1">
-                  //                     ₹{item.price}
-                  //                   </span>
-                  //                   <span className="text-[#3fac45] text-[12px]">
-                  //                     {item.discount_price}% off
-                  //                   </span>
-                  //                 </>
-                  //               )}
-                  //             </div>
-                  //           </div>
-                  //           <div className="text-[#999] text-[14px]">
-                  //             Color:{" "}
-                  //             <span className="text-[#000]">
-                  //               {item.Colors.map((color) => color.name).join(", ")}
-                  //             </span>
-                  //           </div>
-                  //           <div className="text-[#999] text-[14px]">
-                  //             Size:{" "}
-                  //             <span className="text-[#000]">
-                  //               {item.Sizes.map((size) => size.name).join(", ")}
-                  //             </span>
-                  //           </div>
-                  //         </div>
-                  //       </div>
-                  //     </Link>
-                  //   ))
-                  // )
                   : (
                     // Display a message when no products are available
                     <div className="col-span-12 text-center py-20">

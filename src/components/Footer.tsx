@@ -74,7 +74,7 @@ const Footer = () => {
       <ToastContainer />
       <footer className="bg-[#fff]">
         <div className="w-full bg-gray-100 py-10 max-md:py-5">
-          <div className="container mx-auto xl:max-w-7xl max-sm:px-4">
+          <div className="container mx-auto xl:max-w-7xl max-[1024px]:px-4">
             <div className="grid grid-cols-12">
               <div className="col-span-12 text-[30px] font-medium text-center mb-4 ">
                 Get In Touch
@@ -91,8 +91,8 @@ const Footer = () => {
                       <Skeleton className="w-full h-[52px] rounded-full" /> */}
                     </div>
                   ) : (
-                    <div className="flex justify-center gap-3 max-md:flex-wrap">
-                      <div>
+                    <div className="flex justify-center gap-3 flex-wrap">
+                      <div className="max-sm:w-full">
                         <Input
                           type="email"
                           name="email"
@@ -105,7 +105,7 @@ const Footer = () => {
                           <p className="text-red-500">{formik.errors.email}</p>
                         )}
                       </div>
-                      <div>
+                      <div className="max-sm:w-full">
                         <Input
                           type="text"
                           name="phone"
@@ -118,7 +118,7 @@ const Footer = () => {
                           <p className="text-red-500">{formik.errors.phone}</p>
                         )}
                       </div>
-                      <div>
+                      <div className="max-sm:w-full">
                         <Input
                           type="text"
                           name="message"
@@ -135,7 +135,7 @@ const Footer = () => {
                       </div>
                       <Button
                         type="submit"
-                        className="rounded-full px-10 h-[52px] "
+                        className="rounded-full px-10 h-[52px] max-sm:w-full"
                       >
                         Submit
                       </Button>
@@ -146,9 +146,9 @@ const Footer = () => {
             </div>
           </div>
         </div>
-        <div className="container mx-auto xl:max-w-7xl max-sm:px-4">
+        <div className="container mx-auto xl:max-w-7xl max-[1024px]:px-4">
           <div className="flex justify-between items-center flex-wrap max-md:justify-center">
-            <div className="font-bold xl:me-[2rem] text-[24px] ">
+            <div className="font-bold xl:me-[2rem] text-[24px] max-sm:pt-5">
             <Link href="/">
                   <Image src={mainLogo} alt="PerfectApparels" className="h-8 w-full object-contain"></Image>
                 </Link>

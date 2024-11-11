@@ -144,10 +144,10 @@ const ProductDetail = () => {
   }
 
   return (
-    <main className="max-[1024px]:mt-[77px] relative">
+    <main className="max-[1024px]:mt-[58px] relative">
       <Header />
       <div className="min-h-[calc(100vh_-_385px)]">
-        <div className="container mx-auto xl:max-w-8xl max-sm:px-4 py-5">
+        <div className="container mx-auto xl:max-w-7xl max-[1024px]:px-4 py-5">
           <div className="grid grid-cols-12 gap-4">
             <div className="xl:col-span-6 lg:col-span-6 col-span-12">
               {productData.map((item, index) => {
