@@ -712,6 +712,7 @@ function Admin() {
       formik.setFieldValue("final_price", final_price.toFixed(0));
     }
   };
+
   const handleEditProduct = async (item: IProduct) => {
     console.log('item :>> ', item);
     getAllCategory();
@@ -1069,66 +1070,66 @@ function Admin() {
                     {
                       viewProductData?.map((item) => (
                         <>
-                        <div className="grid grid-cols-12 gap-2 gap-y-2">
-                          <div className="mb-2 col-span-6">
-                            <span className="font-bold text-gray-500">Category:</span> {item.Category?.name}
-                          </div>                        
-                          <div className="mb-2 col-span-6">
-                            <span className="font-bold text-gray-500">Name: </span>{item.name}
+                          <div className="grid grid-cols-12 gap-2 gap-y-2">
+                            <div className="mb-2 col-span-6">
+                              <span className="font-bold text-gray-500">Category:</span> {item.Category?.name}
+                            </div>
+                            <div className="mb-2 col-span-6">
+                              <span className="font-bold text-gray-500">Name: </span>{item.name}
+                            </div>
+                            <div className="mb-2 col-span-6">
+                              <span className="font-bold text-gray-500">Price: </span>{item.price}
+                            </div>
+                            <div className="mb-2 col-span-6">
+                              <span className="font-bold text-gray-500">Colors: </span>{item.Colors.map(color => color.name).join(',')}
+                            </div>
+                            <div className="mb-2 col-span-6">
+                              <span className="font-bold text-gray-500">Size: </span>{item.Sizes.map(size => size.name).join(',')}
+                            </div>
+                            <div className="mb-2 col-span-6">
+                              <span className="font-bold text-gray-500">Type: </span>{item.sleeve}
+                            </div>
+                            <div className="mb-2 col-span-6">
+                              <span className="font-bold text-gray-500">Fabric: </span>{item.sleeve}
+                            </div>
+                            <div className="mb-2 col-span-6">
+                              <span className="font-bold text-gray-500">Sales Package:</span>{item.sales_package}
+                            </div>
+                            <div className="mb-2 col-span-6">
+                              <span className="font-bold text-gray-500">Style Code: </span>{item.style_code}
+                            </div>
+                            <div className="mb-2 col-span-6">
+                              <span className="font-bold text-gray-500">Neck Type: </span>{item.neck_type}
+                            </div>
+                            <div className="mb-2 col-span-6">
+                              <span className="font-bold text-gray-500">Pattern: </span>{item.pattern}
+                            </div>
+                            <div className="mb-2 col-span-6">
+                              <span className="font-bold text-gray-500">Fabric Care: </span>{item.fabric_care}
+                            </div>
+                            <div className="mb-2 col-span-6">
+                              <span className="font-bold text-gray-500">Net Quantity: </span>{item.net_quantity}
+                            </div>
+                            <div className="mb-2 col-span-6">
+                              <span className="font-bold text-gray-500">Status: </span>{item.status}
+                            </div>
+                            <div className="mb-2 col-span-6">
+                              <span className="font-bold text-gray-500">Description: </span>{item.description}
+                            </div>
+                            <div className="mb-2 col-span-12">
+                              <span className="font-bold text-gray-500">Images:</span>
+                              <div className="grid grid-cols-12 gap-2 gap-y-2">
+                                {item.ProductImages.map((image, index) => (
+                                  <div key={index} className="col-span-2 shadow rounded-md my-5 overflow-hidden">
+                                    <Image src={`/product-image/${image.sysFileName}`}
+                                      width={200} height={200} alt="Product image" className="w-full h-full object-cover max-h-[90px]"
+                                    />
+                                  </div>
+                                ))
+                                }
+                              </div>
+                            </div>
                           </div>
-                          <div className="mb-2 col-span-6">
-                            <span className="font-bold text-gray-500">Price: </span>{item.price}
-                          </div>
-                          <div className="mb-2 col-span-6">
-                            <span className="font-bold text-gray-500">Colors: </span>{item.Colors.map(color => color.name).join(',')}
-                          </div>
-                          <div className="mb-2 col-span-6">
-                            <span className="font-bold text-gray-500">Size: </span>{item.Sizes.map(size => size.name).join(',')}
-                          </div>
-                          <div className="mb-2 col-span-6">
-                            <span className="font-bold text-gray-500">Type: </span>{item.sleeve}
-                          </div>
-                          <div className="mb-2 col-span-6">
-                            <span className="font-bold text-gray-500">Fabric: </span>{item.sleeve}
-                          </div>
-                          <div className="mb-2 col-span-6">
-                            <span className="font-bold text-gray-500">Sales Package:</span>{item.sales_package}
-                          </div>
-                          <div className="mb-2 col-span-6">
-                            <span className="font-bold text-gray-500">Style Code: </span>{item.style_code}
-                          </div>
-                          <div className="mb-2 col-span-6">
-                            <span className="font-bold text-gray-500">Neck Type: </span>{item.neck_type}
-                          </div>
-                          <div className="mb-2 col-span-6">
-                            <span className="font-bold text-gray-500">Pattern: </span>{item.pattern}
-                          </div>
-                          <div className="mb-2 col-span-6">
-                            <span className="font-bold text-gray-500">Fabric Care: </span>{item.fabric_care}
-                          </div>
-                          <div className="mb-2 col-span-6">
-                            <span className="font-bold text-gray-500">Net Quantity: </span>{item.net_quantity}
-                          </div>
-                          <div className="mb-2 col-span-6">
-                            <span className="font-bold text-gray-500">Status: </span>{item.status}
-                          </div>
-                          <div className="mb-2 col-span-6">
-                            <span className="font-bold text-gray-500">Description: </span>{item.description}
-                          </div>
-                          <div className="mb-2 col-span-12">
-                            <span className="font-bold text-gray-500">Images:</span>
-                            <div className="grid grid-cols-12 gap-2 gap-y-2">
-                            {item.ProductImages.map((image, index) => (
-                                <div key={index} className="col-span-2 shadow rounded-md my-5 overflow-hidden">
-                                  <Image src={`/product-image/${image.sysFileName}`}
-                                    width={200} height={200} alt="Product image" className="w-full h-full object-cover max-h-[90px]"
-                                  />
-                                </div>
-                              ))
-                            }
-                            </div>                            
-                          </div>
-                        </div>
                         </>
                       ))
                     }
@@ -1151,7 +1152,10 @@ function Admin() {
                       <div className="flex items-center space-x-2">
                         <Label>T-Shirts</Label>
                         <Switch checked={isTrackPants}
-                          onCheckedChange={(checked) => setIsTrackPants(checked)}
+                          onCheckedChange={(checked) => {
+                            setIsTrackPants(checked)
+                            setCurrentPage(1)
+                          }}
                         />
                         <Label>Track Pants</Label>
                       </div>
@@ -1657,179 +1661,179 @@ function Admin() {
                       </Dialog>
                     </div>
                     <Paper sx={{ width: '100%', overflow: 'hidden', borderRadius: '12px' }}>
-                          <TableContainer className="table-scrollable h-[calc(100vh_-_180px)] overflow-auto">
-                            <Table stickyHeader aria-label="sticky table">
-                              <TableHead>
-                                <TableRow>
-                                  <TableCell>Category</TableCell>
-                                  <TableCell className="text-center">Name</TableCell>
-                                  <TableCell>Price</TableCell>
-                                  <TableCell>Discount Price</TableCell>
-                                  <TableCell>Final Price</TableCell>
-                                  <TableCell>Fabric</TableCell>
-                                  <TableCell>Type</TableCell>
-                                  <TableCell>Color</TableCell>
-                                  <TableCell>Size</TableCell>
-                                  <TableCell>Status</TableCell>
-                                  <TableCell>Style Code</TableCell>
-                                  <TableCell>Pattern</TableCell>
-                                  <TableCell>Action</TableCell>
+                      <TableContainer className="table-scrollable h-[calc(100vh_-_180px)] overflow-auto">
+                        <Table stickyHeader aria-label="sticky table">
+                          <TableHead>
+                            <TableRow>
+                              <TableCell>Category</TableCell>
+                              <TableCell className="text-center">Name</TableCell>
+                              <TableCell>Price</TableCell>
+                              <TableCell>Discount Price</TableCell>
+                              <TableCell>Final Price</TableCell>
+                              <TableCell>Fabric</TableCell>
+                              <TableCell>Type</TableCell>
+                              <TableCell>Color</TableCell>
+                              <TableCell>Size</TableCell>
+                              <TableCell>Status</TableCell>
+                              <TableCell>Style Code</TableCell>
+                              <TableCell>Pattern</TableCell>
+                              <TableCell>Action</TableCell>
+                            </TableRow>
+                          </TableHead>
+                          <TableBody>
+                            {loading
+                              ? [1, 2, 3, 4, 5, 6, 7, 8].map((item) => (
+                                <TableRow key={item}>
+                                  <TableCell>
+                                    <Skeleton className="h-[14px] w-full" />
+                                  </TableCell>
+                                  <TableCell>
+                                    <Skeleton className="h-[14px] w-full" />
+                                  </TableCell>
+                                  <TableCell>
+                                    <Skeleton className="h-[14px] w-full" />
+                                  </TableCell>
+                                  <TableCell>
+                                    <Skeleton className="h-[14px] w-full" />
+                                  </TableCell>
+                                  <TableCell>
+                                    <Skeleton className="h-[14px] w-full" />
+                                  </TableCell>
+                                  <TableCell>
+                                    <Skeleton className="h-[14px] w-full" />
+                                  </TableCell>
+                                  <TableCell>
+                                    <Skeleton className="h-[14px] w-full" />
+                                  </TableCell>
+                                  <TableCell>
+                                    <Skeleton className="h-[14px] w-full" />
+                                  </TableCell>
+                                  <TableCell>
+                                    <Skeleton className="h-[14px] w-full" />
+                                  </TableCell>
+                                  <TableCell>
+                                    <Skeleton className="h-[14px] w-full" />
+                                  </TableCell>
+                                  <TableCell>
+                                    <Skeleton className="h-[14px] w-full" />
+                                  </TableCell>
+                                  <TableCell>
+                                    <Skeleton className="h-[14px] w-full" />
+                                  </TableCell>
+                                  <TableCell>
+                                    <Skeleton className="h-[14px] w-full" />
+                                  </TableCell>
                                 </TableRow>
-                              </TableHead>
-                              <TableBody>
-                                {loading 
-                                ? [1, 2, 3, 4, 5, 6, 7, 8].map((item) => (
-                                  <TableRow key={item}>
-                                    <TableCell>
-                                      <Skeleton className="h-[14px] w-full" />
-                                    </TableCell>
-                                    <TableCell>
-                                      <Skeleton className="h-[14px] w-full" />
-                                    </TableCell>
-                                    <TableCell>
-                                      <Skeleton className="h-[14px] w-full" />
-                                    </TableCell>
-                                    <TableCell>
-                                      <Skeleton className="h-[14px] w-full" />
-                                    </TableCell>
-                                    <TableCell>
-                                      <Skeleton className="h-[14px] w-full" />
-                                    </TableCell>
-                                    <TableCell>
-                                      <Skeleton className="h-[14px] w-full" />
-                                    </TableCell>
-                                    <TableCell>
-                                      <Skeleton className="h-[14px] w-full" />
-                                    </TableCell>
-                                    <TableCell>
-                                      <Skeleton className="h-[14px] w-full" />
-                                    </TableCell>
-                                    <TableCell>
-                                      <Skeleton className="h-[14px] w-full" />
-                                    </TableCell>
-                                    <TableCell>
-                                      <Skeleton className="h-[14px] w-full" />
-                                    </TableCell>
-                                    <TableCell>
-                                      <Skeleton className="h-[14px] w-full" />
-                                    </TableCell>
-                                    <TableCell>
-                                      <Skeleton className="h-[14px] w-full" />
-                                    </TableCell>
-                                    <TableCell>
-                                      <Skeleton className="h-[14px] w-full" />
-                                    </TableCell>
-                                  </TableRow>
-                                ))
-                                 : 
-                                  currentProducts.map((item, index) => (
-                                    <TableRow key={index}>
-                                      <TableCell>{item.Category?.name}</TableCell>
-                                      <TableCell>{item.name}</TableCell>
-                                      <TableCell>{item.price}</TableCell>
-                                      <TableCell>{item.discount_price}</TableCell>
-                                      <TableCell>{item.final_price}</TableCell>
-                                      <TableCell>{item.fabric}</TableCell>
-                                      <TableCell>{item.type}</TableCell>
-                                      <TableCell>{item.Colors.map(color => color.name).join(',')}</TableCell>
-                                      <TableCell>{item.Sizes.map(size => size.name).join(',')}</TableCell>
-                                      <TableCell>
-                                        <RadioGroup value={item.status}
-                                          onValueChange={(value) => handleUpdateStatus(item, value)}
-                                        >
-                                          <div className="flex gap-1 items-center whitespace-nowrap">
-                                            <RadioGroupItem value="New Drops" />New Drops
-                                          </div>
-                                          <div className="flex gap-1 items-center whitespace-nowrap">
-                                            <RadioGroupItem value="Most Trending" />Most Trending
-                                          </div>
-                                          <div className="flex gap-1 items-center whitespace-nowrap">
-                                            <RadioGroupItem value="Not Display" />Not Display
-                                          </div>
-                                        </RadioGroup>
-                                      </TableCell>
-                                      <TableCell>{item.style_code}</TableCell>
-                                      <TableCell>{item.pattern}</TableCell>
-                                      <TableCell>
-                                        <div className="flex items-center gap-1">
-                                          <svg onClick={() => handleViewProduct(item)}
+                              ))
+                              :
+                              currentProducts.map((item, index) => (
+                                <TableRow key={index}>
+                                  <TableCell>{item.Category?.name}</TableCell>
+                                  <TableCell>{item.name}</TableCell>
+                                  <TableCell>{item.price}</TableCell>
+                                  <TableCell>{item.discount_price}</TableCell>
+                                  <TableCell>{item.final_price}</TableCell>
+                                  <TableCell>{item.fabric}</TableCell>
+                                  <TableCell>{item.type}</TableCell>
+                                  <TableCell>{item.Colors.map(color => color.name).join(',')}</TableCell>
+                                  <TableCell>{item.Sizes.map(size => size.name).join(',')}</TableCell>
+                                  <TableCell>
+                                    <RadioGroup value={item.status}
+                                      onValueChange={(value) => handleUpdateStatus(item, value)}
+                                    >
+                                      <div className="flex gap-1 items-center whitespace-nowrap">
+                                        <RadioGroupItem value="New Drops" />New Drops
+                                      </div>
+                                      <div className="flex gap-1 items-center whitespace-nowrap">
+                                        <RadioGroupItem value="Most Trending" />Most Trending
+                                      </div>
+                                      <div className="flex gap-1 items-center whitespace-nowrap">
+                                        <RadioGroupItem value="Not Display" />Not Display
+                                      </div>
+                                    </RadioGroup>
+                                  </TableCell>
+                                  <TableCell>{item.style_code}</TableCell>
+                                  <TableCell>{item.pattern}</TableCell>
+                                  <TableCell>
+                                    <div className="flex items-center gap-1">
+                                      <svg onClick={() => handleViewProduct(item)}
+                                        className="cursor-pointer w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                        <path stroke="currentColor" stroke-width="2" d="M21 12c0 1.2-4.03 6-9 6s-9-4.8-9-6c0-1.2 4.03-6 9-6s9 4.8 9 6Z" />
+                                        <path stroke="currentColor" stroke-width="2" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+                                      </svg>
+                                      <div onClick={() => handleEditProduct(item)}>
+                                        <svg className="cursor-pointer w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                          <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m14.304 4.844 2.852 2.852M7 7H4a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1v-4.5m2.409-9.91a2.017 2.017 0 0 1 0 2.853l-6.844 6.844L8 14l.713-3.565 6.844-6.844a2.015 2.015 0 0 1 2.852 0Z" />
+                                        </svg>
+                                      </div>
+                                      <AlertDialog open={isProductDialogOpen} onOpenChange={setIsProductDialogOpen}>
+                                        <AlertDialogTrigger>
+                                          <svg onClick={() => openDeleteProductDialog(item.id)}
                                             className="cursor-pointer w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                                            <path stroke="currentColor" stroke-width="2" d="M21 12c0 1.2-4.03 6-9 6s-9-4.8-9-6c0-1.2 4.03-6 9-6s9 4.8 9 6Z" />
-                                            <path stroke="currentColor" stroke-width="2" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+                                            <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 7h14m-9 3v8m4-8v8M10 3h4a1 1 0 0 1 1 1v3H9V4a1 1 0 0 1 1-1ZM6 7h12v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7Z" />
                                           </svg>
-                                          <div onClick={() => handleEditProduct(item)}>
-                                            <svg className="cursor-pointer w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                                              <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m14.304 4.844 2.852 2.852M7 7H4a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1v-4.5m2.409-9.91a2.017 2.017 0 0 1 0 2.853l-6.844 6.844L8 14l.713-3.565 6.844-6.844a2.015 2.015 0 0 1 2.852 0Z" />
-                                            </svg>
-                                          </div>
-                                          <AlertDialog open={isProductDialogOpen} onOpenChange={setIsProductDialogOpen}>
-                                            <AlertDialogTrigger>
-                                              <svg onClick={() => openDeleteProductDialog(item.id)}
-                                                className="cursor-pointer w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                                                <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 7h14m-9 3v8m4-8v8M10 3h4a1 1 0 0 1 1 1v3H9V4a1 1 0 0 1 1-1ZM6 7h12v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7Z" />
-                                              </svg>
-                                            </AlertDialogTrigger>
-                                            <AlertDialogContent>
-                                              <AlertDialogHeader>
-                                                <AlertDialogTitle>Are you sure you want to delete this product</AlertDialogTitle>
-                                                <AlertDialogDescription>
-                                                  Are you sure you want to delete this product? This action cannot be undone.
-                                                </AlertDialogDescription>
-                                              </AlertDialogHeader>
-                                              <AlertDialogFooter>
-                                                <AlertDialogFooter>
-                                                  <AlertDialogCancel onClick={() => setIsProductDialogOpen(false)}>Cancel</AlertDialogCancel>
-                                                  <AlertDialogAction onClick={handleDeleteProduct}>Confirm</AlertDialogAction>
-                                                </AlertDialogFooter>
-                                              </AlertDialogFooter>
-                                            </AlertDialogContent>
-                                          </AlertDialog>
-                                        </div>
-                                      </TableCell>
-                                    </TableRow>
-                                  ))
-                                }
-                              </TableBody>
-                            </Table>
-                          </TableContainer>
-                          <div className="flex justify-center my-4 space-x-2">
-                            <button
-                              onClick={prevPage}
-                              disabled={currentPage === 1}
-                              className={`px-4 py-2 text-base font-medium border rounded-md ${currentPage === 1
-                                ? 'cursor-not-allowed opacity-50'
-                                : 'hover:bg-gray-200'
-                                }`}
-                            >
-                              Previous
-                            </button>
+                                        </AlertDialogTrigger>
+                                        <AlertDialogContent>
+                                          <AlertDialogHeader>
+                                            <AlertDialogTitle>Are you sure you want to delete this product</AlertDialogTitle>
+                                            <AlertDialogDescription>
+                                              Are you sure you want to delete this product? This action cannot be undone.
+                                            </AlertDialogDescription>
+                                          </AlertDialogHeader>
+                                          <AlertDialogFooter>
+                                            <AlertDialogFooter>
+                                              <AlertDialogCancel onClick={() => setIsProductDialogOpen(false)}>Cancel</AlertDialogCancel>
+                                              <AlertDialogAction onClick={handleDeleteProduct}>Confirm</AlertDialogAction>
+                                            </AlertDialogFooter>
+                                          </AlertDialogFooter>
+                                        </AlertDialogContent>
+                                      </AlertDialog>
+                                    </div>
+                                  </TableCell>
+                                </TableRow>
+                              ))
+                            }
+                          </TableBody>
+                        </Table>
+                      </TableContainer>
+                      <div className="flex justify-center my-4 space-x-2">
+                        <button
+                          onClick={prevPage}
+                          disabled={currentPage === 1}
+                          className={`px-4 py-2 text-base font-medium border rounded-md ${currentPage === 1
+                            ? 'cursor-not-allowed opacity-50'
+                            : 'hover:bg-gray-200'
+                            }`}
+                        >
+                          Previous
+                        </button>
 
-                            {/* Render page numbers */}
-                            {Array.from({ length: totalPages }, (_, index) => (
-                              <button
-                                key={index}
-                                onClick={() => goToPage(index + 1)}
-                                className={`px-4 py-2 text-base font-medium border rounded-md ${currentPage === index + 1
-                                  ? 'font-bold bg-gray-300'
-                                  : 'hover:bg-gray-200'
-                                  }`}
-                              >
-                                {index + 1}
-                              </button>
-                            ))}
+                        {/* Render page numbers */}
+                        {Array.from({ length: totalPages }, (_, index) => (
+                          <button
+                            key={index}
+                            onClick={() => goToPage(index + 1)}
+                            className={`px-4 py-2 text-base font-medium border rounded-md ${currentPage === index + 1
+                              ? 'font-bold bg-gray-300'
+                              : 'hover:bg-gray-200'
+                              }`}
+                          >
+                            {index + 1}
+                          </button>
+                        ))}
 
-                            <button
-                              onClick={nextPage}
-                              disabled={currentPage === totalPages}
-                              className={`px-4 py-2 text-base font-medium border rounded-md ${currentPage === totalPages
-                                ? 'cursor-not-allowed opacity-50'
-                                : 'hover:bg-gray-200'
-                                }`}
-                            >
-                              Next
-                            </button>
-                          </div>
-                    </Paper>                    
+                        <button
+                          onClick={nextPage}
+                          disabled={currentPage === totalPages}
+                          className={`px-4 py-2 text-base font-medium border rounded-md ${currentPage === totalPages
+                            ? 'cursor-not-allowed opacity-50'
+                            : 'hover:bg-gray-200'
+                            }`}
+                        >
+                          Next
+                        </button>
+                      </div>
+                    </Paper>
                   </>
                 }
 
