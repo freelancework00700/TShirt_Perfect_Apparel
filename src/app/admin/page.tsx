@@ -183,11 +183,14 @@ function Admin() {
   }
 
   const getAllInquiry = async () => {
+    setLoading(true);
     try {
       const response = await axios.get('/api/get-in-touch')
       setAllInquiry(response.data.data)
     } catch (error) {
       console.error(error)
+    } finally {
+      setLoading(false)
     }
   }
 
@@ -2513,80 +2516,100 @@ function Admin() {
                             </TableRow>
                           </TableHead>
                           <TableBody>
-                            {loading ? (
-                              Array.from(new Array(5)).map((_, index) => (
-                                <TableRow key={index}>
+                            {loading
+                              ? [1, 2, 3, 4, 5, 6, 7, 8].map((item) => (
+                                <TableRow key={item}>
                                   <TableCell>
-                                    <Skeleton className="h-4 w-[250px]" />
+                                    <Skeleton className="h-[14px] w-full" />
                                   </TableCell>
                                   <TableCell>
-                                    <Skeleton className="h-4 w-[250px]" />
+                                    <Skeleton className="h-[14px] w-full" />
                                   </TableCell>
                                   <TableCell>
-                                    <Skeleton className="h-4 w-[250px]" />
+                                    <Skeleton className="h-[14px] w-full" />
                                   </TableCell>
                                   <TableCell>
-                                    <Skeleton className="h-4 w-[250px]" />
+                                    <Skeleton className="h-[14px] w-full" />
                                   </TableCell>
                                   <TableCell>
-                                    <Skeleton className="h-4 w-[250px]" />
+                                    <Skeleton className="h-[14px] w-full" />
+                                  </TableCell>
+                                  <TableCell>
+                                    <Skeleton className="h-[14px] w-full" />
+                                  </TableCell>
+                                  <TableCell>
+                                    <Skeleton className="h-[14px] w-full" />
+                                  </TableCell>
+                                  <TableCell>
+                                    <Skeleton className="h-[14px] w-full" />
+                                  </TableCell>
+                                  <TableCell>
+                                    <Skeleton className="h-[14px] w-full" />
+                                  </TableCell>
+                                  <TableCell>
+                                    <Skeleton className="h-[14px] w-full" />
+                                  </TableCell>
+                                  <TableCell>
+                                    <Skeleton className="h-[14px] w-full" />
+                                  </TableCell>
+                                  <TableCell>
+                                    <Skeleton className="h-[14px] w-full" />
                                   </TableCell>
                                 </TableRow>
-                              ))
-                            ) : (
-                              currentProductInquiry.map((item, index) => {
-                                const filteredDataofSize = item.Sizes.filter((val) => item.size_ids.includes(val.id))
-                                const filteredColorData = item.Colors.filter(val => item.color_ids.includes(val.id))
-                                const formattedDate = format(new Date(item.createdAt), "d/MM/yyyy");
-                                return (
-                                  <TableRow key={index}>
-                                    <TableCell>{item.id}</TableCell>
-                                    <TableCell>{formattedDate}</TableCell>
-                                    <TableCell>{item.name}</TableCell>
-                                    <TableCell>{item.email}</TableCell>
-                                    <TableCell>{item.mobile_no}</TableCell>
-                                    <TableCell>{item.inquiry_message}</TableCell>
-                                    <TableCell>{item.Product.name}</TableCell>
-                                    <TableCell>{item.quantity}</TableCell>
-                                    <TableCell>{item.Product.final_price}</TableCell>
-                                    <TableCell>{filteredColorData.map((item) => item.name).join(', ')}
-                                    </TableCell>
-                                    <TableCell>{filteredDataofSize.map((item) => item.name).join(', ')}
-                                    </TableCell>
-                                    <TableCell>
-                                      <AlertDialog open={openProductInquiry}>
-                                        <AlertDialogTrigger>
-                                          <svg
-                                            className="w-6 h-6 text-gray-800 dark:text-white cursor-pointer"
-                                            aria-hidden="true"
-                                            xmlns="http://www.w3.org/2000/svg"
-                                            width="24"
-                                            height="24"
-                                            fill="none"
-                                            viewBox="0 0 24 24"
-                                            onClick={() => handleOpenDialog(item.id)}
-                                          >
-                                            <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 7h14m-9 3v8m4-8v8M10 3h4a1 1 0 0 1 1 1v3H9V4a1 1 0 0 1 1-1ZM6 7h12v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7Z" />
-                                          </svg>
-                                        </AlertDialogTrigger>
-                                        <AlertDialogContent>
-                                          <AlertDialogHeader>
-                                            <AlertDialogTitle>Are you sure you want to delete this Inquiry?</AlertDialogTitle>
-                                            <AlertDialogDescription>
-                                              Are you sure you want to delete the inquiry? This action cannot be undone.
-                                            </AlertDialogDescription>
-                                          </AlertDialogHeader>
-                                          <AlertDialogFooter>
-                                            <AlertDialogCancel onClick={() => handleCloseDialog()}>Cancel</AlertDialogCancel>
-                                            <AlertDialogAction onClick={() => handleDeleteInquiry()}>Confirm</AlertDialogAction>
-                                          </AlertDialogFooter>
-                                        </AlertDialogContent>
-                                      </AlertDialog>
-                                    </TableCell>
-                                  </TableRow>
-                                )
-                              })
-                            )}
+                              )) : (
+                                currentProductInquiry.map((item, index) => {
+                                  const filteredDataofSize = item.Sizes.filter((val) => item.size_ids.includes(val.id))
+                                  const filteredColorData = item.Colors.filter(val => item.color_ids.includes(val.id))
+                                  const formattedDate = format(new Date(item.createdAt), "d/MM/yyyy");
+                                  return (
+                                    <TableRow key={index}>
+                                      <TableCell>{item.id}</TableCell>
+                                      <TableCell>{formattedDate}</TableCell>
+                                      <TableCell>{item.name}</TableCell>
+                                      <TableCell>{item.email}</TableCell>
+                                      <TableCell>{item.mobile_no}</TableCell>
+                                      <TableCell>{item.inquiry_message}</TableCell>
+                                      <TableCell>{item.Product.name}</TableCell>
+                                      <TableCell>{item.quantity}</TableCell>
+                                      <TableCell>{item.Product.final_price}</TableCell>
+                                      <TableCell>{filteredColorData.map((item) => item.name).join(', ')}
+                                      </TableCell>
+                                      <TableCell>{filteredDataofSize.map((item) => item.name).join(', ')}
+                                      </TableCell>
+                                      <TableCell>
+                                        <AlertDialog open={openProductInquiry}>
+                                          <AlertDialogTrigger>
+                                            <svg
+                                              className="w-6 h-6 text-gray-800 dark:text-white cursor-pointer"
+                                              aria-hidden="true"
+                                              xmlns="http://www.w3.org/2000/svg"
+                                              width="24"
+                                              height="24"
+                                              fill="none"
+                                              viewBox="0 0 24 24"
+                                              onClick={() => handleOpenDialog(item.id)}
+                                            >
+                                              <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 7h14m-9 3v8m4-8v8M10 3h4a1 1 0 0 1 1 1v3H9V4a1 1 0 0 1 1-1ZM6 7h12v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7Z" />
+                                            </svg>
+                                          </AlertDialogTrigger>
+                                          <AlertDialogContent>
+                                            <AlertDialogHeader>
+                                              <AlertDialogTitle>Are you sure you want to delete this Inquiry?</AlertDialogTitle>
+                                              <AlertDialogDescription>
+                                                Are you sure you want to delete the inquiry? This action cannot be undone.
+                                              </AlertDialogDescription>
+                                            </AlertDialogHeader>
+                                            <AlertDialogFooter>
+                                              <AlertDialogCancel onClick={() => handleCloseDialog()}>Cancel</AlertDialogCancel>
+                                              <AlertDialogAction onClick={() => handleDeleteInquiry()}>Confirm</AlertDialogAction>
+                                            </AlertDialogFooter>
+                                          </AlertDialogContent>
+                                        </AlertDialog>
+                                      </TableCell>
+                                    </TableRow>
+                                  )
+                                })
+                              )}
                           </TableBody>
                         </Table>
                       </TableContainer>
@@ -2652,60 +2675,68 @@ function Admin() {
                             </TableRow>
                           </TableHead>
                           <TableBody>
-                            {loading ? (
-                              Array.from({ length: 5 }).map((_, index) => (
-                                <TableRow key={index}>
+                            {loading
+                              ? [1, 2, 3, 4, 5, 6].map((item) => (
+                                <TableRow key={item}>
                                   <TableCell>
-                                    <Skeleton className="h-4 w-[100px]" />
+                                    <Skeleton className="h-[14px] w-full" />
                                   </TableCell>
                                   <TableCell>
-                                    <Skeleton className="h-4 w-[250px]" />
+                                    <Skeleton className="h-[14px] w-full" />
                                   </TableCell>
                                   <TableCell>
-                                    <Skeleton className="h-4 w-[100px]" />
+                                    <Skeleton className="h-[14px] w-full" />
+                                  </TableCell>
+                                  <TableCell>
+                                    <Skeleton className="h-[14px] w-full" />
+                                  </TableCell>
+                                  <TableCell>
+                                    <Skeleton className="h-[14px] w-full" />
+                                  </TableCell>
+                                  <TableCell>
+                                    <Skeleton className="h-[14px] w-full" />
                                   </TableCell>
                                 </TableRow>
-                              ))
-                            ) : (
-                              currentInquiry.map((item, index) => {
-                                const date = format(new Date(item.createdAt), "d/MM/yyyy");
-                                return (
-                                  <TableRow key={index}>
-                                    <TableCell>{item.id}</TableCell>
-                                    <TableCell>{date}</TableCell>
-                                    <TableCell>{item.email}</TableCell>
-                                    <TableCell>{item.phone}</TableCell>
-                                    <TableCell>{item.message}</TableCell>
-                                    <TableCell>
-                                      <AlertDialog>
-                                        <AlertDialogTrigger>
-                                          <svg className="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24"
-                                            onClick={() => handleOpenInquiryDialog(item.id)}
-                                          >
-                                            <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 7h14m-9 3v8m4-8v8M10 3h4a1 1 0 0 1 1 1v3H9V4a1 1 0 0 1 1-1ZM6 7h12v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7Z" />
-                                          </svg>
-                                        </AlertDialogTrigger>
-                                        <AlertDialogContent>
-                                          <AlertDialogHeader>
-                                            <AlertDialogTitle>Are you sure you want to delete this Inquiry?</AlertDialogTitle>
-                                            <AlertDialogDescription>
-                                              Are you sure you want to delete the inquiry? This action cannot be undone.
-                                            </AlertDialogDescription>
-                                          </AlertDialogHeader>
-                                          <AlertDialogFooter>
-                                            <AlertDialogCancel onClick={() => {
-                                              setGetInTouchInquiry(false)
-                                              setSelectedGetInTouchInquiry(null)
-                                            }}>Cancel</AlertDialogCancel>
-                                            <AlertDialogAction onClick={() => handleDeleteGetInTouchInquiry()}>Confirm</AlertDialogAction>
-                                          </AlertDialogFooter>
-                                        </AlertDialogContent>
-                                      </AlertDialog>
-                                    </TableCell>
-                                  </TableRow>
-                                )
-                              })
-                            )}
+                              )) : (
+                                currentInquiry.map((item, index) => {
+                                  const date = format(new Date(item.createdAt), "d/MM/yyyy");
+                                  return (
+                                    <TableRow key={index}>
+                                      <TableCell>{item.id}</TableCell>
+                                      <TableCell>{date}</TableCell>
+                                      <TableCell>{item.email}</TableCell>
+                                      <TableCell>{item.phone}</TableCell>
+                                      <TableCell>{item.message}</TableCell>
+                                      <TableCell>
+                                        <AlertDialog>
+                                          <AlertDialogTrigger>
+                                            <svg className="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24"
+                                              onClick={() => handleOpenInquiryDialog(item.id)}
+                                            >
+                                              <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 7h14m-9 3v8m4-8v8M10 3h4a1 1 0 0 1 1 1v3H9V4a1 1 0 0 1 1-1ZM6 7h12v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7Z" />
+                                            </svg>
+                                          </AlertDialogTrigger>
+                                          <AlertDialogContent>
+                                            <AlertDialogHeader>
+                                              <AlertDialogTitle>Are you sure you want to delete this Inquiry?</AlertDialogTitle>
+                                              <AlertDialogDescription>
+                                                Are you sure you want to delete the inquiry? This action cannot be undone.
+                                              </AlertDialogDescription>
+                                            </AlertDialogHeader>
+                                            <AlertDialogFooter>
+                                              <AlertDialogCancel onClick={() => {
+                                                setGetInTouchInquiry(false)
+                                                setSelectedGetInTouchInquiry(null)
+                                              }}>Cancel</AlertDialogCancel>
+                                              <AlertDialogAction onClick={() => handleDeleteGetInTouchInquiry()}>Confirm</AlertDialogAction>
+                                            </AlertDialogFooter>
+                                          </AlertDialogContent>
+                                        </AlertDialog>
+                                      </TableCell>
+                                    </TableRow>
+                                  )
+                                })
+                              )}
                           </TableBody>
                         </Table>
                       </TableContainer>
