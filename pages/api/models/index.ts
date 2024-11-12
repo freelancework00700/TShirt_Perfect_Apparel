@@ -10,22 +10,22 @@ import ProductInquiry from './product-inquiry.model';
 import BulkOrderDiscuss from './bulk-order-discuss.model';
 
 export const initMySQLModels = (connection: Sequelize) => {
-    Product.initModel(connection);
-    ProductImages.initModel(connection);
     Category.initModel(connection);
     SubCategory.initModel(connection);
     Color.initModel(connection);
     Size.initModel(connection);
+    Product.initModel(connection);
+    ProductImages.initModel(connection);
     GetInTouch.initModel(connection);
     ProductInquiry.initModel(connection);
     BulkOrderDiscuss.initModel(connection);
 
-    Product.initAssociations();
-    ProductImages.initAssociations();
     Category.initAssociations();
     SubCategory.initAssociations();
     Color.initAssociations();
     Size.initAssociations();
+    Product.initAssociations();
+    ProductImages.initAssociations();
     GetInTouch.initAssociations();
     ProductInquiry.initAssociations();
     BulkOrderDiscuss.initAssociations();

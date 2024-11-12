@@ -2247,8 +2247,6 @@ function Admin() {
                               ))
                             ) : (
                               currentSize.map((item, index) => {
-                                console.log('currentSize :>> ', currentSize);
-                                console.log('item :>> ', item);
                                 return (
                                   <>
                                     <TableRow key={index}>
