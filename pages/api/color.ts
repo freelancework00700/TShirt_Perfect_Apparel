@@ -1,30 +1,30 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { CategoryController } from '../controllers/category.controller';
+import { ColorController } from './controllers/color.controller';
 import { initializeDatabase } from './db';
 
-const categoryController = new CategoryController();
+const colorController = new ColorController();
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
 
     try {
 
-       // Call the database initialization function
-       await initializeDatabase();
+        // Call the database initialization function
+        await initializeDatabase();
 
         if (req.method === 'GET') {
-            await categoryController.getAllCategories(res, req.query);   
+            await colorController.getAllColor(res, req.query);
         } else if (req.method === 'POST') {
-            await categoryController.createCategory(res, req.body);
+            await colorController.createColor(res, req.body);
         } else if (req.method === 'PUT') {
-            await categoryController.updateCategory(res, req.body);
-        }else if (req.method === 'DELETE') {
-            await categoryController.deleteCategory(res, req.query.id);
+            await colorController.updateColor(res, req.body);
+        } else if (req.method === 'DELETE') {
+            await colorController.deleteColor(res, req.query.id);
         }
         else {
             res.setHeader('Allow', ['GET', 'POST', 'PUT', 'DELETE']);
             return res.status(405).end(`Method ${req.method} Not Allowed`);
         }
-    } catch(error) {
+    } catch (error) {
         res.status(500).json({ error: 'Internal Server Error' });
     }
 };

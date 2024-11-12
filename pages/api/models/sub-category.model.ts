@@ -1,22 +1,22 @@
 import { DataTypes, Model, Sequelize } from 'sequelize';
 import Category from './category.model';
 
-class Size extends Model {
+class SubCategory extends Model {
     static initModel(connection: Sequelize) {
-        Size.init(
+        SubCategory.init(
             {
                 id: {
                     type: new DataTypes.INTEGER(),
                     primaryKey: true,
                     autoIncrement: true,
                 },
+                category_id: {
+                    type: new DataTypes.INTEGER(),
+                    allowNull: false
+                },
                 name: {
                     type: DataTypes.STRING,
                     allowNull: false,
-                },
-                category_id: {
-                    type: DataTypes.INTEGER(),
-                    allowNull: true
                 },
                 isDeleted: {
                     type: DataTypes.BOOLEAN,
@@ -26,7 +26,7 @@ class Size extends Model {
             },
             {
                 sequelize: connection,
-                tableName: 'size',
+                tableName: 'sub_category',
                 freezeTableName: true,
                 timestamps: true,
             }
@@ -34,8 +34,9 @@ class Size extends Model {
     };
 
     static initAssociations() {
-        Size.belongsTo(Category, { foreignKey: { name: "category_id", allowNull: false } });
+        SubCategory.belongsTo(Category, { foreignKey: 'category_id', targetKey: 'id', as: 'Category' });
     }
 }
 
-export default Size;
+
+export default SubCategory;

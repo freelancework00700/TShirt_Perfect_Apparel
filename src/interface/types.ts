@@ -1,6 +1,6 @@
 export interface IProduct {
     category_id: number,
-    color_ids: number,
+    color_ids: number[],
     createdAt: string,
     fabric: string,
     fabric_care: string,

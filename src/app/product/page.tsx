@@ -328,43 +328,43 @@ function Product() {
               </div>
               <div className="grid grid-cols-12 gap-4 gap-y-5 max-md:pb-10">
                 {loading
-                    ? [1, 2, 3, 4, 5, 6, 7, 8].map((item) => (
-                      <div key={item} className="lg:col-span-3 md:col-span-6 col-span-12">
-                        <Skeleton className="h-[245px] w-full" />
-                        <div className="py-3 px-4">
-                          <Skeleton className="h-[14px] w-[180px]" />
-                          <Skeleton className="h-[10px] w-[80px] mt-1" />
-                          <Skeleton className="h-[20px] w-[100px] my-4" />
-                          <Skeleton className="h-[14px] w-[100px]" />
-                          <Skeleton className="h-[14px] w-[80px] mt-1" />
-                        </div>
+                  ? [1, 2, 3, 4, 5, 6, 7, 8].map((item) => (
+                    <div key={item} className="lg:col-span-3 md:col-span-6 col-span-12">
+                      <Skeleton className="h-[245px] w-full" />
+                      <div className="py-3 px-4">
+                        <Skeleton className="h-[14px] w-[180px]" />
+                        <Skeleton className="h-[10px] w-[80px] mt-1" />
+                        <Skeleton className="h-[20px] w-[100px] my-4" />
+                        <Skeleton className="h-[14px] w-[100px]" />
+                        <Skeleton className="h-[14px] w-[80px] mt-1" />
                       </div>
-                    ))
-                    :  filteredProducts.length > 0 ? (
-                  // Display filteredProducts when data is available
-                  filteredProducts.map((item, index) => (
-                    <>
-                      <Link
-                        key={index}
-                        className="lg:col-span-3 md:col-span-6 col-span-12"
-                        href={`/product/product-details?id=${item.id}`}
-                      >
-                        <div className="shadow-md h-full w-full rounded-lg">
-                          <div className="productImage rounded-[12px] overflow-hidden max-h-[400px] flex justify-center">
-                            <Image
-                              src={`/product-image/${item.ProductImages[0]?.sysFileName}`}
-                              width={200}
-                              height={200}
-                              alt={item.name}
-                              className="min-h-[245px] max-h-[245px] object-cover"
-                            />
-                          </div>
-                          <div className="py-3 px-4">
-                            <div>
-                              <div className="font-bold text-base">{item.name}</div>
-                              <div className="text-[#999] text-[14px]">{item.fit}</div>
+                    </div>
+                  ))
+                  : filteredProducts.length > 0 ? (
+                    // Display filteredProducts when data is available
+                    filteredProducts.map((item, index) => (
+                      <>
+                        <Link
+                          key={index}
+                          className="lg:col-span-3 md:col-span-6 col-span-12"
+                          href={`/product/product-details?id=${item.id}`}
+                        >
+                          <div className="shadow-md h-full w-full rounded-lg">
+                            <div className="productImage rounded-[12px] overflow-hidden max-h-[400px] flex justify-center">
+                              <Image
+                                src={`/product-image/${item.ProductImages[0]?.sysFileName}`}
+                                width={200}
+                                height={200}
+                                alt={item.name}
+                                className="min-h-[245px] max-h-[245px] object-cover"
+                              />
                             </div>
-                            <div className="text-[#000] text-[16px] py-2 5px">
+                            <div className="py-3 px-4">
+                              <div>
+                                <div className="font-bold text-base">{item.name}</div>
+                                <div className="text-[#999] text-[14px]">{item.fit}</div>
+                              </div>
+                              <div className="text-[#000] text-[16px] py-2 5px">
                                 ₹{item.final_price}
                                 {item.discount_price > 0 && (
                                   <>
@@ -377,30 +377,30 @@ function Product() {
                                   </>
                                 )}
                               </div>
-                            <div className="text-[#999] text-[14px]">
-                              Color:{" "}
-                              <span className="text-[#000]">
-                                {item.Colors?.map((color) => color.name).join(", ")}
-                              </span>
-                            </div>
-                            <div className="text-[#999] text-[14px]">
-                              Size:{" "}
-                              <span className="text-[#000]">
-                                {item.Sizes.map((size) => size.name).join(", ")}
-                              </span>
+                              <div className="text-[#999] text-[14px]">
+                                Color:{" "}
+                                <span className="text-[#000]">
+                                  {item.Colors?.map((color) => color.name).join(", ")}
+                                </span>
+                              </div>
+                              <div className="text-[#999] text-[14px]">
+                                Size:{" "}
+                                <span className="text-[#000]">
+                                  {item.Sizes.map((size) => size.name).join(", ")}
+                                </span>
+                              </div>
                             </div>
                           </div>
-                        </div>
-                      </Link>
-                    </>
-                  ))
-                )
-                  : (
-                    // Display a message when no products are available
-                    <div className="col-span-12 text-center py-20">
-                      No products available for the selected filters.
-                    </div>
-                  )}
+                        </Link>
+                      </>
+                    ))
+                  )
+                    : (
+                      // Display a message when no products are available
+                      <div className="col-span-12 text-center py-20">
+                        No products available for the selected filters.
+                      </div>
+                    )}
               </div>
             </div>
           </div>

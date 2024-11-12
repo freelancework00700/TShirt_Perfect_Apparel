@@ -29,12 +29,11 @@ export class BulkOrderDiscussController extends HttpStatus {
         try {
             // Sorting
             let column = params.sortColumn;
-            let direction;
             if (column == null || column == '') {
                 column = "id";
             }
 
-            direction = params.sortDirection == null || params.sortDirection == "" ? "DESC" : params.sortDirection;
+            const direction = params.sortDirection == null || params.sortDirection == "" ? "DESC" : params.sortDirection;
             const orderBy = sequelize.literal(`${column} ${direction}`);
 
             // Get all bulk order discuss

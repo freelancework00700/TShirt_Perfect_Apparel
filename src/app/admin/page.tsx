@@ -656,7 +656,7 @@ function Admin() {
       formData.append("net_quantity", values.net_quantity)
       formData.append("status", values.status)
       formData.append("sales_package", values.sales_package)
-      formData.append("inStock", values.inStock)
+      formData.append("inStock", values.inStock.toString())
       values.images.forEach((images) => {
         formData.append("images", images)
       })
@@ -805,7 +805,7 @@ function Admin() {
     formData.append("color_ids", item.color_ids.toString());
     formData.append("size_ids", item.size_ids.toString());
     formData.append("name", item.name);
-    formData.append("discount_price", item.discount_price);
+    formData.append("discount_price", item.discount_price.toString());
     formData.append("price", item.price);
     formData.append("final_price", item.final_price);
     formData.append("type", item.type);
@@ -827,7 +827,7 @@ function Admin() {
       formData.append("images", image.fileSize);
     });
     formData.append("description", item.description);
-    formData.append("inStock", item.inStock);
+    formData.append("inStock", item.inStock.toString());
 
     try {
       const response = await axios.put(`/api/product?id=${item.id}`, formData)
@@ -1000,7 +1000,8 @@ function Admin() {
   //product-inquiry pagination
 
   const totalPageOfProductInquiry = Math.ceil(productInquiry.length / recordsPerPage)
-  const currentProductInquiry = productInquiry.slice((currentPageOfProductInquiry - 1) * recordsPerPage, currentPageOfInquiry * recordsPerPage)
+  const currentProductInquiry = productInquiry.slice((currentPageOfProductInquiry - 1)
+    * recordsPerPage, currentPageOfInquiry * recordsPerPage)
 
   const nextPageOfProductInquiry = () => {
     if (currentPageOfProductInquiry < totalPageOfProductInquiry) {
@@ -2015,7 +2016,7 @@ function Admin() {
                                           </AlertDialogHeader>
                                           <AlertDialogFooter>
                                             <AlertDialogCancel onClick={() => setIsCategoryDialogOpen(false)}>Cancel</AlertDialogCancel>
-                                            <AlertDialogAction onClick={() => handleDeleteCategory(item)}>Continue</AlertDialogAction>
+                                            <AlertDialogAction onClick={() => handleDeleteCategory()}>Continue</AlertDialogAction>
                                           </AlertDialogFooter>
                                         </AlertDialogContent>
                                       </AlertDialog>
@@ -2031,7 +2032,8 @@ function Admin() {
                   </>
                 }
 
-                {/* {
+                <div>
+                  {/* {
                   page === 3 &&
                   <>
                     <div className="flex justify-between items-center pb-5">
@@ -2129,6 +2131,7 @@ function Admin() {
                     </Paper>
                   </>
                 } */}
+                </div>
 
                 {
                   page === 4 &&
@@ -2243,43 +2246,47 @@ function Admin() {
                                 </TableRow>
                               ))
                             ) : (
-                              currentSize.map((item, index) => (
-                                <>
-                                  <TableRow key={index}>
-                                    <TableCell>{item.id}</TableCell>
-                                    <TableCell>{item.Category?.id}</TableCell>
-                                    <TableCell>{item.Category?.name}</TableCell>
-                                    <TableCell>{item.name}</TableCell>
-                                    <TableCell>
-                                      <div className="flex items-center gap-1">
-                                        <svg onClick={() => handleEditSize(item)} className="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                                          <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m14.304 4.844 2.852 2.852M7 7H4a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1v-4.5m2.409-9.91a2.017 2.017 0 0 1 0 2.853l-6.844 6.844L8 14l.713-3.565 6.844-6.844a2.015 2.015 0 0 1 2.852 0Z" />
-                                        </svg>
-                                        <AlertDialog open={isDeleteSizeDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
-                                          <AlertDialogTrigger>
-                                            <svg onClick={() => openSizeDialog(item.id)} className="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                                              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 7h14m-9 3v8m4-8v8M10 3h4a1 1 0 0 1 1 1v3H9V4a1 1 0 0 1 1-1ZM6 7h12v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7Z" />
-                                            </svg>
-                                          </AlertDialogTrigger>
-                                          <AlertDialogContent>
-                                            <AlertDialogHeader>
-                                              <AlertDialogTitle>Are you sure you want to delete this size?
-                                              </AlertDialogTitle>
-                                              <AlertDialogDescription>
-                                                Are you sure you want to delete this size? This action cannot be undone.
-                                              </AlertDialogDescription>
-                                            </AlertDialogHeader>
-                                            <AlertDialogFooter>
-                                              <AlertDialogCancel onClick={() => setIsDeleteDialogOpen(false)}>Cancel</AlertDialogCancel>
-                                              <AlertDialogAction onClick={handleDeleteSize}>Continue</AlertDialogAction>
-                                            </AlertDialogFooter>
-                                          </AlertDialogContent>
-                                        </AlertDialog>
-                                      </div>
-                                    </TableCell>
-                                  </TableRow>
-                                </>
-                              ))
+                              currentSize.map((item, index) => {
+                                console.log('currentSize :>> ', currentSize);
+                                console.log('item :>> ', item);
+                                return (
+                                  <>
+                                    <TableRow key={index}>
+                                      <TableCell>{item.id}</TableCell>
+                                      <TableCell>{item.Category?.id}</TableCell>
+                                      <TableCell>{item.Category?.name}</TableCell>
+                                      <TableCell>{item.name}</TableCell>
+                                      <TableCell>
+                                        <div className="flex items-center gap-1">
+                                          <svg onClick={() => handleEditSize(item)} className="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m14.304 4.844 2.852 2.852M7 7H4a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1v-4.5m2.409-9.91a2.017 2.017 0 0 1 0 2.853l-6.844 6.844L8 14l.713-3.565 6.844-6.844a2.015 2.015 0 0 1 2.852 0Z" />
+                                          </svg>
+                                          <AlertDialog open={isDeleteSizeDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
+                                            <AlertDialogTrigger>
+                                              <svg onClick={() => openSizeDialog(item.id)} className="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 7h14m-9 3v8m4-8v8M10 3h4a1 1 0 0 1 1 1v3H9V4a1 1 0 0 1 1-1ZM6 7h12v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7Z" />
+                                              </svg>
+                                            </AlertDialogTrigger>
+                                            <AlertDialogContent>
+                                              <AlertDialogHeader>
+                                                <AlertDialogTitle>Are you sure you want to delete this size?
+                                                </AlertDialogTitle>
+                                                <AlertDialogDescription>
+                                                  Are you sure you want to delete this size? This action cannot be undone.
+                                                </AlertDialogDescription>
+                                              </AlertDialogHeader>
+                                              <AlertDialogFooter>
+                                                <AlertDialogCancel onClick={() => setIsDeleteDialogOpen(false)}>Cancel</AlertDialogCancel>
+                                                <AlertDialogAction onClick={handleDeleteSize}>Continue</AlertDialogAction>
+                                              </AlertDialogFooter>
+                                            </AlertDialogContent>
+                                          </AlertDialog>
+                                        </div>
+                                      </TableCell>
+                                    </TableRow>
+                                  </>
+                                )
+                              })
                             )}
 
                           </TableBody>

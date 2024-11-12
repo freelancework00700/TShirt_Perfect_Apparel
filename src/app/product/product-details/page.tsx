@@ -2,9 +2,9 @@
 
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
-import React, { useEffect, useState } from "react";
+import React, { CSSProperties, useEffect, useState } from "react";
 import Image from "next/image";
-import { Swiper, SwiperSlide } from "swiper/react";
+import { Swiper, SwiperClass, SwiperSlide } from "swiper/react";
 import sizeChartIcon from "../../../../public/Images/sizeChartIcon.svg";
 
 // Import Swiper styles
@@ -23,7 +23,7 @@ import { Bounce, toast } from "react-toastify";
 import { Label } from "@/components/ui/label";
 
 const ProductDetail = () => {
-  const [thumbsSwiper, setThumbsSwiper] = useState(null);
+  const [thumbsSwiper, setThumbsSwiper] = useState<SwiperClass | null>(null);
   const searchParams = useSearchParams();
   const search = searchParams?.get("id");
   const searchNumber = search ? Number(search) : null;
@@ -157,7 +157,7 @@ const ProductDetail = () => {
                     style={{
                       "--swiper-navigation-color": "#000",
                       "--swiper-pagination-color": "#000",
-                    }}
+                    } as CSSProperties}
                     spaceBetween={10}
                     navigation={true}
                     thumbs={{ swiper: thumbsSwiper }}

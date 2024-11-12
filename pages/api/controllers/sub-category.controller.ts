@@ -16,18 +16,17 @@ export class SubCategoryController extends HttpStatus {
 
             // Sorting
             let column = params.sortColumn;
-            let direction;
             if (column == null || column == '') {
                 column = "id";
             }
 
-            direction = params.sortDirection == null || params.sortDirection == "" ? "DESC" : params.sortDirection;
+            const direction = params.sortDirection == null || params.sortDirection == "" ? "DESC" : params.sortDirection;
             const orderBy = sequelize.literal(`${column} ${direction}`);
 
             // Get all sub categories
             const subCategories = await SubCategory.findAll({
                 include: [
-                    { model: Category }
+                    { model: Category, as: 'Category' }
                 ],
                 where: { isDeleted: false, category_id: params.id },
                 order: [orderBy]
@@ -39,7 +38,7 @@ export class SubCategoryController extends HttpStatus {
 
             return this.sendOkResponse(res, "Sub Categories get successfully.", subCategories);
         } catch (error) {
-            console.log('error: ', error);
+            console.log('error:::: ', error);
             return this.sendInternalServerResponse(res, "Error fetching sub-categories.");
         }
     };
@@ -67,7 +66,7 @@ export class SubCategoryController extends HttpStatus {
     /** PUT API: Update a sub-category */
     public updateSubCategory = async (res: NextApiResponse, params: any) => {
         try {
-            const subCategory: any = await SubCategory.findOne({ where: { id: params.id,isDeleted: false } });
+            const subCategory: any = await SubCategory.findOne({ where: { id: params.id, isDeleted: false } });
             if (!subCategory) return this.sendBadRequestResponse(res, "Sub Category not found.");
 
             const existingCategory = await SubCategory.findOne({ where: { name: params.name, id: { [Op.ne]: params.id }, isDeleted: false } });

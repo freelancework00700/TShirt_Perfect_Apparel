@@ -1,8 +1,8 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { GetInTouchController } from '../controllers/get-in-touch.controller';
+import { SizeController } from './controllers/size.controller';
 import { initializeDatabase } from './db';
 
-const getInTouchController = new GetInTouchController();
+const sizeController = new SizeController();
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
 
@@ -12,12 +12,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         await initializeDatabase();
 
         if (req.method === 'GET') {
-            await getInTouchController.getAllGetInTouch(res, req.query);
+            await sizeController.getAllSize(res, req.query);
         } else if (req.method === 'POST') {
-            await getInTouchController.createGetInTouch(res, req.body);
+            await sizeController.createSize(res, req.body);
+        } else if (req.method === 'PUT') {
+            await sizeController.updateSize(res, req.body);
         } else if (req.method === 'DELETE') {
-            await getInTouchController.deleteGetInTouch(res, req.query.id);
-        } else {
+            await sizeController.deleteSize(res, req.query.id);
+        }
+        else {
             res.setHeader('Allow', ['GET', 'POST', 'PUT', 'DELETE']);
             return res.status(405).end(`Method ${req.method} Not Allowed`);
         }

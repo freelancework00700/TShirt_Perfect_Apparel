@@ -1,6 +1,6 @@
 import { Dialect } from 'sequelize';
 
-export const config: any = {
+export const configuration: any = {
   development: {
     username: process.env.MYSQL_USER,
     password: process.env.MYSQL_PASSWORD,

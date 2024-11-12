@@ -12,12 +12,11 @@ export class CategoryController extends HttpStatus {
 
             // Sorting
             let column = params.sortColumn;
-            let direction;
             if (column == null || column == '') {
                 column = "id";
             }
             
-            direction = params.sortDirection == null || params.sortDirection == "" ? "DESC" : params.sortDirection;
+           const direction = params.sortDirection == null || params.sortDirection == "" ? "DESC" : params.sortDirection;
             const orderBy = sequelize.literal(`${column} ${direction}`);
 
             // Get categories

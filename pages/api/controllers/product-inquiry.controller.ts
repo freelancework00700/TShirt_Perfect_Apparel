@@ -15,7 +15,7 @@ export class ProductInquiryController extends HttpStatus {
 
             // Sorting
             let column = params.sortColumn;
-            let direction;
+            
             if (column == null || column == '') {
                 column = "id";
             } else if (column === "product_name") {
@@ -23,13 +23,13 @@ export class ProductInquiryController extends HttpStatus {
             } else if (column === "price") {
                 column = "Product.price";
             }
-            direction = params.sortDirection == null || params.sortDirection == "" ? "DESC" : params.sortDirection;
+          const  direction = params.sortDirection == null || params.sortDirection == "" ? "DESC" : params.sortDirection;
             const orderBy = sequelize.literal(`${column} ${direction}`);
 
             // Get all product inquiries
             const product_inquiries: any = await ProductInquiry.findAll({
                 include: [
-                    { model: Product }
+                    { model: Product, as: 'Product' }
                 ],
                 where: { isDeleted: false },
                 order: [orderBy]

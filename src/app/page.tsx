@@ -405,18 +405,18 @@ export default function Home() {
                                   </div>
                                 </div>
                                 <div className="text-[#000] text-[16px] py-2">
-                                    ₹{item.final_price}
-                                    {item.discount_price > 0 && (
-                                      <>
-                                        <span className="line-through text-[12px] text-[#999] ml-1">
-                                          ₹{item.price}
-                                        </span>
-                                        <span className="text-[#3fac45] text-[12px]">
-                                          {item.discount_price}% off
-                                        </span>
-                                      </>
-                                    )}
-                                  </div>
+                                  ₹{item.final_price}
+                                  {item.discount_price > 0 && (
+                                    <>
+                                      <span className="line-through text-[12px] text-[#999] ml-1">
+                                        ₹{item.price}
+                                      </span>
+                                      <span className="text-[#3fac45] text-[12px]">
+                                        {item.discount_price}% off
+                                      </span>
+                                    </>
+                                  )}
+                                </div>
                                 <div className="text-[#999] text-[14px]">
                                   Color:{" "}
                                   <span className="text-[#000]">
@@ -501,18 +501,18 @@ export default function Home() {
                                     </div>
                                   </div>
                                   <div className="text-[#000] text-[16px] py-2">
-                                      ₹{item.final_price}
-                                      {item.discount_price > 0 && (
-                                        <>
-                                          <span className="line-through text-[12px] text-[#999] ml-1">
-                                            ₹{item.price}
-                                          </span>
-                                          <span className="text-[#3fac45] text-[12px]">
-                                            {item.discount_price}% off
-                                          </span>
-                                        </>
-                                      )}
-                                    </div>
+                                    ₹{item.final_price}
+                                    {item.discount_price > 0 && (
+                                      <>
+                                        <span className="line-through text-[12px] text-[#999] ml-1">
+                                          ₹{item.price}
+                                        </span>
+                                        <span className="text-[#3fac45] text-[12px]">
+                                          {item.discount_price}% off
+                                        </span>
+                                      </>
+                                    )}
+                                  </div>
                                   <div className="text-[#999] text-[14px]">
                                     Color:{" "}
                                     <span className="text-[#000]">

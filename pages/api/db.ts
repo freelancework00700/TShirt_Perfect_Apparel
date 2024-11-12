@@ -1,9 +1,9 @@
 import { Sequelize } from 'sequelize';
-import { config } from '../config/config';
-import { initMySQLModels } from '@/pages/models';
+import { configuration } from './configuration/configuration';
+import { initMySQLModels } from './models';
 
-const environment = process.env.NODE_ENV || 'development';
-const dbConfig = config[environment];
+const environment = process.env.API_ENV || 'development';
+const dbConfig = configuration[environment];
 
 const dbConfiguration = {
     ...dbConfig,
@@ -29,7 +29,7 @@ const initializeDatabase = async () => {
         // Initialize models here or in a separate init function
         initMySQLModels(sequelize);
         await sequelize.sync({ alter: true });
-        
+
         console.log('Database synchronized successfully.');
     }
     return sequelize;

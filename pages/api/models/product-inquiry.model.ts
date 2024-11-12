@@ -58,7 +58,7 @@ class ProductInquiry extends Model {
     };
 
     static initAssociations() {
-        ProductInquiry.belongsTo(Product, { foreignKey: { name: "product_id", allowNull: false } });
+        ProductInquiry.belongsTo(Product, { foreignKey: "product_id", as: 'Product' });
     }
 }
 

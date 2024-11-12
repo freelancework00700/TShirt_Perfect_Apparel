@@ -1,23 +1,24 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { SubCategoryController } from '../controllers/sub-category.controller';
+import { CategoryController } from './controllers/category.controller';
 import { initializeDatabase } from './db';
 
-const subcategoryController = new SubCategoryController();
+const categoryController = new CategoryController();
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+
     try {
 
-      // Call the database initialization function
-      await initializeDatabase();
+        // Call the database initialization function
+        await initializeDatabase();
 
         if (req.method === 'GET') {
-            await subcategoryController.getAllSubCategories(res, req.query);   
+            await categoryController.getAllCategories(res, req.query);
         } else if (req.method === 'POST') {
-            await subcategoryController.createSubCategory(res, req.body);
+            await categoryController.createCategory(res, req.body);
         } else if (req.method === 'PUT') {
-            await subcategoryController.updateSubCategory(res, req.body);
-        }else if (req.method === 'DELETE') {
-            await subcategoryController.deleteSubCategory(res, req.query.id);
+            await categoryController.updateCategory(res, req.body);
+        } else if (req.method === 'DELETE') {
+            await categoryController.deleteCategory(res, req.query.id);
         }
         else {
             res.setHeader('Allow', ['GET', 'POST', 'PUT', 'DELETE']);

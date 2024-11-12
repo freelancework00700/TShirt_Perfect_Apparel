@@ -13,19 +13,18 @@ export class SizeController extends HttpStatus {
 
             // Sorting
             let column = params.sortColumn;
-            let direction;
             if (column == null || column == '') {
                 column = "id";
             } else if (column === "category_name") {
                 column = 'Category.name';
             }
-            direction = params.sortDirection == null || params.sortDirection == "" ? "DESC" : params.sortDirection;
+           const direction = params.sortDirection == null || params.sortDirection == "" ? "DESC" : params.sortDirection;
             const orderBy = sequelize.literal(`${column} ${direction}`);
 
             // Get all size
             const size = await Size.findAll({
                 include: [
-                    { model: Category }
+                    { model: Category, as: 'Category' }
                 ],
                 where: { isDeleted: false },
                 order: [orderBy]

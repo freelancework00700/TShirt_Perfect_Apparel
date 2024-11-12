@@ -49,21 +49,20 @@ export class ProductController extends HttpStatus {
 
             // Sorting
             let column = query.sortColumn;
-            let direction;
             if (column == null || column == '') {
                 column = "id";
             } else if (column === 'category_name') {
                 column = "Category.name";
             }
-            direction = query.sortDirection == null || query.sortDirection == "" ? "DESC" : query.sortDirection;
+            const direction = query.sortDirection == null || query.sortDirection == "" ? "DESC" : query.sortDirection;
             const orderBy = sequelize.literal(`${column} ${direction}`);
 
             // Get all products
             const products: any = await Product.findAll({
                 include: [
-                    { model: ProductImages, required: false, where: { isDeleted: false } },
-                    { model: Category },
-                    { model: SubCategory }
+                    { model: ProductImages, as: 'ProductImages', required: false, where: { isDeleted: false } },
+                    { model: Category, as: 'Category' },
+                    { model: SubCategory, as: 'SubCategory' }
                 ],
                 where,
                 order: [orderBy]

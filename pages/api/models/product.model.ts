@@ -131,10 +131,10 @@ class Product extends Model {
     };
 
     static initAssociations() {
-        Product.hasMany(ProductImages, { foreignKey: 'product_id', sourceKey: 'id', onDelete: 'CASCADE' });
-        Product.belongsTo(SubCategory, { foreignKey: 'subcategory_id', targetKey: 'id' });
-        Product.belongsTo(Category, { foreignKey: 'category_id', targetKey: 'id' });
-
+        Product.hasMany(ProductImages, { foreignKey: 'product_id', as: 'ProductImages', sourceKey: 'id', onDelete: 'CASCADE' });
+        Product.belongsTo(SubCategory, { foreignKey: 'subcategory_id', as: 'SubCategory', targetKey: 'id' });
+        Product.belongsTo(Category, { foreignKey: 'category_id', as: 'Category', targetKey: 'id' });
+    
     }
 }
 
