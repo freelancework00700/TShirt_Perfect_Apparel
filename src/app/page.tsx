@@ -249,7 +249,7 @@ export default function Home() {
                                 >
                                   <div className="productImage flex justify-center rounded-[12px] overflow-hidden ">
                                     <Image
-                                      src={`/product-image/${item.ProductImages[0]?.sysFileName}`}
+                                      src={`/Images/${item.ProductImages[0]?.sysFileName}`}
                                       alt={item.name}
                                       width={200}
                                       height={200}

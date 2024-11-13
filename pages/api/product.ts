@@ -8,7 +8,7 @@ import { v4 } from 'uuid';
 
 const productController = new ProductController();
 
-const imagePath = path.resolve('./public/product-image');
+const imagePath = path.resolve('./public/Images');
 
 const storage = multer.diskStorage({
     destination: (req: any, file: any, cb: any) => {
