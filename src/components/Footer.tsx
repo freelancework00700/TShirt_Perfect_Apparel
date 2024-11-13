@@ -12,7 +12,7 @@ import { Bounce, toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Skeleton } from "./ui/skeleton";
 import Image from "next/image";
-import mainLogo from "../../public/images/PerfectApparels.png";
+import mainLogo from "../../public/Images/PerfectApparels.png";
 
 const Footer = () => {
   const router = usePathname();

@@ -5,9 +5,9 @@ import Link from "next/link";
 import { useState } from "react";
 import { usePathname } from "next/navigation";
 import Image from "next/image";
-import menu from "../../public/images/menu.png";
-import close from "../../public/images/close.png";
-import mainLogo from "../../public/images/PerfectApparels.png";
+import menu from "../../public/Images/menu.png";
+import close from "../../public/Images/close.png";
+import mainLogo from "../../public/Images/PerfectApparels.png";
 
 const Header = () => {
   const [menuShowResponsive, setMenuShowResponsive] = useState(false);
@@ -31,9 +31,8 @@ const Header = () => {
                     <li className=" py-[23px] cursor-pointer">
                       <Link
                         href="/"
-                        className={`text-base uppercase font-bold leading-[16px]  hover:text-[#7ab01e] ${
-                          router === "/" ? "text-[#7ab01e]" : "text-[#000]"
-                        }`}
+                        className={`text-base uppercase font-bold leading-[16px]  hover:text-[#7ab01e] ${router === "/" ? "text-[#7ab01e]" : "text-[#000]"
+                          }`}
                       >
                         Home
                       </Link>
@@ -41,11 +40,10 @@ const Header = () => {
                     <li className=" py-[23px] cursor-pointer">
                       <Link
                         href="/product"
-                        className={`text-base uppercase font-bold leading-[16px]  hover:text-[#7ab01e] ${
-                          router === "/product"
-                            ? "text-[#7ab01e]"
-                            : "text-[#000]"
-                        }`}
+                        className={`text-base uppercase font-bold leading-[16px]  hover:text-[#7ab01e] ${router === "/product"
+                          ? "text-[#7ab01e]"
+                          : "text-[#000]"
+                          }`}
                       >
                         Product
                       </Link>
@@ -53,11 +51,10 @@ const Header = () => {
                     <li className=" py-[23px] cursor-pointer">
                       <Link
                         href="/customer-service"
-                        className={`text-base uppercase font-bold leading-[16px]  hover:text-[#7ab01e] ${
-                          router === "/service"
-                            ? "text-[#7ab01e]"
-                            : "text-[#000]"
-                        }`}
+                        className={`text-base uppercase font-bold leading-[16px]  hover:text-[#7ab01e] ${router === "/service"
+                          ? "text-[#7ab01e]"
+                          : "text-[#000]"
+                          }`}
                       >
                         Customer Service
                       </Link>
@@ -119,11 +116,10 @@ const Header = () => {
                       <li className="py-4">
                         <Link
                           href="/product"
-                          className={`text-base uppercase font-bold leading-[16px]  hover:text-[#7ab01e] ${
-                            router === "/product"
-                              ? "text-[#7ab01e]"
-                              : "text-[#000]"
-                          }`}
+                          className={`text-base uppercase font-bold leading-[16px]  hover:text-[#7ab01e] ${router === "/product"
+                            ? "text-[#7ab01e]"
+                            : "text-[#000]"
+                            }`}
                         >
                           Product
                         </Link>
@@ -131,11 +127,10 @@ const Header = () => {
                       <li className="py-4">
                         <Link
                           href="/customer-service"
-                          className={`text-base uppercase font-bold leading-[16px]  hover:text-[#7ab01e] ${
-                            router === "/service"
-                              ? "text-[#7ab01e]"
-                              : "text-[#000]"
-                          }`}
+                          className={`text-base uppercase font-bold leading-[16px]  hover:text-[#7ab01e] ${router === "/service"
+                            ? "text-[#7ab01e]"
+                            : "text-[#000]"
+                            }`}
                         >
                           Customer Service
                         </Link>

@@ -342,7 +342,6 @@ function Admin() {
     setOpenModel(true)
     setSize(item.name)
     setSelectedSizeId(item.id)
-    console.log('item.name :>> ', item.Category.name);
     setSelectedCategory(item.Category)
   }
 
