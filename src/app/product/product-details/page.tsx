@@ -170,7 +170,7 @@ const ProductDetail = () => {
                         className="border rounded-xl mb-2"
                       >
                         <Image
-                          src={`/Images/${item.sysFileName}`}
+                          src={`/product-image/${item.sysFileName}`}
                           width={200}
                           height={200}
                           alt="product1"
