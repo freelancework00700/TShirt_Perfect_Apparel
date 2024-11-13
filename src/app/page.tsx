@@ -23,6 +23,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ToastContainer } from "react-toastify";
+import ProductImagePath from "../../public/Images/9cc0a4da-9f1d-4e4a-aae3-07dc186e2a97.jpg";
 
 type SegmentKey = "newDrops" | "mostTrending";
 
@@ -158,7 +159,7 @@ export default function Home() {
                             >
                               <div className="productImage flex justify-center rounded-[12px] overflow-hidden">
                                 <Image
-                                  src={`/product-image/${item.ProductImages[0]?.sysFileName}`}
+                                  src={`/Images/${item.ProductImages[0]?.sysFileName}`}
                                   alt={item.name}
                                   width={200}
                                   height={200}
