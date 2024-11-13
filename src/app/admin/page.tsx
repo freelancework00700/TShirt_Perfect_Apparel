@@ -338,10 +338,12 @@ function Admin() {
   //   }
   // }
 
-  const handleEditSize = async (item: ICategories) => {
+  const handleEditSize = async (item: ISize) => {
     setOpenModel(true)
     setSize(item.name)
     setSelectedSizeId(item.id)
+    console.log('item.name :>> ', item.Category.name);
+    setSelectedCategory(item.Category)
   }
 
   const openSizeDialog = (id: number) => {
@@ -2176,7 +2178,9 @@ function Admin() {
                               <Select value={selectedCategory ? selectedCategory.name : ""}
                                 onValueChange={(name) => {
                                   const selected = allCategory.find(item => item.name === name);
+                                  console.log('selected :>> ', selected);
                                   if (selected) {
+                                    console.log('selected :>> ', selected);
                                     setSelectedCategory(selected);
                                   }
                                 }}
