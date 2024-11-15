@@ -4,13 +4,13 @@ import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import Footer from "../components/Footer";
 import Header from "../components/Header";
-import heroImage1 from "../../public/Images/5_WebBanner_1920x1080_4eacfb85-fcb6-4205-9741-ed79d7545780_1400x.webp";
-import heroImage2 from "../../public/Images/3_WebBanner_1920x1080_76a24f61-cdd7-482b-ab80-52a350547e6b_1400x.webp";
-import brandPartnerImage1 from "../../public/Images/PerfectApparels.png";
-import brandPartnerImage2 from "../../public/Images/Maa_Bhavani_Apparels.png";
-import brandPartnerImage3 from "../../public/Images/MBA.png";
-import leaf1 from "../../public/Images/leaf2.png";
-import leaf2 from "../../public/Images/leaf3.png";
+import heroImage1 from "../../public/images/5_WebBanner_1920x1080_4eacfb85-fcb6-4205-9741-ed79d7545780_1400x.webp";
+import heroImage2 from "../../public/images/3_WebBanner_1920x1080_76a24f61-cdd7-482b-ab80-52a350547e6b_1400x.webp";
+import brandPartnerImage1 from "../../public/images/PerfectApparels.png";
+import brandPartnerImage2 from "../../public/images/Maa_Bhavani_Apparels.png";
+import brandPartnerImage3 from "../../public/images/MBA.png";
+import leaf1 from "../../public/images/leaf2.png";
+import leaf2 from "../../public/images/leaf3.png";
 import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/effect-fade";
@@ -23,7 +23,6 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ToastContainer } from "react-toastify";
-import ProductImagePath from "../../public/Images/9cc0a4da-9f1d-4e4a-aae3-07dc186e2a97.jpg";
 
 type SegmentKey = "newDrops" | "mostTrending";
 
@@ -34,6 +33,9 @@ export default function Home() {
   const router = useRouter();
   const TrackPants = product.filter((item) => item.Category.name === "Track-Pants");
   const Tshirt = product.filter((item) => item.Category.name === "T-Shirts");
+  const imageURL = process.env.NEXT_PUBLIC_IMAGE_URL
+  const APIURL = process.env.NEXT_PUBLIC_API_URL
+
 
   const segments = {
     newDrops: {
@@ -47,8 +49,7 @@ export default function Home() {
   const getProduct = async () => {
     setLoading(true);
     try {
-      const response = await axios.get(`/api/product`);
-      console.log("response", response.data);
+      const response = await axios.get(APIURL + `product`);
       const getData = response.data?.data;
       setProduct(getData);
     } catch (error) {
@@ -159,7 +160,7 @@ export default function Home() {
                             >
                               <div className="productImage flex justify-center rounded-[12px] overflow-hidden">
                                 <Image
-                                  src={`/product-image/${item.ProductImages[0]?.sysFileName}`}
+                                  src={imageURL + `product-image/${item.ProductImages[0]?.sysFileName}`}
                                   alt={item.name}
                                   width={200}
                                   height={200}
@@ -249,7 +250,7 @@ export default function Home() {
                                 >
                                   <div className="productImage flex justify-center rounded-[12px] overflow-hidden ">
                                     <Image
-                                      src={`/product-image/${item.ProductImages[0]?.sysFileName}`}
+                                      src={imageURL + `product-image/${item.ProductImages[0]?.sysFileName}`}
                                       alt={item.name}
                                       width={200}
                                       height={200}
@@ -312,7 +313,7 @@ export default function Home() {
             <div className="flex justify-center flex-wrap items-center gap-5 w-full">
               <div
                 className="flex-1 flex justify-start items-center 
-              bg-[url('../../public/Images/how-should-a-t-shirt-fit.png')] bg-cover px-20 max-lg:px-5 py-24 max-lg:py-5 rounded-[16px]"
+              bg-[url('../../public/images/how-should-a-t-shirt-fit.png')] bg-cover px-20 max-lg:px-5 py-24 max-lg:py-5 rounded-[16px]"
               >
                 <div>
                   <h1 className="text-3xl font-bold mb-4 text-white">
@@ -332,7 +333,7 @@ export default function Home() {
               </div>
               <div
                 className="flex-1 flex justify-start items-center 
-              bg-[url('../../public/Images/track-pants.png')] bg-cover px-20 max-lg:px-5 py-24 max-lg:py-5 rounded-[16px]"
+              bg-[url('../../public/images/track-pants.png')] bg-cover px-20 max-lg:px-5 py-24 max-lg:py-5 rounded-[16px]"
               >
                 <div>
                   <h1 className="text-3xl font-bold mb-4">Track Pants</h1>
@@ -389,7 +390,7 @@ export default function Home() {
                             >
                               <div className="productImage flex justify-center rounded-[12px] overflow-hidden">
                                 <Image
-                                  src={`/product-image/${item.ProductImages[0]?.sysFileName}`}
+                                  src={imageURL + `product-image/${item.ProductImages[0]?.sysFileName}`}
                                   alt={item.name}
                                   width={200}
                                   height={200}
@@ -485,7 +486,7 @@ export default function Home() {
                                   className="productImage flex justify-center rounded-[12px] overflow-hidden"
                                 >
                                   <Image
-                                    src={`/product-image/${item.ProductImages[0]?.sysFileName}`}
+                                    src={imageURL + `product-image/${item.ProductImages[0]?.sysFileName}`}
                                     alt="track1"
                                     width={200}
                                     height={200}

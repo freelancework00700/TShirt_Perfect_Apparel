@@ -5,7 +5,7 @@ import Header from "@/components/Header";
 import React, { CSSProperties, useEffect, useState } from "react";
 import Image from "next/image";
 import { Swiper, SwiperClass, SwiperSlide } from "swiper/react";
-import sizeChartIcon from "../../../../public/Images/sizeChartIcon.svg";
+import sizeChartIcon from "../../../../public/images/sizeChartIcon.svg";
 
 // Import Swiper styles
 import "swiper/css";
@@ -21,6 +21,7 @@ import { useFormik } from "formik";
 import * as yup from "yup";
 import { Bounce, toast } from "react-toastify";
 import { Label } from "@/components/ui/label";
+import { Loader2 } from "lucide-react";
 
 const ProductDetail = () => {
   const [thumbsSwiper, setThumbsSwiper] = useState<SwiperClass | null>(null);
@@ -28,13 +29,17 @@ const ProductDetail = () => {
   const search = searchParams?.get("id");
   const searchNumber = search ? Number(search) : null;
   const [productData, setProductData] = useState<IProduct[]>([]);
+  const [loading, setLoading] = useState(false);
   const [sizeChart, setSizeChart] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [filteredData, setFilteredData] = useState<IProduct | null>(null);
+  const imageURL = process.env.NEXT_PUBLIC_IMAGE_URL
+  const APIURL = process.env.NEXT_PUBLIC_API_URL
 
   const getIdWiseProduct = async () => {
+    setLoading(true)
     try {
-      const response = await axios.get(`/api/product`);
+      const response = await axios.get(APIURL + `product`);
       const productData = response.data?.data;
       const findData = productData?.find(
         (val: { id: number }) => val.id === searchNumber
@@ -42,6 +47,8 @@ const ProductDetail = () => {
       setProductData([findData]);
     } catch (error) {
       console.error(error);
+    } finally {
+      setLoading(false)
     }
   };
 
@@ -94,7 +101,7 @@ const ProductDetail = () => {
     }),
     onSubmit: async (values, { resetForm, setSubmitting }) => {
       try {
-        const response = await axios.post('/api/product-inquiry', values)
+        const response = await axios.post(APIURL + 'product-inquiry', values)
         toast.success(response.data.message, {
           position: "top-right",
           autoClose: 5000,
@@ -170,7 +177,7 @@ const ProductDetail = () => {
                         className="border rounded-xl mb-2"
                       >
                         <Image
-                          src={`/product-image/${item.sysFileName}`}
+                          src={imageURL + `product-image/${item.sysFileName}`}
                           width={200}
                           height={200}
                           alt="product1"
@@ -196,7 +203,7 @@ const ProductDetail = () => {
                   {item.ProductImages.map((img, index) => (
                     <SwiperSlide key={index} className="shadow-md m-1">
                       <Image
-                        src={`/product-image/${img.sysFileName}`}
+                        src={imageURL + `product-image/${img.sysFileName}`}
                         width={200}
                         height={200}
                         alt="product1"
@@ -444,7 +451,8 @@ const ProductDetail = () => {
             {productData?.map((item, index) => {
               return (
                 <>
-                  <div key={index} className="xl:col-span-1 max-md:hidden" />
+                  <div key={index} className="xl:col-span-1 max-md:hidden">
+                  </div>
                   <div className="xl:col-span-5 lg:col-span-5 col-span-12">
                     <div className="mb-4">
                       <div className="text-2xl font-semibold tracking-normal text-black font-gotham md:text-3xl">

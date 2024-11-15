@@ -34,6 +34,8 @@ function Product() {
   const prices = allData.map((product) => parseFloat(product.price));
   const maxPrice = Math.max(...prices, 3000);
   const [selectedPrice, setSelectedPrice] = useState<[number, number]>([100, maxPrice / 2]);
+  const imageURL = process?.env.NEXT_PUBLIC_IMAGE_URL
+  const APIURL = process?.env.NEXT_PUBLIC_API_URL
 
   const fabricOptions = Array.from(new Set(allData
     .map((product) => product.fabric?.toLowerCase().trim()) // Normalize to lowercase and trim whitespace
@@ -49,22 +51,22 @@ function Product() {
   const getProduct = async () => {
     setLoading(true);
     try {
-      const response = await axios.get("/api/product");
+      const response = await axios.get(APIURL + "product");
       const getData = response.data?.data;
       setAllData(getData);
 
-      const apiFindData = await axios.get(`/api/product?${selectedCategories}`)
+      const apiFindData = await axios.get(APIURL + `product?${selectedCategories}`)
       setAllFilterData(apiFindData.data.data)
 
-      const categoriesResponse = await axios.get("/api/category");
+      const categoriesResponse = await axios.get(APIURL + "category");
       const categoriesData = categoriesResponse.data?.data;
       setCategories(categoriesData);
 
-      const colorResponse = await axios.get("/api/color");
+      const colorResponse = await axios.get(APIURL + "color");
       const colorData = colorResponse.data?.data;
       setAllColor(colorData);
 
-      const sizeResponse = await axios.get("/api/size");
+      const sizeResponse = await axios.get(APIURL + "size");
       const sizeData = sizeResponse.data?.data;
       setAllSize(sizeData);
     } catch (error) {
@@ -172,7 +174,6 @@ function Product() {
         return matchesCategory && matchesSize && matchesColor && matchesFabric && matchesPrice;
       });
 
-    console.log('products :>> ', products);
     setFilteredProducts(products);
   }, [selectedCategories, selectedSizes, selectedColors, selectedPrice, selectedFabrics, allData, allFilterData]);
 
@@ -352,7 +353,7 @@ function Product() {
                           <div className="shadow-md h-full w-full rounded-lg">
                             <div className="productImage rounded-[12px] overflow-hidden max-h-[400px] flex justify-center">
                               <Image
-                                src={`/product-image/${item.ProductImages[0]?.sysFileName}`}
+                                src={imageURL + `product-image/${item.ProductImages[0]?.sysFileName}`}
                                 width={200}
                                 height={200}
                                 alt={item.name}

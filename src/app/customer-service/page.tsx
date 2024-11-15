@@ -14,6 +14,7 @@ import { toast } from "react-toastify";
 
 function CustomerService() {
   const router = useRouter();
+  const APIURL = process.env.NEXT_PUBLIC_API_URL
 
   const handleRetrunBack = () => {
     router.push('/product')
@@ -29,7 +30,7 @@ function CustomerService() {
     onSubmit: async (values, { setSubmitting, resetForm }) => {
       console.log('values :>> ', values);
       try {
-        const response = await axios.post('/api/bulk-order-discuss', values)
+        const response = await axios.post(APIURL + 'bulk-order-discuss', values)
         toast.success(response.data.message, {
           position: "top-right",
           closeOnClick: true,

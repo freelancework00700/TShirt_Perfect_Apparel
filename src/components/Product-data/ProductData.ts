@@ -1,5 +1,5 @@
-import product1 from "../../../public/Images/525eebd82dd31d96fd518e97e5234fe0_78eb7754-39e4-4adc-b66c-acbaa089bfe7.webp";
-import tracks1 from "../../../public/Images/pantTracks.png";
+import product1 from "../../../public/images/525eebd82dd31d96fd518e97e5234fe0_78eb7754-39e4-4adc-b66c-acbaa089bfe7.webp";
+import tracks1 from "../../../public/images/pantTracks.png";
 export const productData = [
   {
     id: "1",

@@ -5,9 +5,9 @@ import Link from "next/link";
 import { useState } from "react";
 import { usePathname } from "next/navigation";
 import Image from "next/image";
-import menu from "../../public/Images/menu.png";
-import close from "../../public/Images/close.png";
-import mainLogo from "../../public/Images/PerfectApparels.png";
+import menu from "../../public/images/menu.png";
+import close from "../../public/images/close.png";
+import mainLogo from "../../public/images/PerfectApparels.png";
 
 const Header = () => {
   const [menuShowResponsive, setMenuShowResponsive] = useState(false);

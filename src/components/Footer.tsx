@@ -12,11 +12,12 @@ import { Bounce, toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Skeleton } from "./ui/skeleton";
 import Image from "next/image";
-import mainLogo from "../../public/Images/PerfectApparels.png";
+import mainLogo from "../../public/images/PerfectApparels.png";
 
 const Footer = () => {
   const router = usePathname();
   const [loading, setLoading] = useState(false);
+  const APIURL = process.env.NEXT_PUBLIC_API_URL
 
   const formik = useFormik({
     initialValues: {
@@ -48,7 +49,7 @@ const Footer = () => {
     onSubmit: async (values, { resetForm }) => {
       setLoading(true);
       try {
-        const response = await axios.post("/api/get-in-touch", values);
+        const response = await axios.post(APIURL + "get-in-touch", values);
         toast.success(response.data.message, {
           position: "top-right",
           autoClose: 5000,

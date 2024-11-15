@@ -90,6 +90,8 @@ function Admin() {
   const router = useRouter();
   const [isTrackPants, setIsTrackPants] = useState(false);
   const [filteredProducts, setFilteredProducts] = useState<IProduct[]>([]);
+  const APIURL = process.env.NEXT_PUBLIC_API_URL
+
 
 
   const loginCredentials = [{ email: 'abc@gmail.com', password: 'Abc@123' },
@@ -129,7 +131,7 @@ function Admin() {
   const getAllProduct = async () => {
     setLoading(true);
     try {
-      const response = await axios.get(`/api/product`)
+      const response = await axios.get(APIURL + `product`)
       setAllProduct(response.data.data)
     } catch (error) {
       console.log('error :>> ', error);
@@ -148,7 +150,7 @@ function Admin() {
   const getAllCategory = async () => {
     setLoading(true);
     try {
-      const response = await axios.get(`/api/category`)
+      const response = await axios.get(APIURL + `category`)
       setAllCategory(response.data.data)
     } catch (error) {
       console.error(error)
@@ -157,11 +159,10 @@ function Admin() {
     }
   }
 
-
   const getAllSize = async () => {
     setLoading(true)
     try {
-      const response = await axios.get(`/api/size`)
+      const response = await axios.get(APIURL + `size`)
       setAllSize(response.data.data)
     } catch (error) {
       console.error(error)
@@ -173,7 +174,7 @@ function Admin() {
   const getAllColor = async () => {
     setLoading(true)
     try {
-      const colorResponse = await axios.get(`/api/color`)
+      const colorResponse = await axios.get(APIURL + `color`)
       setAllColors(colorResponse.data.data)
     } catch (error) {
       console.error(error)
@@ -185,7 +186,7 @@ function Admin() {
   const getAllInquiry = async () => {
     setLoading(true);
     try {
-      const response = await axios.get('/api/get-in-touch')
+      const response = await axios.get(APIURL + 'get-in-touch')
       setAllInquiry(response.data.data)
     } catch (error) {
       console.error(error)
@@ -197,7 +198,7 @@ function Admin() {
   const getProductInquiry = async () => {
     setLoading(true);
     try {
-      const response = await axios.get('/api/product-inquiry')
+      const response = await axios.get(APIURL + 'product-inquiry')
       setProductInquiry(response.data.data)
     } catch (error) {
       console.error(error)
@@ -248,7 +249,7 @@ function Admin() {
   const handleAddCategory = async () => {
     try {
       if (selectedCategoryId) {
-        const editResponse = await axios.put(`/api/category`, { id: selectedCategoryId, name: category })
+        const editResponse = await axios.put(APIURL + `category`, { id: selectedCategoryId, name: category })
         console.log('editResponse :>> ', editResponse);
         setOpenModel(false)
         toast.success(editResponse.data.message, {
@@ -264,7 +265,7 @@ function Admin() {
         });
         getAllCategory();
       } else {
-        const response = await axios.post('/api/category', { name: category })
+        const response = await axios.post(APIURL + '/category', { name: category })
         setOpenModel(false)
         toast.success(response.data.message, {
           position: "top-right",
@@ -311,7 +312,7 @@ function Admin() {
 
   const handleDeleteCategory = async () => {
     try {
-      const response = await axios.delete(`/api/category?id=${selectedCategoryId}`)
+      const response = await axios.delete(APIURL + `category?id=${selectedCategoryId}`)
       toast.success(response.data.message, {
         position: "top-right",
         autoClose: 5000,
@@ -353,7 +354,7 @@ function Admin() {
   const handleAddSize = async () => {
     try {
       if (selectedSizeId) {
-        const editSizeResponse = await axios.put(`/api/size`, { id: selectedSizeId, name: size, category_id: selectedCategory.id })
+        const editSizeResponse = await axios.put(APIURL + `size`, { id: selectedSizeId, name: size, category_id: selectedCategory.id })
         toast.success(editSizeResponse.data.message, {
           position: "top-right",
           autoClose: 5000,
@@ -367,7 +368,7 @@ function Admin() {
         });
         getAllSize();
       } else {
-        const sizeResponse = await axios.post(`/api/size`, { name: size, category_id: selectedCategory?.id })
+        const sizeResponse = await axios.post(APIURL + `size`, { name: size, category_id: selectedCategory?.id })
         toast.success(sizeResponse.data.message, {
           position: "top-right",
           autoClose: 5000,
@@ -414,7 +415,7 @@ function Admin() {
 
   const handleDeleteSize = async () => {
     try {
-      const response = await axios.delete(`/api/size?id=${selectedSizeId}`)
+      const response = await axios.delete(APIURL + `size?id=${selectedSizeId}`)
       toast.success(response.data.message, {
         position: "top-right",
         autoClose: 5000,
@@ -439,7 +440,7 @@ function Admin() {
 
   const handleDeleteProduct = async () => {
     try {
-      const response = await axios.delete(`/api/product?id=${selectedProductId}`)
+      const response = await axios.delete(APIURL + `product?id=${selectedProductId}`)
       toast.success(response.data.message, {
         position: "top-right",
         autoClose: 5000,
@@ -471,7 +472,7 @@ function Admin() {
   const handleAddColor = async () => {
     try {
       if (selectedColorId) {
-        const editResponse = await axios.put(`/api/color`, { id: selectedColorId, name: colors })
+        const editResponse = await axios.put(APIURL + `color`, { id: selectedColorId, name: colors })
         setOpenModel(false)
         toast.success(editResponse.data.message, {
           position: "top-right",
@@ -486,7 +487,7 @@ function Admin() {
         });
         getAllColor();
       } else {
-        const colorResponse = await axios.post(`/api/color`, { name: colors })
+        const colorResponse = await axios.post(APIURL + `color`, { name: colors })
         setOpenModel(false)
         toast.success(colorResponse.data.message, {
           position: "top-right",
@@ -532,10 +533,8 @@ function Admin() {
   }
 
   const handleDeleteColor = async (id: any) => {
-    console.log('id :>> ', id.id);
-    console.log('selectedColorId :>> ', selectedColorId);
     try {
-      const response = await axios.delete(`/api/color?id=${selectedColorId}`)
+      const response = await axios.delete(APIURL + `color?id=${selectedColorId}`)
       toast.success(response.data.message, {
         position: "top-right",
         autoClose: 5000,
@@ -667,7 +666,7 @@ function Admin() {
       if (id) {
         formData.append("id", id.toString())
         try {
-          const response = await axios.put(`/api/product?id=${id}`, formData, {
+          const response = await axios.put(APIURL + `product?id=${id}`, formData, {
             headers: { 'content-type': 'multipart/form-data' }
           })
           toast.success(response.data.message, {
@@ -687,7 +686,7 @@ function Admin() {
         }
       } else {
         try {
-          const productResponse = await axios.post(`/api/product/`, formData, {
+          const productResponse = await axios.post(APIURL + `product/`, formData, {
             headers: { 'content-type': 'multipart/form-data' }
           })
           toast.success(productResponse.data.message, {
@@ -831,7 +830,7 @@ function Admin() {
     formData.append("inStock", item.inStock.toString());
 
     try {
-      const response = await axios.put(`/api/product?id=${item.id}`, formData)
+      const response = await axios.put(APIURL + `product?id=${item.id}`, formData)
       console.log('response: ', response.data.data);
       getAllProduct();
     } catch (error) {
@@ -885,7 +884,7 @@ function Admin() {
     if (selectedProductInquiry) {
       // onDelete(selectedProductInquiry) // Call delete function, pass the selected product ID
       try {
-        const response = await axios.delete(`/api/product-inquiry?id=${selectedProductInquiry}`)
+        const response = await axios.delete(APIURL + `product-inquiry?id=${selectedProductInquiry}`)
         toast.success(response.data.message, {
           position: "top-right",
           autoClose: 5000,
@@ -913,7 +912,7 @@ function Admin() {
   const handleDeleteGetInTouchInquiry = async () => {
     if (selectedGetInTouchInquiry) {
       try {
-        const response = await axios.delete(`/api/get-in-touch?id=${selectedGetInTouchInquiry}`)
+        const response = await axios.delete(APIURL + `get-in-touch?id=${selectedGetInTouchInquiry}`)
         toast.success(response.data.message, {
           position: "top-right",
           autoClose: 5000,
@@ -1230,7 +1229,7 @@ function Admin() {
                             setCurrentPage(1)
                           }}
                         />
-                        <Label>Track Pants</Label>
+                        <Label>Track-Pants</Label>
                       </div>
                       <Dialog open={openModel} onOpenChange={(state) => setOpenModel(state)}>
                         <DialogTrigger asChild>
