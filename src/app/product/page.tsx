@@ -207,13 +207,7 @@ function Product() {
                   {!filterOpen ? (
                     "Filter"
                   ) : (
-                    <Image
-                      src={close}
-                      alt="close-icon"
-                      width={18}
-                      height={18}
-                      className="cursor-pointer"
-                    />
+                    "Filter"
                   )}
                 </div>
                 <div>
