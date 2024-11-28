@@ -720,7 +720,6 @@ function Admin() {
   };
 
   const handleEditProduct = async (item: IProduct) => {
-    console.log('item :>> ', item);
     getAllCategory();
     getAllSize();
     getAllColor();
@@ -1724,8 +1723,8 @@ function Admin() {
                               </div>
                             </div>
                             <DialogFooter className="px-5 pb-5">
-                              <Button type="submit">
-                                {id ? "Save changes" : "Add product"}
+                              <Button type="submit" disabled={formik.isSubmitting}>
+                                {id ? "Save changes" : formik.isSubmitting ? "Submitting..." : "Add product"}
                               </Button>
                             </DialogFooter>
                           </form>
