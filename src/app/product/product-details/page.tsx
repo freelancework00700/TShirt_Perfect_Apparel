@@ -458,7 +458,7 @@ const ProductDetail = () => {
                       <div className="text-2xl font-semibold tracking-normal text-black font-gotham md:text-3xl">
                         {item.name}
                       </div>
-                      <div className="flex justify-between items-end">
+                      <div className="flex justify-between items-end max-sm:flex-col max-sm:items-start">
                         <div>
                           <div className="flex items-center gap-x-2 text-xl text-gray-900 font-semibold mt-3">
                             <div className="text-[#000] text-[16px] py-2">
@@ -478,18 +478,16 @@ const ProductDetail = () => {
                             (incl. of all taxes)
                           </div>
                         </div>
-                        <div className="pe-8 lg:pe-0 max-lg:hidden">
-                          <div
-                            onClick={() => openProductInquiryModal(item.id)}
-                            className="bg-[#000] hover:bg-[#222] hover:text-[#7ab01e] cursor-pointer transition ease-in-out duration-200 rounded-full text-base flex items-center font-bold 
-                          text-[#fff] py-2 px-6 max-[1023px]:hidden button button--nanuk button--border-thin button--round-s"
-                          >
-                            <span>Product Inquiry</span>
-                          </div>
-                        </div>
+                        <div
+                          onClick={() => openProductInquiryModal(item.id)}
+                          className="bg-[#000] hover:bg-[#222] hover:text-[#7ab01e] cursor-pointer transition ease-in-out duration-200 rounded-full text-base flex items-center font-bold 
+                          text-[#fff] py-2 px-6 button button--nanuk button--border-thin button--round-s max-sm:mt-3"
+                        >
+                          <span>Product Inquiry</span>
+                        </div>                   
                       </div>
                     </div>
-                    <div className="text-[#999] text-[16px]">
+                    <div className="text-[#999] text-[16px] max-sm:border-t max-sm:pt-3">
                       Color:{" "}
                       <span className="text-[#000]">
                         {item.Colors.map((item) => item.name).join(", ")}

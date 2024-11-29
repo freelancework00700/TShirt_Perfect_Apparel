@@ -77,7 +77,7 @@ const Footer = () => {
         <div className="w-full bg-gray-100 py-10 max-md:py-5">
           <div className="container mx-auto xl:max-w-7xl max-[1024px]:px-4">
             <div className="grid grid-cols-12">
-              <div className="col-span-12 text-[30px] font-medium text-center mb-4 ">
+              <div className="col-span-12 text-[30px] max-sm:text-[18px] max-sm:mb-2 font-medium text-center mb-4 ">
                 Get In Touch
               </div>
               <div className="col-span-12">

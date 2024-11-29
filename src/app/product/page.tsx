@@ -198,30 +198,30 @@ function Product() {
       <div className="min-h-[calc(100vh_-_385px)]">
         <div className="container mx-auto xl:max-w-7xl max-[1024px]:px-4">
           <div className="grid grid-cols-12 gap-4 lg:py-10">
-            <div className="xl:col-span-2 lg:col-span-3 col-span-12 max-md:py-5">
-              <div className="flex justify-between items-center w-full">
-                <div className="text-[24px] font-medium cursor-pointer"
-                  onClick={() => setFilterOpen(!filterOpen)}
+            <div className="xl:col-span-2 lg:col-span-3 col-span-12 max-md:py-5 max-sm:pb-0">
+              <div className="flex justify-between items-center w-full max-sm:bg-gray-50 max-sm:px-3 max-sm:py-2 max-sm:rounded-md" onClick={() => setFilterOpen(!filterOpen)}>
+                <div className="text-[24px] max-sm:text-[18px] font-medium cursor-pointer"
+                  
                 >
                   Filter
                 </div>
 
-                <span className="md:hidden mr-40" onClick={() => setFilterOpen(!filterOpen)}>
+                <span className="md:hidden" onClick={() => setFilterOpen(!filterOpen)}>
                   <svg className="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
                     <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m19 9-7 7-7-7" />
                   </svg>
                 </span>
 
-                <div>
                   {
                     isActiveFilterData &&
+                <div>
                     <button onClick={handleResetFilters} className="text-sm">Reset Filter</button>
-                  }
                 </div>
+                  }
               </div>
 
               {filterOpen && (
-                <div>
+                <div className="max-sm:bg-gray-50 max-sm:px-3 max-sm:py-2 max-sm:rounded-md">
                   <Accordion type="single" collapsible className="w-full">
                     <AccordionItem value="item-1">
                       <AccordionTrigger>Price</AccordionTrigger>
@@ -461,7 +461,7 @@ function Product() {
 
             <div className="xl:col-span-10 lg:col-span-9 col-span-12">
               <div className="flex justify-between items-center lg:sticky lg:top-0 bg-white max-lg:flex-wrap max-md:mb-2">
-                <div className="mb-4 text-[24px] font-medium">
+                <div className="mb-4 max-sm:mb-0 text-[24px] max-sm:text-[18px] font-medium">
                   Product ({filteredProducts.length})
                 </div>
               </div>

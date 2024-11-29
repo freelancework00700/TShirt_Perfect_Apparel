@@ -109,13 +109,13 @@ export default function Home() {
           </Swiper>
         </div>
         <div className="container mx-auto xl:max-w-7xl max-[1024px]:px-4 relative z-10">
-          <div className="py-10 max-sm:py-5">
-            <div className="flex justify-center items-center gap-2 py-7">
+          <div className="py-10 max-sm:py-2">
+            <div className="flex justify-center items-center gap-2 py-7 max-sm:py-3">
               {Object.keys(segments).map((key: string) => (
                 <button
                   key={key}
                   onClick={() => setActiveSegment(key as SegmentKey)}
-                  className={`py-1 px-10 rounded-[20px] border border-black text-lg ${activeSegment === key
+                  className={`py-1 px-10 max-[389px]:px-5 rounded-[20px] border border-black text-lg ${activeSegment === key
                     ? "text-white bg-black"
                     : " text-black bg-white"
                     }`}
@@ -307,7 +307,7 @@ export default function Home() {
             )}
           </div>
           <div className="py-10 max-sm:py-5">
-            <div className="mb-8 text-[30px] font-medium text-center bg-gray-100 py-2 rounded-lg">
+            <div className="mb-8 text-[30px] max-sm:text-[18px] max-sm:mb-4 font-medium text-center bg-gray-100 py-2 rounded-lg">
               Perfect Apparels Collection
             </div>
             <div className="flex justify-center flex-wrap items-center gap-5 w-full">
@@ -316,15 +316,15 @@ export default function Home() {
               bg-[url('../../public/images/how-should-a-t-shirt-fit.png')] bg-cover px-20 max-lg:px-5 py-24 max-lg:py-5 rounded-[16px]"
               >
                 <div>
-                  <h1 className="text-3xl font-bold mb-4 text-white">
+                  <h1 className="text-3xl max-sm:text-[20px] max-sm:mb-2 font-bold mb-4 text-white">
                     T-Shirt
                   </h1>
-                  <p className="mb-6 w-72 text-white">
+                  <p className="mb-6 w-72 text-white max-sm:text-[16px]">
                     T-shirts are a versatile and essential part of any wardrobe,
                     known for their comfort and adaptability.
                   </p>
                   <button
-                    className="bg-black text-white px-6 py-2 rounded-full"
+                    className="bg-black text-white px-6 max-sm:py-1 py-2 rounded-full"
                     onClick={() => handleShowCatagories()}
                   >
                     Show Catagories
@@ -336,14 +336,14 @@ export default function Home() {
               bg-[url('../../public/images/track-pants.png')] bg-cover px-20 max-lg:px-5 py-24 max-lg:py-5 rounded-[16px]"
               >
                 <div>
-                  <h1 className="text-3xl font-bold mb-4">Track Pants</h1>
-                  <p className="mb-6 w-72">
+                  <h1 className="text-3xl max-sm:text-[20px] max-sm:mb-2 font-bold mb-4">Track Pants</h1>
+                  <p className="mb-6 w-72 max-sm:text-[16px]">
                     Track pants are a popular type of athletic wear, often made
                     of soft, stretchy materials like polyester, cotton blends,
                     or fleece.
                   </p>
                   <button
-                    className="bg-black text-white px-6 py-2 rounded-full"
+                    className="bg-black text-white px-6 max-sm:py-1 py-2 rounded-full"
                     onClick={() => handleShowCatagories()}
                   >
                     Show Catagories
@@ -353,7 +353,7 @@ export default function Home() {
             </div>
           </div>
           <div className="py-10 max-sm:py-5">
-            <div className="mb-8 text-[30px] font-medium text-center bg-gray-100 py-2 rounded-lg">
+            <div className="mb-8 text-[30px] max-sm:text-[18px] max-sm:mb-4 font-medium text-center bg-gray-100 py-2 rounded-lg">
               Trending T-Shirt Collection
             </div>
             <div className="trending-swiper">
@@ -445,7 +445,7 @@ export default function Home() {
             </div>
           </div>
           <div className="py-10 max-sm:py-5">
-            <div className="mb-8 text-[30px] font-medium text-center bg-gray-100 py-2 rounded-lg">
+            <div className="mb-8 text-[30px] max-sm:text-[18px] max-sm:mb-4 font-medium text-center bg-gray-100 py-2 rounded-lg">
               Trending Track Pants Collection
             </div>
             <div className="trending-swiper">
@@ -545,7 +545,7 @@ export default function Home() {
       </div>
       <div className="w-full bg-gray-100 py-10 pb-5 max-md:py-5 ">
         <div className="container mx-auto xl:max-w-8xl max-sm:px-4">
-          <div className="mb-4 text-[30px] font-medium text-center">
+          <div className="mb-4 text-[30px] max-sm:text-[18px] max-sm:mb-0 font-medium text-center">
             Our Brand Partners
           </div>
           <div className="flex items-center justify-center flex-wrap gap-8 max-sm:gap-3 py-5">
