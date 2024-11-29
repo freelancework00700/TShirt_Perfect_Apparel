@@ -200,16 +200,18 @@ function Product() {
           <div className="grid grid-cols-12 gap-4 lg:py-10">
             <div className="xl:col-span-2 lg:col-span-3 col-span-12 max-md:py-5">
               <div className="flex justify-between items-center w-full">
-                <div
-                  className="text-[24px] font-medium cursor-pointer"
+                <div className="text-[24px] font-medium cursor-pointer"
                   onClick={() => setFilterOpen(!filterOpen)}
                 >
-                  {!filterOpen ? (
-                    "Filter"
-                  ) : (
-                    "Filter"
-                  )}
+                  Filter
                 </div>
+
+                <span className="md:hidden mr-40" onClick={() => setFilterOpen(!filterOpen)}>
+                  <svg className="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                    <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m19 9-7 7-7-7" />
+                  </svg>
+                </span>
+
                 <div>
                   {
                     isActiveFilterData &&
@@ -219,120 +221,122 @@ function Product() {
               </div>
 
               {filterOpen && (
-                <Accordion type="single" collapsible className="w-full">
-                  <AccordionItem value="item-1">
-                    <AccordionTrigger>Price</AccordionTrigger>
-                    <AccordionContent>
-                      <div className="flex flex-col gap-3 mt-3">
-                        <Slider
-                          onValueChange={(value) => setSelectedPrice(value as [number, number])}
-                          defaultValue={[100, maxPrice / 2]}
-                          min={100}
-                          max={maxPrice}
-                          step={1}
-                        />
-                        <span>Selected Price: {selectedPrice[0]} - {selectedPrice[1]}</span>
-                      </div>
-                    </AccordionContent>
-                  </AccordionItem>
-                  <AccordionItem value="item-2">
-                    <AccordionTrigger>Collection</AccordionTrigger>
-                    <AccordionContent>
-                      <div className="flex flex-col gap-3 mt-3">
-                        {categories.map((item, index) => (
-                          <>
-                            <div key={index} className="flex items-center space-x-2">
-                              <Checkbox
-                                id={`category-${item.id}`}
-                                checked={selectedCategories.includes(item.id)}
-                                onCheckedChange={() =>
-                                  handleCheckboxChange(item.id)
-                                }
-                              />
-                              <label
-                                htmlFor={`category-${item.id}`}
-                                className="text-base font-medium leading-none text-[#777]"
-                              >
-                                {item?.name}
-                              </label>
-                            </div>
-                          </>
-                        ))}
-                      </div>
-                    </AccordionContent>
-                  </AccordionItem>
-                  <AccordionItem value="item-3">
-                    <AccordionTrigger>Size</AccordionTrigger>
-                    <AccordionContent>
-                      <div className="flex flex-col gap-3 mt-3">
-                        {availableSizes.map((item, index) => {
-                          return (
+                <div>
+                  <Accordion type="single" collapsible className="w-full">
+                    <AccordionItem value="item-1">
+                      <AccordionTrigger>Price</AccordionTrigger>
+                      <AccordionContent>
+                        <div className="flex flex-col gap-3 mt-3">
+                          <Slider
+                            onValueChange={(value) => setSelectedPrice(value as [number, number])}
+                            defaultValue={[100, maxPrice / 2]}
+                            min={100}
+                            max={maxPrice}
+                            step={1}
+                          />
+                          <span>Selected Price: {selectedPrice[0]} - {selectedPrice[1]}</span>
+                        </div>
+                      </AccordionContent>
+                    </AccordionItem>
+                    <AccordionItem value="item-2">
+                      <AccordionTrigger>Collection</AccordionTrigger>
+                      <AccordionContent>
+                        <div className="flex flex-col gap-3 mt-3">
+                          {categories.map((item, index) => (
                             <>
                               <div key={index} className="flex items-center space-x-2">
                                 <Checkbox
-                                  id={`size-${item.id}`}
-                                  checked={selectedSizes.includes(item.id)}
+                                  id={`category-${item.id}`}
+                                  checked={selectedCategories.includes(item.id)}
                                   onCheckedChange={() =>
-                                    handleSizeCheckboxChange(item.id)
-                                  }
-                                />
-                                <label htmlFor="terms2"
-                                  className="text-base font-medium leading-none text-[#777]"
-                                >
-                                  {item.name}
-                                </label>
-                              </div>
-                            </>
-                          );
-                        })}
-                      </div>
-                    </AccordionContent>
-                  </AccordionItem>
-                  <AccordionItem value="item-4">
-                    <AccordionTrigger>Colors</AccordionTrigger>
-                    <AccordionContent>
-                      <div className="flex flex-col gap-3 mt-3">
-                        {allColor?.map((item, index) => {
-                          return (
-                            <>
-                              <div key={index} className="flex items-center space-x-2">
-                                <Checkbox
-                                  id={`color-${item.id}`}
-                                  checked={selectedColors.includes(item.id)}
-                                  onCheckedChange={() =>
-                                    handleColorCheckboxChange(item.id)
+                                    handleCheckboxChange(item.id)
                                   }
                                 />
                                 <label
-                                  htmlFor="terms2"
+                                  htmlFor={`category-${item.id}`}
                                   className="text-base font-medium leading-none text-[#777]"
                                 >
-                                  {item.name}
+                                  {item?.name}
                                 </label>
                               </div>
                             </>
-                          );
-                        })}
-                      </div>
-                    </AccordionContent>
-                  </AccordionItem>
-                  <AccordionItem value="item-5">
-                    <AccordionTrigger>Fabric</AccordionTrigger>
-                    <AccordionContent>
-                      <div className="flex flex-col gap-3 mt-3">
-                        {fabricOptions.map((fabric) => (
-                          <label key={fabric} className="flex items-center">
-                            <Checkbox
-                              checked={selectedFabrics.includes(fabric)}
-                              onCheckedChange={() => handleFabricChange(fabric)}
-                            />
-                            <span className="ml-2">{fabric}</span>
-                          </label>
-                        ))}
-                      </div>
-                    </AccordionContent>
-                  </AccordionItem>
-                </Accordion>
+                          ))}
+                        </div>
+                      </AccordionContent>
+                    </AccordionItem>
+                    <AccordionItem value="item-3">
+                      <AccordionTrigger>Size</AccordionTrigger>
+                      <AccordionContent>
+                        <div className="flex flex-col gap-3 mt-3">
+                          {availableSizes.map((item, index) => {
+                            return (
+                              <>
+                                <div key={index} className="flex items-center space-x-2">
+                                  <Checkbox
+                                    id={`size-${item.id}`}
+                                    checked={selectedSizes.includes(item.id)}
+                                    onCheckedChange={() =>
+                                      handleSizeCheckboxChange(item.id)
+                                    }
+                                  />
+                                  <label htmlFor="terms2"
+                                    className="text-base font-medium leading-none text-[#777]"
+                                  >
+                                    {item.name}
+                                  </label>
+                                </div>
+                              </>
+                            );
+                          })}
+                        </div>
+                      </AccordionContent>
+                    </AccordionItem>
+                    <AccordionItem value="item-4">
+                      <AccordionTrigger>Colors</AccordionTrigger>
+                      <AccordionContent>
+                        <div className="flex flex-col gap-3 mt-3">
+                          {allColor?.map((item, index) => {
+                            return (
+                              <>
+                                <div key={index} className="flex items-center space-x-2">
+                                  <Checkbox
+                                    id={`color-${item.id}`}
+                                    checked={selectedColors.includes(item.id)}
+                                    onCheckedChange={() =>
+                                      handleColorCheckboxChange(item.id)
+                                    }
+                                  />
+                                  <label
+                                    htmlFor="terms2"
+                                    className="text-base font-medium leading-none text-[#777]"
+                                  >
+                                    {item.name}
+                                  </label>
+                                </div>
+                              </>
+                            );
+                          })}
+                        </div>
+                      </AccordionContent>
+                    </AccordionItem>
+                    <AccordionItem value="item-5">
+                      <AccordionTrigger>Fabric</AccordionTrigger>
+                      <AccordionContent>
+                        <div className="flex flex-col gap-3 mt-3">
+                          {fabricOptions.map((fabric) => (
+                            <label key={fabric} className="flex items-center">
+                              <Checkbox
+                                checked={selectedFabrics.includes(fabric)}
+                                onCheckedChange={() => handleFabricChange(fabric)}
+                              />
+                              <span className="ml-2">{fabric}</span>
+                            </label>
+                          ))}
+                        </div>
+                      </AccordionContent>
+                    </AccordionItem>
+                  </Accordion>
+                </div>
               )}
 
               {!filterOpen && (
@@ -454,6 +458,7 @@ function Product() {
                 </div>
               )}
             </div>
+
             <div className="xl:col-span-10 lg:col-span-9 col-span-12">
               <div className="flex justify-between items-center lg:sticky lg:top-0 bg-white max-lg:flex-wrap max-md:mb-2">
                 <div className="mb-4 text-[24px] font-medium">
@@ -541,7 +546,7 @@ function Product() {
         </div>
       </div>
       <Footer />
-    </main>
+    </main >
   );
 }
 
