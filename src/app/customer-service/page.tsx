@@ -160,8 +160,17 @@ function CustomerService() {
                   Address: Plot No.40 GF, Shidhi Park Society, L.H.Road, Varachha,
                   Surat, 395006
                 </div>
-                <div className="text-center text-[16px] mb-6">
-                  Call or WhatsApp: +91 94268 66467 / +91 94281 49160 / +91 99047 97335
+                <div className="text-center text-[16px] mb-3">
+                  Call or WhatsApp:
+                  <span className="block sm:inline-block sm:mr-2 mb-2 sm:mb-0">
+                    +91 94268 66467
+                  </span>
+                  <span className="block sm:inline-block sm:mr-2 mb-2 sm:mb-0">
+                    +91 94281 49160
+                  </span>
+                  <span className="block sm:inline-block sm:mr-2 mb-2 sm:mb-0">
+                    +91 99047 97335
+                  </span>
                 </div>
                 <div className="text-center text-[16px] mb-6">
                   Email: pravinbudheliya99@gmail.com
