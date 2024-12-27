@@ -229,10 +229,10 @@ const ProductDetail = () => {
 
                       <div className="mt-4">
                         {item.Category.name === "T-Shirts" ? (
-                          <>
-                            <h3 className="text-sm font-semibold">T-Shirt Measurements</h3>
+                          item.SizeCharts?.map((sizeChart, index) => (
+                              <div key={index}>
                             <div className="overflow-x-auto mt-4">
-                              <table className="w-full text-sm text-left text-gray-700">
+                             <table className="w-full text-sm text-left text-gray-700">
                                 <thead className="bg-gray-100">
                                   <tr>
                                     <th className="px-4 py-2 font-medium">Size</th>
@@ -244,19 +244,20 @@ const ProductDetail = () => {
                                 </thead>
                                 <tbody>
                                   <tr>
-                                    <td className="px-4 py-2">XS</td>
-                                    <td className="px-4 py-2">36</td>
-                                    <td className="px-4 py-2">26</td>
-                                    <td className="px-4 py-2">17</td>
-                                    <td className="px-4 py-2">24 ¼</td>
+                                    <td className="px-4 py-2">{sizeChart.Size?.name || "N/A"}</td>
+                                    <td className="px-4 py-2">{sizeChart.chest || "N/A"}</td>
+                                    <td className="px-4 py-2">{sizeChart.length_inch || "N/A"}</td>
+                                    <td className="px-4 py-2">{sizeChart.shoulder || "N/A"}</td>
+                                    <td className="px-4 py-2">{sizeChart.sleeve || "N/A"}</td>
                                   </tr>
                                 </tbody>
                               </table>
                             </div>
-                          </>
-                        ) : item.Category.name === "Track-Pants" ? (
-                          <>
-                            <h3 className="text-sm font-semibold">Track Pants Measurements</h3>
+                          </div>
+                            ))
+                        ) : item.Category.name === "Cargo/Track-Pants" ? (
+                            item.SizeCharts?.map((sizeChart, index) => (
+                            <div key={index}>
                             <div className="overflow-x-auto mt-4">
                               <table className="w-full text-sm text-left text-gray-700">
                                 <thead className="bg-gray-100">
@@ -269,18 +270,18 @@ const ProductDetail = () => {
                                 </thead>
                                 <tbody>
                                   <tr>
-                                    <td className="px-4 py-2">XS</td>
-                                    <td className="px-4 py-2">28</td>
-                                    <td className="px-4 py-2">38</td>
-                                    <td className="px-4 py-2">36</td>
+                                    <td className="px-4 py-2">{sizeChart.Size?.name || "N/A"}</td>
+                                    <td className="px-4 py-2">{sizeChart.waist || "N/A"}</td>
+                                    <td className="px-4 py-2">{sizeChart.length_cm || "N/A"}</td>
+                                    <td className="px-4 py-2">{sizeChart.hip || "N/A"}</td>
                                   </tr>
-                                  {/* Add more sizes as needed */}
                                 </tbody>
                               </table>
                             </div>
-                          </>
+                          </div>
+                            ))
                         ) : (
-                          <p className="text-center text-sm text-gray-500">No size chart available.</p>
+                          <p className="text-gray-500">No size chart available for this category.</p>
                         )}
                         <p className="mt-4 text-xs text-center text-gray-500">
                           If your measurements fall between sizes, we suggest that you size up for a better fit.
@@ -484,7 +485,7 @@ const ProductDetail = () => {
                           text-[#fff] py-2 px-6 button button--nanuk button--border-thin button--round-s max-sm:mt-3"
                         >
                           <span>Product Inquiry</span>
-                        </div>                   
+                        </div>
                       </div>
                     </div>
                     <div className="text-[#999] text-[16px] max-sm:border-t max-sm:pt-3">
@@ -493,6 +494,7 @@ const ProductDetail = () => {
                         {item.Colors.map((item) => item.name).join(", ")}
                       </span>
                     </div>
+                    <div className="text-xs pt-3">Shipping charges extra*</div>
                     <div className="text-[#999] text-[16px] mt-4 pt-4 border-t border-[#ddd] flex items-center gap-3">
                       Select A Size
                       <div className="flex items-center" onClick={openSizeChart}>

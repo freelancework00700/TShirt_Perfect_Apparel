@@ -57,7 +57,25 @@ export interface IProduct {
         isDeleted: boolean,
         name: string,
         updatedAt: string,
-    }
+    },
+    SizeCharts: {
+        Size: {
+            category_id: number;
+            createdAt: string;
+            id: number;
+            isDeleted: boolean;
+            name: string;
+            updatedAt: string;
+        }
+        size_id: string;
+        chest: string;
+        length_inch: string;
+        shoulder: string;
+        sleeve: string;
+        waist: string;
+        length_cm: string;
+        hip: string;
+    }[],
 }
 
 interface ProductImages {
@@ -184,4 +202,4 @@ export interface ProductInquiry {
 }
 
 
-export type Filter = "T-Shirts" | "Track-Pants";
+export type Filter = "T-Shirts" | "Cargo/Track-Pants";

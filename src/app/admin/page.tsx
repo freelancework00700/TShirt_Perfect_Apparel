@@ -91,6 +91,11 @@ function Admin() {
   const [isTrackPants, setIsTrackPants] = useState(false);
   const [filteredProducts, setFilteredProducts] = useState<IProduct[]>([]);
   const APIURL = process.env.NEXT_PUBLIC_API_URL
+  const imageURL = process.env.NEXT_PUBLIC_IMAGE_URL
+  const [isAddingCategory, setIsAddingCategory] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isSizeButtonDisabled, setIsSizeButtonDisabled] = useState(false);
+  const [sizeChartData, setSizeChartData] = useState<any>();
 
 
 
@@ -142,7 +147,7 @@ function Admin() {
 
   useEffect(() => {
     // Filter products based on switch selection
-    const category = isTrackPants ? 'Track-Pants' : 'T-Shirts';
+    const category = isTrackPants ? 'Cargo/Track-Pants' : 'T-Shirts';
     const filtered = allProduct.filter((product) => product.Category.name === category);
     setFilteredProducts(filtered);
   }, [isTrackPants, allProduct]);
@@ -235,7 +240,6 @@ function Admin() {
   }, [page, isTrackPants])
 
   const handleEditCategory = async (item: ICategories) => {
-    console.log('item :>> ', item);
     setOpenModel(true)
     setCategory(item.name)
     setSelectedCategoryId(item.id)
@@ -247,6 +251,11 @@ function Admin() {
   };
 
   const handleAddCategory = async () => {
+    if (!category.trim()) {
+      return;
+    }
+
+    setIsAddingCategory(true);
     try {
       if (selectedCategoryId) {
         const editResponse = await axios.put(APIURL + `category`, { id: selectedCategoryId, name: category })
@@ -281,6 +290,7 @@ function Admin() {
         getAllCategory();
       }
     } catch (error: any) {
+      setIsAddingCategory(false);
       if (error.response && error.response.status === 400) {
         toast.error(error.response.data.message || "Something went wrong", {
           position: "top-right",
@@ -307,6 +317,8 @@ function Admin() {
           transition: Bounce,
         });
       }
+    } finally {
+      setIsAddingCategory(false);
     }
   }
 
@@ -352,6 +364,10 @@ function Admin() {
   };
 
   const handleAddSize = async () => {
+    if (!size || !selectedCategory) {
+      return
+    }
+    setIsSizeButtonDisabled(true)
     try {
       if (selectedSizeId) {
         const editSizeResponse = await axios.put(APIURL + `size`, { id: selectedSizeId, name: size, category_id: selectedCategory.id })
@@ -410,6 +426,8 @@ function Admin() {
           transition: Bounce,
         });
       }
+    } finally {
+      setIsSizeButtonDisabled(false)
     }
   }
 
@@ -470,6 +488,10 @@ function Admin() {
   };
 
   const handleAddColor = async () => {
+    if (!colors.trim()) {
+      return;
+    }
+    setIsLoading(true);
     try {
       if (selectedColorId) {
         const editResponse = await axios.put(APIURL + `color`, { id: selectedColorId, name: colors })
@@ -529,6 +551,8 @@ function Admin() {
           transition: Bounce,
         });
       }
+    } finally {
+      setIsLoading(false);
     }
   }
 
@@ -587,7 +611,19 @@ function Admin() {
       discount_price: "",
       final_price: "",
       inStock: true,
-      isHideFields: false
+      isHideFields: false,
+      size_chart: [
+        {
+          size_id: "",
+          chest: "",
+          length_inch: "",
+          shoulder: "",
+          sleeve: "",
+          waist: "",
+          length_cm: "",
+          hip: "",
+        },
+      ],
     },
     validationSchema: yup.object({
       category_id: yup.string().required("Select a category"),
@@ -630,8 +666,24 @@ function Admin() {
       discount_price: yup.number().required("Enter the discount price"),
       final_price: yup.string().required("Enter the final price"),
       inStock: yup.boolean().required(),
+      size_chart: yup.array().of(
+        yup.object().shape({
+          size_id: yup
+            .string()
+            .required("Size ID is required")
+            .typeError("Size ID must be a number"),
+          chest: yup.string(),
+          length_inch: yup.string(),
+          shoulder: yup.string(),
+          sleeve: yup.string(),
+          waist: yup.string(),
+          length_cm: yup.string(),
+          hip: yup.string(),
+        })
+      ),
     }),
     onSubmit: async (values) => {
+      console.log('values: ', values);
       const formData = new FormData();
       formData.append("category_id", values.category_id)
       // formData.append("subcategory_id", values.subcategory_id)
@@ -661,6 +713,7 @@ function Admin() {
         formData.append("images", images)
       })
       formData.append("description", values.description)
+      formData.append("size_chart", JSON.stringify(values.size_chart));
 
 
       if (id) {
@@ -709,6 +762,7 @@ function Admin() {
     },
   });
 
+
   const changeFinalPrice = (discountValue: number) => {
     const price = Number(formik.values.price);
     const discount = Number(discountValue);
@@ -720,6 +774,7 @@ function Admin() {
   };
 
   const handleEditProduct = async (item: IProduct) => {
+    console.log('item: ', item);
     getAllCategory();
     getAllSize();
     getAllColor();
@@ -753,6 +808,20 @@ function Admin() {
     setSelectedImages(imageFilenames)
     formik.setFieldValue("description", item.description)
     formik.setFieldValue("inStock", item.inStock)
+
+    if (item.SizeCharts && item.SizeCharts.length > 0) {
+      const updatedSizeChart = item.SizeCharts.map((size) => ({
+        size_id: size.size_id || '',
+        chest: size.chest || '',
+        length_inch: size.length_inch || '',
+        shoulder: size.shoulder || '',
+        sleeve: size.sleeve || '',
+        waist: size.waist || '',
+        length_cm: size.length_cm || '',
+        hip: size.hip || '',
+      }));
+      formik.setFieldValue("size_chart", updatedSizeChart);
+    }
   }
 
   useEffect(() => {
@@ -782,6 +851,7 @@ function Admin() {
     const { type, files } = e.target;
     if (type === "file") {
       const selectedFiles: any = Array.from(files);
+      console.log('selectedFiles: ', selectedFiles);
       setSelectedImages(selectedFiles);
       formik.setFieldValue("images", selectedFiles);
     } else {
@@ -840,7 +910,6 @@ function Admin() {
   const handleCheckboxChange = async (id: string) => {
     // console.log(id, "iddddd")
     const selectedIds = new Set(formik.values.size_ids.split(',').filter(Boolean)); // Use a Set to handle uniqueness
-    // console.log('selectedIds: ', selectedIds);
     if (selectedIds.has(id)) {
       selectedIds.delete(id);
     } else {
@@ -997,7 +1066,6 @@ function Admin() {
   }
 
   //product-inquiry pagination
-
   const totalPageOfProductInquiry = Math.ceil(productInquiry.length / recordsPerPage)
   const currentProductInquiry = productInquiry.slice((currentPageOfProductInquiry - 1)
     * recordsPerPage, currentPageOfInquiry * recordsPerPage)
@@ -1041,8 +1109,58 @@ function Admin() {
     setCurrentPageOfInquiry(page)
   }
 
-  const trackPantsCategoryId = allCategory.find((cat) => cat.name === "Track-Pants")?.id.toString();
+  const trackPantsCategoryId = allCategory.find((cat) => cat.name === "Cargo/Track-Pants")?.id.toString();
 
+  // const handleInputChange = (field: string, value: string) => {
+  //   formik.setFieldValue(field, value);
+  // };
+
+  const handleDynamicInputChange = (field: string, value: string, sizeId: number) => {
+    const updated = [...(formik.values?.size_chart || [])];
+
+    const filteredUpdated = updated.filter(item => {
+      const sizeIdStr = item.size_id ? item.size_id.toString() : '';
+      return sizeIdStr.trim() !== '';
+    });
+
+
+    const sizeChartObject = filteredUpdated.reduce((acc: any, item) => {
+      acc[item.size_id] = { ...item };
+      return acc;
+    }, {});
+
+    if (sizeChartObject[sizeId]) {
+      sizeChartObject[sizeId][field] = value;
+    } else {
+      sizeChartObject[sizeId] = { size_id: sizeId, [field]: value };
+    }
+    const updatedSizeChartArray = Object.values(sizeChartObject);
+
+    // Update the state
+    setSizeChartData(sizeChartObject);
+    formik.setFieldValue('size_chart', updatedSizeChartArray);
+
+    // formik.setFieldValue('size_chart', sizeChartData);
+
+
+    // setSizeChartData((prev) => {
+    //   const updated = [...prev];
+    //   console.log('updated: ', updated);
+
+    //   //index object find
+    //   const index = updated.findIndex((data) => data.size_id === sizeId);
+    //   if (index > -1) {
+    //     updated[index] = { ...updated[index], [field]: value };
+    //   } else {
+    //     updated.push({ size_id: sizeId, [field]: value });
+    //   }
+
+    //   if (updated) {
+    //     formik.setFieldValue('size_chart', updated);
+    //   }
+    //   return updated;
+    // });
+  };
 
   return (
     <>
@@ -1192,7 +1310,7 @@ function Admin() {
                               <div className="grid grid-cols-12 gap-2 gap-y-2">
                                 {item.ProductImages.map((image, index) => (
                                   <div key={index} className="col-span-2 shadow rounded-md my-5 overflow-hidden">
-                                    <Image src={`/product-image/${image.sysFileName}`}
+                                    <Image src={imageURL + `product-image/${image.sysFileName}`}
                                       width={200} height={200} alt="Product image" className="w-full h-full object-cover max-h-[90px]"
                                     />
                                   </div>
@@ -1228,7 +1346,7 @@ function Admin() {
                             setCurrentPage(1)
                           }}
                         />
-                        <Label>Track-Pants</Label>
+                        <Label>Cargo/Track-Pants</Label>
                       </div>
                       <Dialog open={openModel} onOpenChange={(state) => setOpenModel(state)}>
                         <DialogTrigger asChild>
@@ -1283,7 +1401,7 @@ function Admin() {
                                         formik.setFieldValue("reversible", '');
                                       }
                                       const findName = allCategory.find((item) => item.id.toString() === value)?.name || "";
-                                      if (findName === "Track-Pants") {
+                                      if (findName === "Cargo/Track-Pants") {
                                         formik.setFieldValue('isHideFields', true)
                                       }
                                       formik.setFieldValue("size_ids", '')
@@ -1380,7 +1498,7 @@ function Admin() {
                                               : 'Size'}
                                           </button>
                                         </PopoverTrigger>
-                                        <PopoverContent>
+                                        {/* <PopoverContent>
                                           {filteredSize.map((item) => (
                                             <label key={item.id} className="flex items-center">
                                               <input
@@ -1393,7 +1511,90 @@ function Admin() {
                                               {item.name}
                                             </label>
                                           ))}
+                                        </PopoverContent> */}
+
+                                        <PopoverContent className="max-h-80 overflow-y-auto">
+                                          {filteredSize.map((item: any, index) => {
+                                            const isSelected = formik.values.size_ids.split(',').includes(item.id.toString());
+
+                                            return (
+                                              <div key={item.id} className="flex flex-col items-start">
+                                                <label className="flex items-center">
+                                                  <input
+                                                    type="checkbox"
+                                                    value={item.id.toString()}
+                                                    checked={isSelected}
+                                                    onChange={() => handleCheckboxChange(item.id.toString())}
+                                                    className="mr-2"
+                                                  />
+                                                  {item.name}
+                                                </label>
+
+                                                {/* Cargo/Track-Pants Fields */}
+                                                {isSelected && item?.Category?.name === 'Cargo/Track-Pants' && (
+                                                  <>
+                                                    <Input
+                                                      id={`size_chart[${item.id}].waist`}
+                                                      placeholder="Waist"
+                                                      className="mt-2 p-1 border border-gray-300 rounded"
+                                                      value={formik.values.size_chart?.find((size) => size.size_id === item.id)?.waist || ''}
+                                                      onChange={(e) => handleDynamicInputChange('waist', e.target.value, item.id)}
+                                                    />
+                                                    <Input
+                                                      id={`size_chart[${item.id}].length_cm`}
+                                                      placeholder="Length (cm)"
+                                                      className="mt-2 p-1 border border-gray-300 rounded"
+                                                      value={formik.values.size_chart?.find((size) => size.size_id === item.id)?.length_cm || ''}
+                                                      onChange={(e) => handleDynamicInputChange('length_cm', e.target.value, item.id)}
+                                                    />
+                                                    <Input
+                                                      id={`size_chart[${item.id}].hip`}
+                                                      placeholder="Hip"
+                                                      className="mt-2 p-1 border border-gray-300 rounded"
+                                                      value={formik.values.size_chart?.find((size) => size.size_id === item.id)?.hip || ''}
+                                                      onChange={(e) => handleDynamicInputChange('hip', e.target.value, item.id)}
+                                                    />
+                                                  </>
+                                                )}
+
+                                                {/* T-Shirts Fields */}
+                                                {isSelected && item?.Category?.name === 'T-Shirts' && (
+                                                  <>
+                                                    <Input
+                                                      id={`size_chart[${item.id}].chest`}
+                                                      placeholder="Chest"
+                                                      className="mt-2 p-1 border border-gray-300 rounded"
+                                                      value={formik.values.size_chart?.find((size) => size.size_id === item.id)?.chest || ''}
+                                                      onChange={(e) => handleDynamicInputChange('chest', e.target.value, item.id)}
+                                                    />
+                                                    <Input
+                                                      id={`size_chart[${item.id}].sleeve`}
+                                                      placeholder="Sleeve"
+                                                      className="mt-2 p-1 border border-gray-300 rounded"
+                                                      value={formik.values.size_chart?.find((size) => size.size_id === item.id)?.sleeve || ''}
+                                                      onChange={(e) => handleDynamicInputChange('sleeve', e.target.value, item.id)}
+                                                    />
+                                                    <Input
+                                                      id={`size_chart[${item.id}].shoulder`}
+                                                      placeholder="Shoulder"
+                                                      className="mt-2 p-1 border border-gray-300 rounded"
+                                                      value={formik.values.size_chart?.find((size) => size.size_id === item.id)?.shoulder || ''}
+                                                      onChange={(e) => handleDynamicInputChange('shoulder', e.target.value, item.id)}
+                                                    />
+                                                    <Input
+                                                      id={`size_chart[${item.id}].length_inch`}
+                                                      placeholder="Length (inch)"
+                                                      className="mt-2 p-1 border border-gray-300 rounded"
+                                                      value={formik.values.size_chart?.find((size) => size.size_id === item.id)?.length_inch || ''}
+                                                      onChange={(e) => handleDynamicInputChange('length_inch', e.target.value, item.id)}
+                                                    />
+                                                  </>
+                                                )}
+                                              </div>
+                                            );
+                                          })}
                                         </PopoverContent>
+
                                       </Popover>
                                     </div>
                                   </div>
@@ -1478,7 +1679,7 @@ function Admin() {
                                 </div>
 
                                 {
-                                  formik.values.category_id.toString() !== allCategory.find(val => val.name === "Track-Pants")?.id.toString() && (
+                                  formik.values.category_id.toString() !== allCategory.find(val => val.name === "Cargo/Track-Pants")?.id.toString() && (
                                     <div className="col-span-4">
                                       <Label>Sleeve</Label>
                                       <Input
@@ -1541,7 +1742,7 @@ function Admin() {
                                 </div>
 
                                 {
-                                  formik.values.category_id.toString() !== allCategory.find(val => val.name === "Track-Pants")?.id.toString() && (
+                                  formik.values.category_id.toString() !== allCategory.find(val => val.name === "Cargo/Track-Pants")?.id.toString() && (
                                     <div className="col-span-4">
                                       <Label>Neck Type</Label>
                                       <Input
@@ -1593,7 +1794,7 @@ function Admin() {
                                 </div>
 
                                 {
-                                  formik.values.category_id.toString() !== allCategory.find(val => val.name === "Track-Pants")?.id.toString() && (
+                                  formik.values.category_id.toString() !== allCategory.find(val => val.name === "Cargo/Track-Pants")?.id.toString() && (
                                     <div className="col-span-4">
                                       <Label>Reversible</Label>
                                       <Input
@@ -1721,7 +1922,7 @@ function Admin() {
                                   <Label className="ml-2">InStock</Label>
                                 </div>
                               </div>
-                            </div>
+                            </div >
                             <DialogFooter className="px-5 pb-5">
                               <Button type="submit" disabled={formik.isSubmitting}>
                                 {id ? "Save changes" : formik.isSubmitting ? "Submitting..." : "Add product"}
@@ -1957,7 +2158,11 @@ function Admin() {
                             </div>
                           </div>
                           <DialogFooter className="px-5 pb-5">
-                            <Button type="submit" onClick={handleAddCategory}>Save changes</Button>
+                            <Button type="submit" onClick={handleAddCategory} disabled={isAddingCategory}>
+                              {
+                                isAddingCategory ? 'Saving...' : 'Save changes'
+                              }
+                            </Button>
                           </DialogFooter>
                         </DialogContent>
                       </Dialog>
@@ -2208,7 +2413,9 @@ function Admin() {
                             </div>
                           </div>
                           <DialogFooter className="px-5 pb-5">
-                            <Button type="submit" onClick={handleAddSize}>Save changes</Button>
+                            <Button type="submit" onClick={handleAddSize}
+                              disabled={isSizeButtonDisabled || !size || !selectedCategory}>
+                              Save changes</Button>
                           </DialogFooter>
                         </DialogContent>
                       </Dialog>
@@ -2379,7 +2586,7 @@ function Admin() {
                             </div>
                           </div>
                           <DialogFooter className="px-5 pb-5">
-                            <Button type="submit" onClick={handleAddColor}>Save changes</Button>
+                            <Button type="submit" onClick={handleAddColor} disabled={isLoading || !colors.trim()}>{isLoading ? "Saving..." : "Save changes"}</Button>
                           </DialogFooter>
                         </DialogContent>
                       </Dialog>

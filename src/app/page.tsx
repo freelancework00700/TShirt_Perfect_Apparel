@@ -31,7 +31,7 @@ export default function Home() {
   const [activeSegment, setActiveSegment] = useState<SegmentKey>("newDrops");
   const [product, setProduct] = useState<IProduct[]>([]);
   const router = useRouter();
-  const TrackPants = product.filter((item) => item.Category.name === "Track-Pants");
+  const TrackPants = product.filter((item) => item.Category.name === "Cargo/Track-Pants");
   const Tshirt = product.filter((item) => item.Category.name === "T-Shirts");
   const imageURL = process.env.NEXT_PUBLIC_IMAGE_URL
   const APIURL = process.env.NEXT_PUBLIC_API_URL
@@ -336,9 +336,9 @@ export default function Home() {
               bg-[url('../../public/images/track-pants.png')] bg-cover px-20 max-lg:px-5 py-24 max-lg:py-5 rounded-[16px]"
               >
                 <div>
-                  <h1 className="text-3xl max-sm:text-[20px] max-sm:mb-2 font-bold mb-4">Track Pants</h1>
+                  <h1 className="text-3xl max-sm:text-[20px] max-sm:mb-2 font-bold mb-4">Cargo/Track Pants</h1>
                   <p className="mb-6 w-72 max-sm:text-[16px]">
-                    Track pants are a popular type of athletic wear, often made
+                    Cargo/Track pants are a popular type of athletic wear, often made
                     of soft, stretchy materials like polyester, cotton blends,
                     or fleece.
                   </p>
@@ -446,7 +446,7 @@ export default function Home() {
           </div>
           <div className="py-10 max-sm:py-5">
             <div className="mb-8 text-[30px] max-sm:text-[18px] max-sm:mb-4 font-medium text-center bg-gray-100 py-2 rounded-lg">
-              Trending Track Pants Collection
+              Trending Cargo Pants Collection
             </div>
             <div className="trending-swiper">
               <Swiper

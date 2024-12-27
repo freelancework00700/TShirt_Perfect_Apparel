@@ -161,7 +161,7 @@ function CustomerService() {
                   Surat, 395006
                 </div>
                 <div className="text-center text-[16px] mb-6">
-                  Call or WhatsApp: +91 94268 66467 / +91 94281 49160
+                  Call or WhatsApp: +91 94268 66467 / +91 94281 49160 / +91 99047 97335
                 </div>
                 <div className="text-center text-[16px] mb-6">
                   Email: pravinbudheliya99@gmail.com
