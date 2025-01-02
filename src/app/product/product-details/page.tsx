@@ -225,7 +225,7 @@ const ProductDetail = () => {
                   {productData.map((item, index) => (
                     <div key={index}>
                       <h2 className="text-lg font-semibold text-center">{item.name}</h2>
-                      <p className="text-center text-sm text-gray-500">Size Charts</p>
+                      <p className="text-center text-sm text-gray-500">Size Charts(Inch)</p>
 
                       <div className="mt-4">
                         {item.Category.name === "T-Shirts" ? (
@@ -255,8 +255,8 @@ const ProductDetail = () => {
                             </div>
                           </div>
                             ))
-                        ) : item.Category.name === "Cargo/Track-Pants" ? (
-                            item.SizeCharts?.map((sizeChart, index) => (
+                        ) : item.Category.name === "Cargo/Track-Pants" || item.Category.name === "Jeans" ? (
+                          item.SizeCharts?.map((sizeChart, index) => (
                             <div key={index}>
                             <div className="overflow-x-auto mt-4">
                               <table className="w-full text-sm text-left text-gray-700">
@@ -547,6 +547,9 @@ const ProductDetail = () => {
                           <div className="text-base font-semibold">
                             Net Quantity
                           </div>
+                          {
+                            item.Category.name === "T-Shirts" && (
+                              <>
                           <div className="text-base font-semibold">
                             Neck Type
                           </div>
@@ -554,6 +557,9 @@ const ProductDetail = () => {
                             Reversible
                           </div>
                           <div className="text-base font-semibold">Sleeve</div>
+                              </>
+                            )}
+
                         </div>
                         <div className="col-span-8">
                           <div className="text-base font-normal">
@@ -589,7 +595,10 @@ const ProductDetail = () => {
                           <div className="text-base font-normal">
                             {item.net_quantity}
                           </div>
-                          <div className="text-base font-normal">
+                          {
+                            item.Category.name === "T-Shirts" && (
+                              <>
+                                <div className="text-base font-normal">
                             {item.neck_type}
                           </div>
                           <div className="text-base font-normal">
@@ -598,6 +607,9 @@ const ProductDetail = () => {
                           <div className="text-base font-normal">
                             {item.sleeve}
                           </div>
+                              </>
+                            )
+                          }
                         </div>
                         <div className="col-span-12 text-base mt-6">
                           {item.description}

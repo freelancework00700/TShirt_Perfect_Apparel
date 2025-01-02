@@ -96,6 +96,7 @@ function Admin() {
   const [isLoading, setIsLoading] = useState(false);
   const [isSizeButtonDisabled, setIsSizeButtonDisabled] = useState(false);
   const [sizeChartData, setSizeChartData] = useState<any>();
+  const [searchQuery, setSearchQuery] = useState('');
 
 
 
@@ -145,12 +146,28 @@ function Admin() {
     }
   }
 
+  // useEffect(() => {
+  //   // Filter products based on switch selection
+  //   const category = isTrackPants ? 'Cargo/Track-Pants' : 'T-Shirts';
+  //   const filtered = allProduct.filter((product) => product.Category.name === category);
+  //   setFilteredProducts(filtered);
+  // }, [isTrackPants, allProduct]);
+
   useEffect(() => {
-    // Filter products based on switch selection
-    const category = isTrackPants ? 'Cargo/Track-Pants' : 'T-Shirts';
-    const filtered = allProduct.filter((product) => product.Category.name === category);
+    // Filter products based on search query
+    const filtered = allProduct.filter((product) => {
+      const query = searchQuery.toLowerCase();
+      return (
+        product.name.toLowerCase().includes(query) ||
+        product.price.includes(query) ||
+        product.category_id.toString().includes(query) ||
+        product.discount_price.toString().includes(query) ||
+        (product.style_code && product.style_code.toLowerCase().includes(query))
+      );
+    });
+
     setFilteredProducts(filtered);
-  }, [isTrackPants, allProduct]);
+  }, [searchQuery, allProduct]);
 
   const getAllCategory = async () => {
     setLoading(true);
@@ -237,7 +254,7 @@ function Admin() {
     } else {
       getAllInquiry();
     }
-  }, [page, isTrackPants])
+  }, [page])
 
   const handleEditCategory = async (item: ICategories) => {
     setOpenModel(true)
@@ -1109,11 +1126,10 @@ function Admin() {
     setCurrentPageOfInquiry(page)
   }
 
-  const trackPantsCategoryId = allCategory.find((cat) => cat.name === "Cargo/Track-Pants")?.id.toString();
+  const trackPantsCategoryId = allCategory.find((cat) => cat.name === "Cargo/Track-Pants" || cat.name === "Jeans")?.id.toString();
 
-  // const handleInputChange = (field: string, value: string) => {
-  //   formik.setFieldValue(field, value);
-  // };
+  const trackPantsId = allCategory.find(val => val.name === "Cargo/Track-Pants")?.id.toString();
+  const jeansId = allCategory.find(val => val.name === "Jeans")?.id.toString();
 
   const handleDynamicInputChange = (field: string, value: string, sizeId: number) => {
     const updated = [...(formik.values?.size_chart || [])];
@@ -1338,7 +1354,16 @@ function Admin() {
                   <>
                     <div className="flex justify-between items-center pb-5">
                       <div className="text-2xl font-bold">Product</div>
-                      <div className="flex items-center space-x-2">
+                      <div>
+                        <Input
+                          type="text"
+                          placeholder="Search by stylecode, name, category, price"
+                          value={searchQuery}
+                          onChange={(e) => setSearchQuery(e.target.value)}
+                          className="border border-gray-300 p-3 rounded-md mb-4 w-[300px] focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 placeholder-gray-500"
+                        />
+                      </div>
+                      {/* <div className="flex items-center space-x-2">
                         <Label>T-Shirts</Label>
                         <Switch checked={isTrackPants}
                           onCheckedChange={(checked) => {
@@ -1348,6 +1373,16 @@ function Admin() {
                         />
                         <Label>Cargo/Track-Pants</Label>
                       </div>
+                      <div className="flex items-center space-x-2">
+                        <Label>Jeans</Label>
+                        <Switch checked={isTrackPants}
+                          onCheckedChange={(checked) => {
+                            setIsTrackPants(checked)
+                            setCurrentPage(1)
+                          }}
+                        />
+                        <Label>Shirt</Label>
+                      </div> */}
                       <Dialog open={openModel} onOpenChange={(state) => setOpenModel(state)}>
                         <DialogTrigger asChild>
                           <Button className="rounded-full pr-5" onClick={async () => {
@@ -1401,7 +1436,7 @@ function Admin() {
                                         formik.setFieldValue("reversible", '');
                                       }
                                       const findName = allCategory.find((item) => item.id.toString() === value)?.name || "";
-                                      if (findName === "Cargo/Track-Pants") {
+                                      if (findName === "Cargo/Track-Pants" || findName === "Jeans") {
                                         formik.setFieldValue('isHideFields', true)
                                       }
                                       formik.setFieldValue("size_ids", '')
@@ -1531,7 +1566,7 @@ function Admin() {
                                                 </label>
 
                                                 {/* Cargo/Track-Pants Fields */}
-                                                {isSelected && item?.Category?.name === 'Cargo/Track-Pants' && (
+                                                {isSelected && (item?.Category?.name === 'Cargo/Track-Pants' || item?.Category?.name === 'Jeans') && (
                                                   <>
                                                     <Input
                                                       id={`size_chart[${item.id}].waist`}
@@ -1679,7 +1714,10 @@ function Admin() {
                                 </div>
 
                                 {
-                                  formik.values.category_id.toString() !== allCategory.find(val => val.name === "Cargo/Track-Pants")?.id.toString() && (
+                                  // formik.values.category_id.toString() !== allCategory.find(val => val.name === "Cargo/Track-Pants")?.id.toString()
+                                  formik.values.category_id.toString() !== trackPantsId &&
+                                  formik.values.category_id.toString() !== jeansId
+                                  && (
                                     <div className="col-span-4">
                                       <Label>Sleeve</Label>
                                       <Input
@@ -1742,7 +1780,8 @@ function Admin() {
                                 </div>
 
                                 {
-                                  formik.values.category_id.toString() !== allCategory.find(val => val.name === "Cargo/Track-Pants")?.id.toString() && (
+                                  formik.values.category_id.toString() !== trackPantsId &&
+                                  formik.values.category_id.toString() !== jeansId && (
                                     <div className="col-span-4">
                                       <Label>Neck Type</Label>
                                       <Input
@@ -1794,7 +1833,8 @@ function Admin() {
                                 </div>
 
                                 {
-                                  formik.values.category_id.toString() !== allCategory.find(val => val.name === "Cargo/Track-Pants")?.id.toString() && (
+                                  formik.values.category_id.toString() !== trackPantsId &&
+                                  formik.values.category_id.toString() !== jeansId && (
                                     <div className="col-span-4">
                                       <Label>Reversible</Label>
                                       <Input

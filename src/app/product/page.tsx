@@ -38,6 +38,8 @@ function Product() {
   const [selectedPrice, setSelectedPrice] = useState<[number, number]>([100, maxPrice / 2]);
   const imageURL = process?.env.NEXT_PUBLIC_IMAGE_URL
   const APIURL = process?.env.NEXT_PUBLIC_API_URL
+  const [filteredCategories, setFilteredCategories] = useState<ICategories[]>([]);
+  const [searchTerm, setSearchTerm] = useState<string>('');
 
   const fabricOptions = Array.from(new Set(allData
     .map((product) => product.fabric?.toLowerCase().trim()) // Normalize to lowercase and trim whitespace
@@ -56,6 +58,7 @@ function Product() {
       const response = await axios.get(APIURL + "product");
       const getData = response.data?.data;
       setAllData(getData);
+      setFilteredCategories(getData);
 
       const apiFindData = await axios.get(APIURL + `product?${selectedCategories}`)
       setAllFilterData(apiFindData.data.data)
@@ -192,9 +195,32 @@ function Product() {
     selectedSizes.length > 0 || selectedColors.length > 0 || selectedFabrics.length > 0 ||
     selectedPrice[1] < maxPrice / 2;
 
+  const normalizeString = (str: string): string =>
+    str.toLowerCase().replace(/[^a-z0-9 ]/gi, "");
+
+  useEffect(() => {
+    const filtered = allData.filter((product) => {
+      const normalizedCategoryName = normalizeString(product.Category.name);
+      const normalizedSearchTerm = normalizeString(searchTerm);
+      return normalizedCategoryName.includes(normalizedSearchTerm);
+    });
+
+    setFilteredProducts(filtered);
+  }, [searchTerm, allData]);
+
+
   return (
     <main className="max-[1024px]:mt-[77px] max-[767px]:mt-[50px] relative">
       <Header />
+      <div className="flex justify-center p-4">
+        <input
+          type="text"
+          className="w-full max-w-md sm:w-2/4 lg:w-1/2 px-4 py-2 border border-black rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 text-sm"
+          placeholder="Search Items..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
+      </div>
       <div className="min-h-[calc(100vh_-_385px)]">
         <div className="container mx-auto xl:max-w-7xl max-[1024px]:px-4">
           <div className="grid grid-cols-12 gap-4 lg:py-10">

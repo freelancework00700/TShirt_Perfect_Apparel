@@ -18,7 +18,7 @@ import "swiper/css/navigation";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { EffectFade, Navigation, Pagination } from "swiper/modules";
 import axios from "axios";
-import { IProduct } from "@/interface/types";
+import { ICategories, IProduct } from "@/interface/types";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -31,11 +31,16 @@ export default function Home() {
   const [activeSegment, setActiveSegment] = useState<SegmentKey>("newDrops");
   const [product, setProduct] = useState<IProduct[]>([]);
   const router = useRouter();
+  const ShirtsData = product.filter((item) => item.Category.name === "Shirts");
+  console.log('Shirts: ', ShirtsData);
+  const JeansPants = product.filter((item) => item.Category.name === "Jeans");
   const TrackPants = product.filter((item) => item.Category.name === "Cargo/Track-Pants");
   const Tshirt = product.filter((item) => item.Category.name === "T-Shirts");
   const imageURL = process.env.NEXT_PUBLIC_IMAGE_URL
   const APIURL = process.env.NEXT_PUBLIC_API_URL
-
+  const [categories, setCategories] = useState<ICategories[]>([]);
+  const [isJeansAvailable, setIsJeansAvailable] = useState(false);
+  const [isShirtsAvailable, setIsShirtsAvailable] = useState(false);
 
   const segments = {
     newDrops: {
@@ -59,8 +64,28 @@ export default function Home() {
     }
   };
 
+  const handleGetCategory = async () => {
+    const categoriesResponse = await axios.get(APIURL + "category");
+    const categoriesData = categoriesResponse.data?.data;
+    setCategories(categoriesData);
+  }
+
+  useEffect(() => {
+    const jeansExists = categories.some(
+      (category) =>
+        category.name.toLowerCase().replace(/[^a-z0-9 ]/gi, "") === "jeans"
+    );
+    setIsJeansAvailable(jeansExists);
+    const shirtsExists = categories.some(
+      (category) =>
+        category.name.toLowerCase().replace(/[^a-z0-9 ]/gi, "") === "shirts"
+    )
+    setIsShirtsAvailable(shirtsExists)
+  }, [categories]);
+
   useEffect(() => {
     getProduct();
+    handleGetCategory();
   }, []);
 
   const handleShowCatagories = () => {
@@ -541,8 +566,206 @@ export default function Home() {
               </Swiper>
             </div>
           </div>
+          {isJeansAvailable && (
+            <div className="py-10 max-sm:py-5">
+              <div className="mb-8 text-[30px] max-sm:text-[18px] max-sm:mb-4 font-medium text-center bg-gray-100 py-2 rounded-lg">
+                Trending Jeans Pants Collection
+              </div>
+              <div className="trending-swiper">
+                <Swiper
+                  breakpoints={{
+                    320: { slidesPerView: 1, spaceBetween: 5 },
+                    480: { slidesPerView: 1, spaceBetween: 5 },
+                    768: { slidesPerView: 2.3, spaceBetween: 10 },
+                    1024: { slidesPerView: 4.3, spaceBetween: 12 },
+                  }}
+                  modules={[Navigation]}
+                  navigation={true}
+                >
+                  {loading
+                    ? [1, 2, 3, 4, 5].map((item) => (
+                      <SwiperSlide key={item} className="bg-white">
+                        <Skeleton className="h-[245px] w-full" />
+                        <div className="py-3 px-4">
+                          <Skeleton className="h-[14px] w-[180px]" />
+                          <Skeleton className="h-[10px] w-[80px] mt-1" />
+                          <Skeleton className="h-[20px] w-[100px] my-4" />
+                          <Skeleton className="h-[14px] w-[100px]" />
+                          <Skeleton className="h-[14px] w-[80px] mt-1" />
+                        </div>
+                      </SwiperSlide>
+                    ))
+                    : JeansPants.filter((val) => val.inStock === true).map(
+                      (item, index) => {
+                        return (
+                          <SwiperSlide key={index}>
+                            <div className="shadow-md h-full w-full m-2 rounded-lg bg-white">
+                              <Link
+                                href={`/product/product-details?id=${item.id}`}
+                              >
+                                <div className="productImage flex justify-center rounded-[12px] overflow-hidden">
+                                  <Image
+                                    src={
+                                      imageURL +
+                                      `product-image/${item.ProductImages[0]?.sysFileName}`
+                                    }
+                                    alt="track1"
+                                    width={200}
+                                    height={200}
+                                    className="min-h-[245px] max-h-[245px] object-cover"
+                                  ></Image>
+                                </div>
+                                <div className="py-3 px-4">
+                                  <div>
+                                    <div className="font-bold line-clamp-1">
+                                      {item.name}
+                                    </div>
+                                    <div className="text-[#999] text-[14px] line-clamp-1">
+                                      {item.fit}
+                                    </div>
+                                  </div>
+                                  <div className="text-[#000] text-[16px] py-2">
+                                    ₹{item.final_price}
+                                    {item.discount_price > 0 && (
+                                      <>
+                                        <span className="line-through text-[12px] text-[#999] ml-1">
+                                          ₹{item.price}
+                                        </span>
+                                        <span className="text-[#3fac45] text-[12px]">
+                                          {item.discount_price}% off
+                                        </span>
+                                      </>
+                                    )}
+                                  </div>
+                                  <div className="text-[#999] text-[14px]">
+                                    Color:{" "}
+                                    <span className="text-[#000]">
+                                      {item.Colors?.map(
+                                        (item) => item.name
+                                      ).join(", ")}
+                                    </span>
+                                  </div>
+                                  <div className="text-[#999] text-[14px]">
+                                    Size:{" "}
+                                    <span className="text-[#000]">
+                                      {item.Sizes?.map(
+                                        (item) => item.name
+                                      ).join(",")}
+                                    </span>
+                                  </div>
+                                </div>
+                              </Link>
+                            </div>
+                          </SwiperSlide>
+                        );
+                      }
+                    )}
+                </Swiper>
+              </div>
+            </div>
+          )}
+
+          {isShirtsAvailable && (
+            <div className="py-10 max-sm:py-5">
+              <div className="mb-8 text-[30px] max-sm:text-[18px] max-sm:mb-4 font-medium text-center bg-gray-100 py-2 rounded-lg">
+                Trending Shirts Collection
+              </div>
+              <div className="trending-swiper">
+                <Swiper
+                  breakpoints={{
+                    320: { slidesPerView: 1, spaceBetween: 5 },
+                    480: { slidesPerView: 1, spaceBetween: 5 },
+                    768: { slidesPerView: 2.3, spaceBetween: 10 },
+                    1024: { slidesPerView: 4.3, spaceBetween: 12 },
+                  }}
+                  modules={[Navigation]}
+                  navigation={true}
+                >
+                  {loading
+                    ? [1, 2, 3, 4, 5].map((item) => (
+                      <SwiperSlide key={item} className="bg-white">
+                        <Skeleton className="h-[245px] w-full" />
+                        <div className="py-3 px-4">
+                          <Skeleton className="h-[14px] w-[180px]" />
+                          <Skeleton className="h-[10px] w-[80px] mt-1" />
+                          <Skeleton className="h-[20px] w-[100px] my-4" />
+                          <Skeleton className="h-[14px] w-[100px]" />
+                          <Skeleton className="h-[14px] w-[80px] mt-1" />
+                        </div>
+                      </SwiperSlide>
+                    ))
+                    : ShirtsData.filter((val) => val.inStock === true).map(
+                      (item, index) => {
+                        return (
+                          <SwiperSlide key={index}>
+                            <div className="shadow-md h-full w-full m-2 rounded-lg bg-white">
+                              <Link
+                                href={`/product/product-details?id=${item.id}`}
+                              >
+                                <div className="productImage flex justify-center rounded-[12px] overflow-hidden">
+                                  <Image
+                                    src={
+                                      imageURL +
+                                      `product-image/${item.ProductImages[0]?.sysFileName}`
+                                    }
+                                    alt="track1"
+                                    width={200}
+                                    height={200}
+                                    className="min-h-[245px] max-h-[245px] object-cover"
+                                  ></Image>
+                                </div>
+                                <div className="py-3 px-4">
+                                  <div>
+                                    <div className="font-bold line-clamp-1">
+                                      {item.name}
+                                    </div>
+                                    <div className="text-[#999] text-[14px] line-clamp-1">
+                                      {item.fit}
+                                    </div>
+                                  </div>
+                                  <div className="text-[#000] text-[16px] py-2">
+                                    ₹{item.final_price}
+                                    {item.discount_price > 0 && (
+                                      <>
+                                        <span className="line-through text-[12px] text-[#999] ml-1">
+                                          ₹{item.price}
+                                        </span>
+                                        <span className="text-[#3fac45] text-[12px]">
+                                          {item.discount_price}% off
+                                        </span>
+                                      </>
+                                    )}
+                                  </div>
+                                  <div className="text-[#999] text-[14px]">
+                                    Color:{" "}
+                                    <span className="text-[#000]">
+                                      {item.Colors?.map(
+                                        (item) => item.name
+                                      ).join(", ")}
+                                    </span>
+                                  </div>
+                                  <div className="text-[#999] text-[14px]">
+                                    Size:{" "}
+                                    <span className="text-[#000]">
+                                      {item.Sizes?.map(
+                                        (item) => item.name
+                                      ).join(",")}
+                                    </span>
+                                  </div>
+                                </div>
+                              </Link>
+                            </div>
+                          </SwiperSlide>
+                        );
+                      }
+                    )}
+                </Swiper>
+              </div>
+            </div>
+          )}
         </div>
       </div>
+
       <div className="w-full bg-gray-100 py-10 pb-5 max-md:py-5 ">
         <div className="container mx-auto xl:max-w-8xl max-sm:px-4">
           <div className="mb-4 text-[30px] max-sm:text-[18px] max-sm:mb-0 font-medium text-center">
