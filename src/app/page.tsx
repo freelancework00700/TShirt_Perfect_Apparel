@@ -6,6 +6,7 @@ import Footer from "../components/Footer";
 import Header from "../components/Header";
 import heroImage1 from "../../public/images/5_WebBanner_1920x1080_4eacfb85-fcb6-4205-9741-ed79d7545780_1400x.webp";
 import heroImage2 from "../../public/images/3_WebBanner_1920x1080_76a24f61-cdd7-482b-ab80-52a350547e6b_1400x.webp";
+import heroImage3 from "../../public/images/68c34295-2ca3-4f3a-84e9-e8d8dc08.webp";
 import brandPartnerImage1 from "../../public/images/PerfectApparels.png";
 import brandPartnerImage2 from "../../public/images/Maa_Bhavani_Apparels.png";
 import brandPartnerImage3 from "../../public/images/MBA.png";
@@ -16,7 +17,7 @@ import "swiper/css/pagination";
 import "swiper/css/effect-fade";
 import "swiper/css/navigation";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { EffectFade, Navigation, Pagination } from "swiper/modules";
+import { Autoplay, EffectFade, Navigation, Pagination } from "swiper/modules";
 import axios from "axios";
 import { ICategories, IProduct } from "@/interface/types";
 import Link from "next/link";
@@ -32,7 +33,6 @@ export default function Home() {
   const [product, setProduct] = useState<IProduct[]>([]);
   const router = useRouter();
   const ShirtsData = product.filter((item) => item.Category.name === "Shirts");
-  console.log('Shirts: ', ShirtsData);
   const JeansPants = product.filter((item) => item.Category.name === "Jeans");
   const TrackPants = product.filter((item) => item.Category.name === "Cargo/Track-Pants");
   const Tshirt = product.filter((item) => item.Category.name === "T-Shirts");
@@ -107,7 +107,12 @@ export default function Home() {
           <Swiper
             slidesPerView={1}
             spaceBetween={0}
-            modules={[Pagination, EffectFade]}
+            speed={100}
+            autoplay={{
+              delay: 5000,
+              disableOnInteraction: false,
+            }}
+            modules={[Pagination, EffectFade, Autoplay]}
             pagination={true}
             effect={"fade"}
             onSlideChange={() => console.log("slide change")}
@@ -116,8 +121,8 @@ export default function Home() {
             <SwiperSlide>
               <div>
                 <Image
-                  src={heroImage1}
-                  alt="heroImage1"
+                  src={heroImage2}
+                  alt="heroImage2"
                   className="w-full xl:h-[calc(100vh_-_70px)] h-auto object-cover"
                 ></Image>
               </div>
@@ -125,8 +130,17 @@ export default function Home() {
             <SwiperSlide>
               <div>
                 <Image
-                  src={heroImage2}
-                  alt="heroImage2"
+                  src={heroImage3}
+                  alt="heroImage3"
+                  className="w-full xl:h-[calc(100vh_-_70px)] h-auto object-cover"
+                ></Image>
+              </div>
+            </SwiperSlide>
+            <SwiperSlide>
+              <div>
+                <Image
+                  src={heroImage1}
+                  alt="heroImage1"
                   className="w-full xl:h-[calc(100vh_-_70px)] h-auto object-cover"
                 ></Image>
               </div>

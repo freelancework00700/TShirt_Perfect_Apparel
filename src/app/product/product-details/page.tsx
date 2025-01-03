@@ -82,6 +82,10 @@ const ProductDetail = () => {
       mobile_no: "",
       size_ids: "",
       color_ids: "",
+      address: '',
+      city: '',
+      state: '',
+      pincode: '',
     },
     enableReinitialize: true,
     validationSchema: yup.object({
@@ -98,10 +102,16 @@ const ProductDetail = () => {
         .required("Phone number required!").test("isTenDigits", "Mobile number must be exactly 10 digits", (value: any) => { return value && /^\d{10}$/.test(value.toString()); }),
       size_ids: yup.string().min(1, 'Select at least one size'),
       color_ids: yup.string().min(1, 'Select at least one color'),
+      address: yup.string().min(10).max(250).required("Enter the address"),
+      city: yup.string().min(3).max(50).required("Enter the city"),
+      state: yup.string().min(3).max(50).required("Enter the state"),
+      pincode: yup.number().typeError("Only digits are allowed!")
+        .required("Pincode required!").test("isSixDigits", "Pincode must be exactly 6 digits", (value: any) => { return value && /^\d{6}$/.test(value.toString()); }),
     }),
     onSubmit: async (values, { resetForm, setSubmitting }) => {
       try {
         const response = await axios.post(APIURL + 'product-inquiry', values)
+        console.log('response: ', response.data.data);
         toast.success(response.data.message, {
           position: "top-right",
           autoClose: 5000,
@@ -230,56 +240,56 @@ const ProductDetail = () => {
                       <div className="mt-4">
                         {item.Category.name === "T-Shirts" ? (
                           item.SizeCharts?.map((sizeChart, index) => (
-                              <div key={index}>
-                            <div className="overflow-x-auto mt-4">
-                             <table className="w-full text-sm text-left text-gray-700">
-                                <thead className="bg-gray-100">
-                                  <tr>
-                                    <th className="px-4 py-2 font-medium">Size</th>
-                                    <th className="px-4 py-2 font-medium">Chest</th>
-                                    <th className="px-4 py-2 font-medium">Length</th>
-                                    <th className="px-4 py-2 font-medium">Shoulder</th>
-                                    <th className="px-4 py-2 font-medium">Sleeve</th>
-                                  </tr>
-                                </thead>
-                                <tbody>
-                                  <tr>
-                                    <td className="px-4 py-2">{sizeChart.Size?.name || "N/A"}</td>
-                                    <td className="px-4 py-2">{sizeChart.chest || "N/A"}</td>
-                                    <td className="px-4 py-2">{sizeChart.length_inch || "N/A"}</td>
-                                    <td className="px-4 py-2">{sizeChart.shoulder || "N/A"}</td>
-                                    <td className="px-4 py-2">{sizeChart.sleeve || "N/A"}</td>
-                                  </tr>
-                                </tbody>
-                              </table>
+                            <div key={index}>
+                              <div className="overflow-x-auto mt-4">
+                                <table className="w-full text-sm text-left text-gray-700">
+                                  <thead className="bg-gray-100">
+                                    <tr>
+                                      <th className="px-4 py-2 font-medium">Size</th>
+                                      <th className="px-4 py-2 font-medium">Chest</th>
+                                      <th className="px-4 py-2 font-medium">Length</th>
+                                      <th className="px-4 py-2 font-medium">Shoulder</th>
+                                      <th className="px-4 py-2 font-medium">Sleeve</th>
+                                    </tr>
+                                  </thead>
+                                  <tbody>
+                                    <tr>
+                                      <td className="px-4 py-2">{sizeChart.Size?.name || "N/A"}</td>
+                                      <td className="px-4 py-2">{sizeChart.chest || "N/A"}</td>
+                                      <td className="px-4 py-2">{sizeChart.length_inch || "N/A"}</td>
+                                      <td className="px-4 py-2">{sizeChart.shoulder || "N/A"}</td>
+                                      <td className="px-4 py-2">{sizeChart.sleeve || "N/A"}</td>
+                                    </tr>
+                                  </tbody>
+                                </table>
+                              </div>
                             </div>
-                          </div>
-                            ))
+                          ))
                         ) : item.Category.name === "Cargo/Track-Pants" || item.Category.name === "Jeans" ? (
                           item.SizeCharts?.map((sizeChart, index) => (
                             <div key={index}>
-                            <div className="overflow-x-auto mt-4">
-                              <table className="w-full text-sm text-left text-gray-700">
-                                <thead className="bg-gray-100">
-                                  <tr>
-                                    <th className="px-4 py-2 font-medium">Size</th>
-                                    <th className="px-4 py-2 font-medium">Waist</th>
-                                    <th className="px-4 py-2 font-medium">Length</th>
-                                    <th className="px-4 py-2 font-medium">Hip</th>
-                                  </tr>
-                                </thead>
-                                <tbody>
-                                  <tr>
-                                    <td className="px-4 py-2">{sizeChart.Size?.name || "N/A"}</td>
-                                    <td className="px-4 py-2">{sizeChart.waist || "N/A"}</td>
-                                    <td className="px-4 py-2">{sizeChart.length_cm || "N/A"}</td>
-                                    <td className="px-4 py-2">{sizeChart.hip || "N/A"}</td>
-                                  </tr>
-                                </tbody>
-                              </table>
+                              <div className="overflow-x-auto mt-4">
+                                <table className="w-full text-sm text-left text-gray-700">
+                                  <thead className="bg-gray-100">
+                                    <tr>
+                                      <th className="px-4 py-2 font-medium">Size</th>
+                                      <th className="px-4 py-2 font-medium">Waist</th>
+                                      <th className="px-4 py-2 font-medium">Length</th>
+                                      <th className="px-4 py-2 font-medium">Hip</th>
+                                    </tr>
+                                  </thead>
+                                  <tbody>
+                                    <tr>
+                                      <td className="px-4 py-2">{sizeChart.Size?.name || "N/A"}</td>
+                                      <td className="px-4 py-2">{sizeChart.waist || "N/A"}</td>
+                                      <td className="px-4 py-2">{sizeChart.length_cm || "N/A"}</td>
+                                      <td className="px-4 py-2">{sizeChart.hip || "N/A"}</td>
+                                    </tr>
+                                  </tbody>
+                                </table>
+                              </div>
                             </div>
-                          </div>
-                            ))
+                          ))
                         ) : (
                           <p className="text-gray-500">No size chart available for this category.</p>
                         )}
@@ -302,17 +312,17 @@ const ProductDetail = () => {
                   >
                     ✖️
                   </button>
-                  <h2 className="text-lg font-semibold text-center mb-4">
+                  <h2 className="text-lg font-semibold text-center mb-3">
                     Product Inquiry
                   </h2>
 
-                  <h3 className="text-xl font-semibold mb-3">
+                  <h3 className="text-xl font-semibold mb-2">
                     {filteredData?.name}
                   </h3>
 
                   <form onSubmit={formik.handleSubmit}>
-                    <div className="flex flex-col gap-2 mb-2">
-                      <div className="flex items-center gap-5">
+                    <div className="flex flex-col gap-2">
+                      <div className="flex items-center gap-1">
                         <Label className="min-w-[40px]">Size:</Label>
                         <div className="flex items-center gap-5">
                           {filteredData?.Sizes.map((size) => (
@@ -373,7 +383,7 @@ const ProductDetail = () => {
                       name="quantity"
                       value={formik.values.quantity}
                       onChange={formik.handleChange}
-                      className="w-full px-4 py-2 mb-4 border rounded-md"
+                      className="w-full px-4 py-2 mb-2 border rounded-md"
                       placeholder="Quantity"
                       required
                     />
@@ -385,9 +395,9 @@ const ProductDetail = () => {
                       name="inquiry_message"
                       value={formik.values.inquiry_message}
                       onChange={formik.handleChange}
-                      className="w-full px-4 py-2 mb-4 border rounded-md"
+                      className="w-full px-4 py-2 mb-2 border rounded-md"
                       placeholder="Inquiry Message"
-                      rows={3}
+                      rows={2}
                       required
                     ></textarea>
                     {formik.errors.inquiry_message &&
@@ -403,7 +413,7 @@ const ProductDetail = () => {
                       name="name"
                       value={formik.values.name}
                       onChange={formik.handleChange}
-                      className="w-full px-4 py-2 mb-4 border rounded-md"
+                      className="w-full px-4 py-2 mb-2 border rounded-md"
                       placeholder="Name"
                       required
                     />
@@ -417,7 +427,7 @@ const ProductDetail = () => {
                       name="email"
                       value={formik.values.email}
                       onChange={formik.handleChange}
-                      className="w-full px-4 py-2 mb-4 border rounded-md"
+                      className="w-full px-4 py-2 mb-2 border rounded-md"
                       placeholder="Email"
                       required
                     />
@@ -431,12 +441,64 @@ const ProductDetail = () => {
                       name="mobile_no"
                       value={formik.values.mobile_no}
                       onChange={formik.handleChange}
-                      className="w-full px-4 py-2 mb-4 border rounded-md"
+                      className="w-full px-4 py-2 mb-2 border rounded-md"
                       placeholder="Mobile No."
                       required
                     />
                     {formik.errors.mobile_no && formik.touched.mobile_no && (
                       <p className="text-red-500">{formik.errors.mobile_no}</p>
+                    )}
+
+                    <input
+                      type="address"
+                      name="address"
+                      value={formik.values.address}
+                      onChange={formik.handleChange}
+                      className="w-full px-4 py-2 mb-2 border rounded-md"
+                      placeholder="Address"
+                      required
+                    />
+                    {formik.errors.address && formik.touched.address && (
+                      <p className="text-red-500">{formik.errors.address}</p>
+                    )}
+
+                    <input
+                      type="text"
+                      name="city"
+                      value={formik.values.city}
+                      onChange={formik.handleChange}
+                      className="w-full px-4 py-2 mb-2 border rounded-md"
+                      placeholder="City"
+                      required
+                    />
+                    {formik.errors.city && formik.touched.city && (
+                      <p className="text-red-500">{formik.errors.city}</p>
+                    )}
+
+                    <input
+                      type="text"
+                      name="state"
+                      value={formik.values.state}
+                      onChange={formik.handleChange}
+                      className="w-full px-4 py-2 mb-2 border rounded-md"
+                      placeholder="State"
+                      required
+                    />
+                    {formik.errors.state && formik.touched.state && (
+                      <p className="text-red-500">{formik.errors.state}</p>
+                    )}
+
+                    <input
+                      type="text"
+                      name="pincode"
+                      value={formik.values.pincode}
+                      onChange={formik.handleChange}
+                      className="w-full px-4 py-2 mb-2 border rounded-md"
+                      placeholder="Pincode"
+                      required
+                    />
+                    {formik.errors.pincode && formik.touched.pincode && (
+                      <p className="text-red-500">{formik.errors.pincode}</p>
                     )}
 
                     <button type="submit" disabled={formik.isSubmitting}
@@ -550,13 +612,13 @@ const ProductDetail = () => {
                           {
                             item.Category.name === "T-Shirts" && (
                               <>
-                          <div className="text-base font-semibold">
-                            Neck Type
-                          </div>
-                          <div className="text-base font-semibold">
-                            Reversible
-                          </div>
-                          <div className="text-base font-semibold">Sleeve</div>
+                                <div className="text-base font-semibold">
+                                  Neck Type
+                                </div>
+                                <div className="text-base font-semibold">
+                                  Reversible
+                                </div>
+                                <div className="text-base font-semibold">Sleeve</div>
                               </>
                             )}
 
@@ -599,14 +661,14 @@ const ProductDetail = () => {
                             item.Category.name === "T-Shirts" && (
                               <>
                                 <div className="text-base font-normal">
-                            {item.neck_type}
-                          </div>
-                          <div className="text-base font-normal">
-                            {item.reversible}
-                          </div>
-                          <div className="text-base font-normal">
-                            {item.sleeve}
-                          </div>
+                                  {item.neck_type}
+                                </div>
+                                <div className="text-base font-normal">
+                                  {item.reversible}
+                                </div>
+                                <div className="text-base font-normal">
+                                  {item.sleeve}
+                                </div>
                               </>
                             )
                           }

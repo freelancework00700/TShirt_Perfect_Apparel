@@ -2765,6 +2765,10 @@ function Admin() {
                               <TableCell>Price</TableCell>
                               <TableCell>Color</TableCell>
                               <TableCell>Size</TableCell>
+                              <TableCell>Address</TableCell>
+                              <TableCell>City</TableCell>
+                              <TableCell>State</TableCell>
+                              <TableCell>Pincode</TableCell>
                               <TableCell>Action</TableCell>
                             </TableRow>
                           </TableHead>
@@ -2829,6 +2833,10 @@ function Admin() {
                                       </TableCell>
                                       <TableCell>{filteredDataofSize.map((item) => item.name).join(', ')}
                                       </TableCell>
+                                      <TableCell>{item.address}</TableCell>
+                                      <TableCell>{item.city}</TableCell>
+                                      <TableCell>{item.state}</TableCell>
+                                      <TableCell>{item.pincode}</TableCell>
                                       <TableCell>
                                         <AlertDialog open={openProductInquiry}>
                                           <AlertDialogTrigger>
