@@ -227,15 +227,18 @@ const ProductDetail = () => {
 
             {sizeChart && (
               <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-                <div className="bg-white w-full max-w-md p-6 rounded-lg shadow-lg relative">
-                  <button onClick={closeSizeChart} className="absolute top-2 right-2 text-gray-600 hover:text-gray-800">
+                <div className="bg-white w-full max-w-3xl sm:max-w-md md:max-w-lg p-6 rounded-lg shadow-lg relative">
+                  <button
+                    onClick={closeSizeChart}
+                    className="absolute top-4 right-4 text-gray-600 hover:text-gray-800 focus:outline-none"
+                  >
                     ✖️
                   </button>
 
                   {productData.map((item, index) => (
                     <div key={index}>
-                      <h2 className="text-lg font-semibold text-center">{item.name}</h2>
-                      <p className="text-center text-sm text-gray-500">Size Charts(Inch)</p>
+                      <h2 className="text-2xl sm:text-xl md:text-2xl lg:text-3xl font-semibold text-center">{item.name}</h2>
+                      <p className="text-sm sm:text-base md:text-lg text-gray-500 text-center">Size Charts (Inch)</p>
 
                       <div className="mt-4">
                         {item.Category.name === "T-Shirts" ? (
@@ -245,20 +248,20 @@ const ProductDetail = () => {
                                 <table className="w-full text-sm text-left text-gray-700">
                                   <thead className="bg-gray-100">
                                     <tr>
-                                      <th className="px-4 py-2 font-medium">Size</th>
-                                      <th className="px-4 py-2 font-medium">Chest</th>
-                                      <th className="px-4 py-2 font-medium">Length</th>
-                                      <th className="px-4 py-2 font-medium">Shoulder</th>
-                                      <th className="px-4 py-2 font-medium">Sleeve</th>
+                                      <th className="px-3 py-1 font-medium">Size</th>
+                                      <th className="px-3 py-1 font-medium">Chest</th>
+                                      <th className="px-3 py-1 font-medium">Length</th>
+                                      <th className="px-3 py-1 font-medium">Shoulder</th>
+                                      <th className="px-3 py-1 font-medium">Sleeve</th>
                                     </tr>
                                   </thead>
                                   <tbody>
                                     <tr>
-                                      <td className="px-4 py-2">{sizeChart.Size?.name || "N/A"}</td>
-                                      <td className="px-4 py-2">{sizeChart.chest || "N/A"}</td>
-                                      <td className="px-4 py-2">{sizeChart.length_inch || "N/A"}</td>
-                                      <td className="px-4 py-2">{sizeChart.shoulder || "N/A"}</td>
-                                      <td className="px-4 py-2">{sizeChart.sleeve || "N/A"}</td>
+                                      <td className="px-3 py-1">{sizeChart.Size?.name || "N/A"}</td>
+                                      <td className="px-3 py-1">{sizeChart.chest || "N/A"}</td>
+                                      <td className="px-3 py-1">{sizeChart.length_inch || "N/A"}</td>
+                                      <td className="px-3 py-1">{sizeChart.shoulder || "N/A"}</td>
+                                      <td className="px-3 py-1">{sizeChart.sleeve || "N/A"}</td>
                                     </tr>
                                   </tbody>
                                 </table>
@@ -272,18 +275,18 @@ const ProductDetail = () => {
                                 <table className="w-full text-sm text-left text-gray-700">
                                   <thead className="bg-gray-100">
                                     <tr>
-                                      <th className="px-4 py-2 font-medium">Size</th>
-                                      <th className="px-4 py-2 font-medium">Waist</th>
-                                      <th className="px-4 py-2 font-medium">Length</th>
-                                      <th className="px-4 py-2 font-medium">Hip</th>
+                                      <th className="px-3 py-1 font-medium">Size</th>
+                                      <th className="px-3 py-1 font-medium">Waist</th>
+                                      <th className="px-3 py-1 font-medium">Length</th>
+                                      <th className="px-3 py-1 font-medium">Hip</th>
                                     </tr>
                                   </thead>
                                   <tbody>
                                     <tr>
-                                      <td className="px-4 py-2">{sizeChart.Size?.name || "N/A"}</td>
-                                      <td className="px-4 py-2">{sizeChart.waist || "N/A"}</td>
-                                      <td className="px-4 py-2">{sizeChart.length_cm || "N/A"}</td>
-                                      <td className="px-4 py-2">{sizeChart.hip || "N/A"}</td>
+                                      <td className="px-3 py-1">{sizeChart.Size?.name || "N/A"}</td>
+                                      <td className="px-3 py-1">{sizeChart.waist || "N/A"}</td>
+                                      <td className="px-3 py-1">{sizeChart.length_cm || "N/A"}</td>
+                                      <td className="px-3 py-1">{sizeChart.hip || "N/A"}</td>
                                     </tr>
                                   </tbody>
                                 </table>
@@ -302,6 +305,7 @@ const ProductDetail = () => {
                 </div>
               </div>
             )}
+
 
             {isModalOpen && (
               <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
